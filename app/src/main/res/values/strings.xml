@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">UnitorM2</string>
+    <string name="app_version">5.0.0</string>
+    <string name="per_re_title">Unitor Needs Permission</string>
+    <string name="per_re_content">Unitor needs \'Write to storage (EXTERNAL_WRITE)\' permission. If you don\'t Unitor cna\'t save Unipack!</string>
+    <string name="agree">Agree</string>
+    <string name="cancel">Cancel</string>
+    <string name="unable_save">You will not be able to save UniPack.</string>
 </resources>
