@@ -6,4 +6,7 @@
     <string name="agree">Agree</string>
     <string name="cancel">Cancel</string>
     <string name="unable_save">You will not be able to save UniPack.</string>
+    <string name="setting">Setting</string>
+    <string name="importing">Import</string>
+    <string name="newPack">New Pack</string>
 </resources>
