@@ -6,11 +6,28 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="menu_labels_style">
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">#FFFFFFFF</item>
+    </style>
+
+    <style name="edittext_darkback" parent="AppTheme">
+        <item name="colorControlNormal">#ffffff</item>
+    </style>
+
+    <style name="toolbar_style" parent="edittext_darkback">
+        <item name="android:textColorPrimary">#FFFFFFFF</item>
+    </style>
+
+    <style name="radiobutton_style" parent="toolbar_style">
+        <item name="android:textColorSecondary">#ffffff</item>
+        <item name="android:textColorTertiary">#ffffff</item>
+        <item name="android:tint">#ffffff</item>
+        <item name="android:colorForeground">#FFFFFF</item>
     </style>
 
 </resources>

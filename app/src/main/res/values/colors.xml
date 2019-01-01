@@ -11,4 +11,5 @@
     <color name="sub">#c7000000</color>
     <color name="colorEdittextHint">#90ffffff</color>
     <color name="black">#ffffff</color>
+    <color name="text_delete">#be1717</color>
 </resources>
