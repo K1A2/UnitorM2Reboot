@@ -1,4 +1,4 @@
-package com.uni.unitor.unitorm2
+package com.uni.unitor.unitorm2.File.layout
 
 import android.Manifest
 import android.content.DialogInterface
@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
 import android.widget.Toast
+import com.uni.unitor.unitorm2.R
 
 class SplashActivity : AppCompatActivity() {
 
@@ -22,8 +23,10 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         if (supportActionBar != null) supportActionBar!!.hide()
 
+        //안드 5.0 이상일때 권한검사
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
+            //저장소 읽기/쓰기 권한 요청
             val permisionRequest = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             val permisionRequest2 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
 

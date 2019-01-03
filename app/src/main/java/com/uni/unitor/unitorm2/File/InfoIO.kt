@@ -22,7 +22,7 @@ class InfoIO(private val context: Context) : ContextWrapper(context) {
     }
 
     @Throws(Exception::class)
-    fun mkInfo(Title: String, Producer: String, Chain: String, path: String) {
+    fun mkInfo(Title: String?, Producer: String?, Chain: String?, path: String?) {
         val file = File(path)
         fileIO.isExists(file, FileKey.KEY_FILE_INT)
 

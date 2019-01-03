@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:padding="5dp" android:background="@color/colorLayoutBackground">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_marginRight="3dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginRight="3dp">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Title"
+                android:id="@+id/Edit_Title"
+                android:imeOptions="actionNext"
+                android:layout_marginBottom="3dp"
+                android:theme="@style/edittext_darkback"
+                android:textColorHint="@color/colorEdittextHint"
+                android:textColor="@color/colorTextNormal"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Producer"
+                android:id="@+id/Edit_Producer"
+                android:imeOptions="actionNext"
+                android:layout_marginBottom="3dp"
+                android:theme="@style/edittext_darkback"
+                android:textColorHint="@color/colorEdittextHint"
+                android:textColor="@color/colorTextNormal"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Chain"
+                android:id="@+id/Edit_Chain"
+                android:inputType="number"
+                android:imeOptions="actionDone"
+                android:layout_marginBottom="3dp"
+                android:theme="@style/edittext_darkback"
+                android:textColorHint="@color/colorEdittextHint"
+                android:textColor="@color/colorTextNormal"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:textSize="20dp"
+        android:textColor="@color/colorTextNormal"
+        android:id="@+id/Text_info"/>
+</LinearLayout>
