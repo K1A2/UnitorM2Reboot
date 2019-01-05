@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".File.layout.MainActivity" android:screenOrientation="sensorLandscape"/>
-        <activity android:name=".File.layout.TabHostActivity" android:screenOrientation="sensorLandscape"/>
+        <activity android:name=".File.layout.TabHostActivity" android:screenOrientation="sensorLandscape" android:windowSoftInputMode="stateAlwaysHidden"/>
     </application>
 
 </manifest>

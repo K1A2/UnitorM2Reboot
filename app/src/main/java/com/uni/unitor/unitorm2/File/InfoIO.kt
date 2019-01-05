@@ -11,7 +11,7 @@ import java.io.PrintWriter
 class InfoIO(private val context: Context) : ContextWrapper(context) {
     private val defaultpath: String = Environment.getExternalStorageDirectory().absolutePath + "/"
 
-    val fileIO:FileIO = FileIO(context)
+    private val fileIO:FileIO = FileIO(context)
 
     //info내용 가져옴
     @Throws(Exception::class)

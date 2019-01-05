@@ -1,14 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@color/colorLayoutBackground">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:padding="5dp" android:background="@color/colorLayoutBackground">
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/Layout_KeyLeft"
         android:layout_width="match_parent"
+        android:layout_marginRight="5dp"
         android:layout_height="match_parent"
-        android:text="KEYSOUND"
-        android:textColor="@color/colorTextNormal"
-        android:gravity="center"
-        android:textSize="100dp"/>
+        android:layout_toLeftOf="@+id/Layout_Btns"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/round_create_new_folder_white_36"
+                android:background="#00000000"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/Button_Image_add"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="3dp"
+                android:textColor="@color/colorTextNormal"
+                android:gravity="center_vertical"
+                android:id="@+id/Text_current_sound"/>
+
+        </LinearLayout>
+
+        <!--<Button-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="3dp"-->
+        <!--android:text="@string/text_add_sound"-->
+        <!--android:id="@+id/Button_AddSound"/>-->
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/List_KeySound"
+            android:layout_marginBottom="3dp"></android.support.v7.widget.RecyclerView>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:checkedButton="@id/Radio_Edit"
+            android:id="@+id/RadioG_mode"
+            android:layout_marginTop="3dp"
+            android:theme="@style/radiobutton_style">
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_mode_add"
+                android:id="@+id/Radio_Edit"
+                android:textColor="@color/colorTextNormal"/>
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_mode_test"
+                android:id="@+id/Radio_Test"
+                android:textColor="@color/colorTextNormal"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/view_array_buttons"
+        android:layout_height="match_parent"
+        android:layout_width="300dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/Layout_Btns"/>
+
+
+    <RelativeLayout
+        android:id="@+id/Layout_KeyRight"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/Layout_Btns">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/Layout_Edit">
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/Spinner_chain"
+                android:layout_marginBottom="3dp"
+                android:theme="@style/spinner_style"></Spinner>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/edit_repeattime"
+                android:id="@+id/Edit_Repeattime"
+                android:layout_marginBottom="3dp"
+                android:inputType="number"
+                android:imeOptions="actionDone"
+                android:theme="@style/edittext_darkback"
+                android:textColorHint="@color/colorEdittextHint"
+                android:textColor="@color/colorTextNormal"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/edit_wormhole"
+                android:id="@+id/Edit_Whomwhole"
+                android:layout_marginBottom="3dp"
+                android:inputType="number"
+                android:imeOptions="actionDone"
+                android:theme="@style/edittext_darkback"
+                android:textColorHint="@color/colorEdittextHint"
+                android:textColor="@color/colorTextNormal"/>
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/Check_deleteSound"
+                android:text="@string/checkbox_delete_sound"
+                android:theme="@style/radiobutton_style"
+                android:textColor="@color/colorTextNormal"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/text_content"
+                android:scrollbars="vertical"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/Layout_Play"
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/RadioG_chain_S"
+                android:theme="@style/radiobutton_style"></RadioGroup>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

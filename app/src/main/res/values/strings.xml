@@ -66,4 +66,7 @@
     <string name="alert_die_M">\'%s\' was not saved before. Do you want to restore it?</string>
     <string name="alert_die_OK">Restore</string>
     <string name="alert_die_NO">No</string>
+    <string name="edit_repeattime">Repeat Time(Not required)</string>
+    <string name="edit_wormhole">Wormhole(Not required)</string>
+    <string name="async_duplicate_sound_title">Read Sounds Info..</string>
 </resources>

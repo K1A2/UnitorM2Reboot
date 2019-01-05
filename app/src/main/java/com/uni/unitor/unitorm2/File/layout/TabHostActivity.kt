@@ -1,6 +1,7 @@
 package com.uni.unitor.unitorm2.File.layout
 
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
@@ -13,7 +14,9 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.uni.unitor.unitorm2.File.FileKey
 import com.uni.unitor.unitorm2.File.InfoIO
+import com.uni.unitor.unitorm2.File.KeySoundIO
 import com.uni.unitor.unitorm2.File.fragment.InfoFragment
 import com.uni.unitor.unitorm2.File.fragment.KeyLEDFragment
 import com.uni.unitor.unitorm2.File.fragment.KeySoundFragment
@@ -22,13 +25,15 @@ import com.uni.unitor.unitorm2.File.sharedpreference.PreferenceKey
 import com.uni.unitor.unitorm2.File.sharedpreference.SharedPreferenceIO
 import com.uni.unitor.unitorm2.R
 import java.lang.Exception
+import java.util.concurrent.ThreadPoolExecutor
 
-class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener {
+class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, KeySoundFragment.OnKeySoundRequestListener {
 
     private lateinit var toolbarV: Toolbar
     private lateinit var tablayout:TabLayout
     private lateinit var viewPager:ViewPager
 
+    private lateinit var keySoundIO: KeySoundIO
     private lateinit var infoIO: InfoIO
     private lateinit var menu_save:MenuItem
     private lateinit var sharedPreferenceIO: SharedPreferenceIO
@@ -43,6 +48,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener {
         setContentView(R.layout.activity_tabhost)
         if (supportActionBar != null) supportActionBar!!.hide()
 
+        keySoundIO = KeySoundIO(this)
         infoIO = InfoIO(this)
         sharedPreferenceIO = SharedPreferenceIO(this, PreferenceKey.KEY_REPOSITORY_INFO)
         toolbarV = findViewById<Toolbar>(R.id.toolbar)
@@ -90,6 +96,9 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener {
 
             }
         })
+
+        //keysound초기화
+        initKeySound()
     }
 
     //메뉴생성
@@ -130,23 +139,42 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener {
         }
     }
 
+    //keysound 초기화
+    private fun initKeySound() {
+        keySoundIO.mkKeySoundWork()
+        KeySoundIO.DupliSaveSound(this, FileKey.KEY_SOUND_WORK_DUPLICATE,
+                sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+    }
+
     //info저장
     private fun saveInfo() {
         try {
-            infoIO.mkInfo(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_TITLE, ""), sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PRODUCER, ""), sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_CHAIN, ""), sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "") + "info")
+            infoIO.mkInfo(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_TITLE, ""),
+                    sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PRODUCER, ""),
+                    sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_CHAIN, ""),
+                    sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "") + "info")
             Toast.makeText(this, getString(R.string.toast_save_succeed), Toast.LENGTH_SHORT).show()
         } catch (e:Exception) {
             Toast.makeText(this, getString(R.string.toast_save_fail), Toast.LENGTH_SHORT).show()
         }
     }
 
-    //infofragment 이밴트
+    //infofragment 이밴트(info)
     override fun onInfoChaged(type:String, content:String) {
         //최초요청시 전달
         if (type.equals(ListenerKey.KEY_INFO_START)) {
             infoFragment.requestInfo(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_TITLE, ""), sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PRODUCER, ""), sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_CHAIN, ""))
-        } else {
+        } else {//일반적인경우(edittext편집)
             sharedPreferenceIO.setString(type, content)
+        }
+    }
+
+    //(keysound)
+    override fun onRequest(type:String, content:String) {
+        when (type) {
+            ListenerKey.KEY_SOUND_CHAIN -> {
+                keySoundFragment.setChain(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_CHAIN, "1"))
+            }
         }
     }
 

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ksdfgjnkkosdgkoljk"
+        android:textColor="@color/title"
+        android:textSize="20dp"
+        android:id="@+id/dialog_progress_title"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ksdfgjnkkosdgkoljk"
+        android:textColor="@color/title"
+        android:textSize="13dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/dialog_progress_title"
+        android:id="@+id/dialog_progress_sub"/>
+
+    <ProgressBar
+        android:layout_marginTop="10dp"
+        android:id="@+id/dialog_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialog_progress_sub"
+        android:max="100"
+        android:progress="50" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/dialog_progress_bar">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/alert_ok"
+            android:background="@null"
+            android:textColor="@color/title"
+            android:id="@+id/button_progress_ok"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

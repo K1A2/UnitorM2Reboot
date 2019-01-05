@@ -5,7 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorAccentDark">#bc2055</color>
     <color name="colorLayoutBackground">#263238</color>
-    <color name="colorTextNormal">#FFFFFFFF</color>
+    <color name="colorTextNormal">#ffffff</color>
     <color name="black_semi_transparent">#1a1919</color>
     <color name="title">#FF000000</color>
     <color name="sub">#c7000000</color>

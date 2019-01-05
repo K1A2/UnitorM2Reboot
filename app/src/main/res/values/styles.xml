@@ -30,4 +30,7 @@
         <item name="android:colorForeground">#FFFFFF</item>
     </style>
 
+    <style name="spinner_style" parent="radiobutton_style" >
+    </style>
+
 </resources>
