@@ -1,4 +1,4 @@
-package com.uni.unitor.unitorm2.File.fragment
+package com.uni.unitor.unitorm2.fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import com.uni.unitor.unitorm2.File.layout.TabHostActivity
 import com.uni.unitor.unitorm2.File.sharedpreference.PreferenceKey
 import com.uni.unitor.unitorm2.R
 

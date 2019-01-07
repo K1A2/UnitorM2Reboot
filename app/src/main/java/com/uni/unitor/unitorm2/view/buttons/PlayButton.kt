@@ -10,11 +10,22 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.uni.unitor.unitorm2.R
+import com.uni.unitor.unitorm2.fragment.KeySoundFragment
+import com.uni.unitor.unitorm2.layout.TabHostActivity
+import android.os.Bundle
 
-class PlayButton : LinearLayout, View.OnClickListener {
+
+
+class PlayButton : LinearLayout {
 
     lateinit var textView: TextView
     lateinit var con: Context
+    private var soundlist:ArrayList<Array<String>> = ArrayList()
+    private var multilist:ArrayList<Array<Int>> = ArrayList()
+    private var count:Int = 0
+    private var isFirst:Boolean = true
+    private var currenrchain:String = "1"
+    private var chain:String = "1"
 
     constructor(context: Context) : super(context) {
         iniView(context)
@@ -48,6 +59,35 @@ class PlayButton : LinearLayout, View.OnClickListener {
         con = context
 
         addView(view)
+        multilist.add(arrayOf(1, 0, 0, 0))//chain current allcount forcount
+        textView.setOnClickListener {
+            for (list in 0..soundlist.size - 1) {
+                val s = soundlist.get(list)
+
+                if (s[1].equals(currenrchain)) {
+                    val count = multilist.get(s[1].toInt() - 1)
+                    if (count[1] > count[3]) {//넘길횟수 체크
+                        multilist.set(s[1].toInt() - 1, arrayOf(count[0], count[1], count[2], count[3] + 1))
+                        continue
+                    }
+                    if (count[1] <= count[2]) {//총 카운트랑 현재 카운트가 작거나 같을시 재생
+                        if (s.size == 5) {
+                            (con as TabHostActivity).play(s[2], s[3], s[4])
+                            soundlist.set(list, arrayOf("0", s[1], s[2], s[3], s[4]))
+                        } else {
+                            (con as TabHostActivity).play(s[2], s[3])
+                            soundlist.set(list, arrayOf("0", s[1], s[2], s[3]))
+                        }
+                    }
+                    if (count[1] == count[2]) {//총 카운트랑 현재 카운트가 같을시 초기화
+                        multilist.set(s[1].toInt() - 1, arrayOf(count[0], 1, count[2], 1))
+                    } else {//아니면 현재 카운트+1
+                        multilist.set(s[1].toInt() - 1, arrayOf(count[0], count[1] + 1, count[2], 1))
+                    }
+                    break
+                }
+            }
+        }
     }
 
     private fun getAttrs(attrs: AttributeSet) {
@@ -72,7 +112,91 @@ class PlayButton : LinearLayout, View.OnClickListener {
         typeArray.recycle()
     }
 
-    override fun onClick(v: View?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun addSound(chain:String, name:String, rpeat:String, whole:String) {
+        soundlist.add(arrayOf("0", chain, name, rpeat, whole))
+        count = soundlist.size
+        setMulti()
     }
+
+    fun addSound(chain:String, name:String, rpeat:String) {
+        soundlist.add(arrayOf("0", chain, name, rpeat))
+        count = soundlist.size
+        setMulti()
+    }
+
+    private fun initList() {
+        multilist.clear()
+        for (a in 1.. chain.toInt()) {
+            multilist.add(arrayOf(a, 0, 0, 0))
+        }
+    }
+
+    private fun setMulti() {
+        initList()
+        for (s in soundlist) {
+            val chain = s[1]
+            var isIn = false
+            for (m in 0..multilist.size - 1) {
+                val sin = multilist.get(m)
+                if (chain.toInt() == sin[0]) {
+                    multilist.set(m, arrayOf(sin[0], 1, sin[2] + 1, 1))//chain current allcount forcount
+                    isIn = true
+                    break
+                }
+            }
+            if (!isIn) {
+                multilist.add(arrayOf(chain.toInt(), 1, 1, 1))
+            }
+        }
+    }
+
+    fun setChain(c:String) {
+        chain = c
+    }
+
+    fun setcurrentChain(c:String) {
+        currenrchain = c
+//        if (isFirst) {
+//            initList()
+//            setMulti()
+//            isFirst = false
+//        }
+    }
+
+    fun resetSound() {
+        soundlist.clear()
+    }
+
+    fun setContext(context: Context) {
+        con = context
+    }
+
+//    override fun onClick(v: View?) {
+//        for (list in 0..soundlist.size - 1) {
+//            val s = soundlist.get(list)
+//
+//            if (s[1].equals(chain)) {
+//                val count = multilist.get(s[1].toInt())
+//                if (s[1] > s[3]) {//넘길횟수 체크
+//                    multilist.set(s[1].toInt(), arrayOf(count[0], count[1], count[2], count[3] + 1))
+//                    continue
+//                }
+//                if (count[1] <= count[2]) {//총 카운트랑 현재 카운트가 작거나 같을시 재생
+//                    if (s.size == 5) {
+//                        (con as TabHostActivity).play(s[2], s[3], s[4])
+//                        soundlist.set(list, arrayOf("0", s[1], s[2], s[3], s[4]))
+//                    } else {
+//                        (con as TabHostActivity).play(s[2], s[3])
+//                        soundlist.set(list, arrayOf("0", s[1], s[2], s[3]))
+//                    }
+//                }
+//                if (count[1] == count[2]) {//총 카운트랑 현재 카운트가 같을시 초기화
+//                    multilist.set(s[1].toInt(), arrayOf(count[0], 1, count[2], 1))
+//                } else {//아니면 현재 카운트+1
+//                    multilist.set(s[1].toInt(), arrayOf(count[0], count[1] + 1, count[2], 1))
+//                }
+//                break
+//            }
+//        }
+//    }
 }

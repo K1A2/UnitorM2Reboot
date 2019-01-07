@@ -1,4 +1,4 @@
-package com.uni.unitor.unitorm2.File.fragment
+package com.uni.unitor.unitorm2.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

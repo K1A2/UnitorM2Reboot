@@ -12,6 +12,7 @@ import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.uni.unitor.unitorm2.R
+import com.uni.unitor.unitorm2.layout.TabHostActivity
 import java.io.File
 import java.io.FileFilter
 import java.io.PrintWriter
@@ -42,11 +43,16 @@ class KeySoundIO(private val context: Context) : ContextWrapper(context) {
     fun getKeySoundWork(): ArrayList<String>? {
         return fileIO.getTextFile(File(defaultpath + "unipackProject/work/keySound.txt"))
     }
+    //키사운드 워크파일 내용 가져옴
+    @Throws(Exception::class)
+    fun deleteKeySoundWork() {
+        File(defaultpath + "unipackProject/work/keySound.txt").delete()
+    }
 
     //사운드 파일 가져옴
     @Throws(Exception::class)
     fun getSoundFile(path: String): ArrayList<Array<String>> {
-        val path_sound = File(path)
+        val path_sound = File(path + "sounds/")
         val sounds = ArrayList<Array<String>>()
 
         fileIO.isExists(path_sound, FileKey.KEY_DIRECTORY_INT)
@@ -142,6 +148,7 @@ class KeySoundIO(private val context: Context) : ContextWrapper(context) {
         override fun onPostExecute(result: Boolean?) {
             if (result!!) {
                 prograssDialog.dismiss()
+                (context as TabHostActivity).setKeysoundWork()
             } else {
                 prograssDialog.dismiss()
             }

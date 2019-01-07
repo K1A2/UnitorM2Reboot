@@ -1,4 +1,4 @@
-package com.uni.unitor.unitorm2.File.layout
+package com.uni.unitor.unitorm2.layout
 
 import android.content.Intent
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.uni.unitor.unitorm2.File.layout
+package com.uni.unitor.unitorm2.layout
 
 import android.Manifest
 import android.content.DialogInterface
