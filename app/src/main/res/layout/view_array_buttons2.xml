@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:orientation="vertical" android:id="@+id/Linear_main"
+    android:background="@color/colorLayoutBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="1 1"
+            android:layout_weight="1"
+            android:tag="1 1"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="1 2"
+            android:layout_weight="1"
+            android:tag="1 2"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="1 3"
+            android:layout_weight="1"
+            android:tag="1 3"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="1 4"
+            android:layout_weight="1"
+            android:tag="1 4"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="1 5"
+            android:layout_weight="1"
+            android:tag="1 5"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="1 6"
+            android:layout_weight="1"
+            android:tag="1 6"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="1 7"
+            android:layout_weight="1"
+            android:tag="1 7"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="1 8"
+            android:layout_weight="1"
+            android:tag="1 8"/>
+
+        <ImageView
+            android:id="@+id/chain_1"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_play_circle_outline_white_24dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="2 1"
+            android:layout_weight="1"
+            android:tag="2 1"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="2 2"
+            android:layout_weight="1"
+            android:tag="2 2"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="2 3"
+            android:layout_weight="1"
+            android:tag="2 3"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="2 4"
+            android:layout_weight="1"
+            android:tag="2 4"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="2 5"
+            android:layout_weight="1"
+            android:tag="2 5"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="2 6"
+            android:layout_weight="1"
+            android:tag="2 6"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="2 7"
+            android:layout_weight="1"
+            android:tag="2 7"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="2 8"
+            android:layout_weight="1"
+            android:tag="2 8"/>
+
+        <ImageView
+            android:id="@+id/chain_2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_play_circle_outline_white_24dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="3 1"
+            android:layout_weight="1"
+            android:tag="3 1"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="3 2"
+            android:layout_weight="1"
+            android:tag="3 2"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="3 3"
+            android:layout_weight="1"
+            android:tag="3 3"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="3 4"
+            android:layout_weight="1"
+            android:tag="3 4"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="3 5"
+            android:layout_weight="1"
+            android:tag="3 5"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="3 6"
+            android:layout_weight="1"
+            android:tag="3 6"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="3 7"
+            android:layout_weight="1"
+            android:tag="3 7"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="3 8"
+            android:layout_weight="1"
+            android:tag="3 8"/>
+
+        <ImageView
+            android:id="@+id/chain_3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_play_circle_outline_white_24dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="4 1"
+            android:layout_weight="1"
+            android:tag="4 1"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="4 2"
+            android:layout_weight="1"
+            android:tag="4 2"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="4 3"
+            android:layout_weight="1"
+            android:tag="4 3"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="4 4"
+            android:layout_weight="1"
+            android:tag="4 4"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="4 5"
+            android:layout_weight="1"
+            android:tag="4 5"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="4 6"
+            android:layout_weight="1"
+            android:tag="4 6"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="4 7"
+            android:layout_weight="1"
+            android:tag="4 7"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="4 8"
+            android:layout_weight="1"
+            android:tag="4 8"/>
+
+        <ImageView
+            android:id="@+id/chain_4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_play_circle_outline_white_24dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="5 1"
+            android:layout_weight="1"
+            android:tag="5 1"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="5 2"
+            android:layout_weight="1"
+            android:tag="5 2"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="5 3"
+            android:layout_weight="1"
+            android:tag="5 3"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="5 4"
+            android:layout_weight="1"
+            android:tag="5 4"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="5 5"
+            android:layout_weight="1"
+            android:tag="5 5"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="5 6"
+            android:layout_weight="1"
+            android:tag="5 6"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="5 7"
+            android:layout_weight="1"
+            android:tag="5 7"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="5 8"
+            android:layout_weight="1"
+            android:tag="5 8"/>
+
+        <ImageView
+            android:id="@+id/chain_5"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_play_circle_outline_white_24dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="6 1"
+            android:layout_weight="1"
+            android:tag="6 1"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="6 2"
+            android:layout_weight="1"
+            android:tag="6 2"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="6 3"
+            android:layout_weight="1"
+            android:tag="6 3"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="6 4"
+            android:layout_weight="1"
+            android:tag="6 4"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="6 5"
+            android:layout_weight="1"
+            android:tag="6 5"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="6 6"
+            android:layout_weight="1"
+            android:tag="6 6"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="6 7"
+            android:layout_weight="1"
+            android:tag="6 7"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="6 8"
+            android:layout_weight="1"
+            android:tag="6 8"/>
+
+        <ImageView
+            android:id="@+id/chain_6"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_play_circle_outline_white_24dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="7 1"
+            android:layout_weight="1"
+            android:tag="7 1"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="7 2"
+            android:layout_weight="1"
+            android:tag="7 2"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="7 3"
+            android:layout_weight="1"
+            android:tag="7 3"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="7 4"
+            android:layout_weight="1"
+            android:tag="7 4"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="7 5"
+            android:layout_weight="1"
+            android:tag="7 5"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="7 6"
+            android:layout_weight="1"
+            android:tag="7 6"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="7 7"
+            android:layout_weight="1"
+            android:tag="7 7"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="7 8"
+            android:layout_weight="1"
+            android:tag="7 8"/>
+
+        <ImageView
+            android:id="@+id/chain_7"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_play_circle_outline_white_24dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="8 1"
+            android:layout_weight="1"
+            android:tag="8 1"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="8 2"
+            android:layout_weight="1"
+            android:tag="8 2"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="8 3"
+            android:layout_weight="1"
+            android:tag="8 3"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="8 4"
+            android:layout_weight="1"
+            android:tag="8 4"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="8 5"
+            android:layout_weight="1"
+            android:tag="8 5"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="8 6"
+            android:layout_weight="1"
+            android:tag="8 6"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="8 7"
+            android:layout_weight="1"
+            android:tag="8 7"/>
+
+        <com.uni.unitor.unitorm2.view.buttons.PlayButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            custom:name="8 8"
+            android:layout_weight="1"
+            android:tag="8 8"/>
+
+        <ImageView
+            android:id="@+id/chain_8"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_play_circle_outline_white_24dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

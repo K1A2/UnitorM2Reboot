@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:padding="5dp" android:background="@color/colorLayoutBackground">
+
+
+    <include
+        android:id="@+id/Layout_Btns"
+        layout="@layout/view_array_buttons2"
+        android:layout_width="300dp"
+        android:layout_height="280dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:checkedButton="@id/Radio_Edit"
+            android:id="@+id/RadioG_mode"
+            android:layout_marginTop="3dp"
+            android:theme="@style/radiobutton_style">
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_mode_add"
+                android:id="@+id/Radio_Edit"
+                android:textColor="@color/colorTextNormal"/>
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/radio_mode_test"
+                android:id="@+id/Radio_Test"
+                android:textColor="@color/colorTextNormal"/>
+
+        </RadioGroup>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/Layout_KeyRight"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/Layout_Btns">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/Layout_Edit">
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="232dp"></ListView>
+
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:text="<<"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp" />
+
+                <Button
+                    android:text="▶"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+
+                <Button
+                    android:text=">>"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/Layout_Play"
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/RadioG_chain_S"
+                android:theme="@style/radiobutton_style"></RadioGroup>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
