@@ -8,7 +8,7 @@
     <string name="unable_save">유니팩을 저장할수 없을것입니다.</string>
     <string name="setting">설정</string>
     <string name="importing">불러오기</string>
-    <string name="newPack">새로하기</string>
+    <string name="newPack">새로 만들기</string>
     <string name="delete">삭제</string>
     <string name="alert_err">에러</string>
     <string name="alert_ok">확인</string>
@@ -17,7 +17,7 @@
     <string name="alert_title_dunipack">\'%s\' 삭제</string>
     <string name="alert_button_dok">삭제</string>
     <string name="alert_button_dcancel">취소</string>
-    <string name="pref_category_app">앱 설</string>
+    <string name="pref_category_app">앱 설정</string>
     <string name="pref_app_lockon">편집화면 켜진 채로 유지</string>
     <string name="pref_app_lockonOk">활성화</string>
     <string name="pref_app_lockonNo">비활성화</string>
@@ -51,7 +51,7 @@
     <string name="check_delete_LED">LED 삭제</string>
     <string name="button_edit_another">다른 버튼 편집</string>
     <string name="save">저장</string>
-    <string name="text_nochain">Info탭에서 \'체인\'을 지정해 주세요</string>
+    <string name="text_nochain">Info 탭에서 \'체인 수\'를 지정해 주세요</string>
     <string name="menu_sound_select">선택</string>
     <string name="menu_sound_delete">삭제</string>
     <string name="menu_sound_play">재생</string>
@@ -63,7 +63,7 @@
     <string name="save_keySound">keySound 저장</string>
     <string name="save_KeyLED">keyLED 저장</string>
     <string name="alert_recover">\'%s\' 이어서만들기</string>
-    <string name="alert_die_M">\'%s\'가 저장되지 않고 종료되었습니다. 이어서 만들겠습니까? 지금 거부하면 이전에 편집한것은 사라집니다.</string>
+    <string name="alert_die_M">\'%s\'가 저장되지 않고 종료되었습니다. 이어서 만들겠습니까? 거부하면 이전 편집본은 영원히 사라집니다.</string>
     <string name="alert_die_OK">이어하기</string>
     <string name="alert_die_NO">안하기</string>
     <string name="edit_repeattime">반복 횟수(필수 아님)</string>

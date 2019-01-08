@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">UnitorM2</string>
     <string name="app_version">5.0.0</string>
-    <string name="per_re_title">Unitor Needs Permission</string>
+    <string name="per_re_title">Permission Request</string>
     <string name="per_re_content">Unitor needs \'Write to storage (EXTERNAL_WRITE)\' permission. If you don\'t Unitor cna\'t save Unipack!</string>
     <string name="agree">Agree</string>
     <string name="cancel">Cancel</string>
@@ -11,7 +11,7 @@
     <string name="newPack">New Pack</string>
     <string name="delete">Delete</string>
     <string name="alert_err">Error</string>
-    <string name="alert_ok">ok</string>
+    <string name="alert_ok">OK</string>
     <string name="asynk_delete_title">Deleting \n%s\n...</string>
     <string name="alert_message_dunipack">Are you sure delete \'%s\'?</string>
     <string name="alert_title_dunipack">Delete \'%s\'</string>
@@ -23,7 +23,7 @@
     <string name="pref_app_lockonNo">Disable</string>
     <string name="toast_back">If you want to go back, press \'Back button\' one more.</string>
     <string name="dialog_Make">make</string>
-    <string name="dialog_title_newUnipack">Making new Unipack</string>
+    <string name="dialog_title_newUnipack">Create a new Unipack</string>
     <string name="toast_newUnipack_null">Please fill in all blanks</string>
     <string name="button_selectAll">Select All</string>
     <string name="dialog_title_unipack">Please select a Unipack. (.zip)</string>
@@ -55,7 +55,7 @@
     <string name="menu_sound_select">Select</string>
     <string name="menu_sound_delete">Delete</string>
     <string name="menu_sound_play">Play</string>
-    <string name="async_load_sound_title">Loading Sounds..</string>
+    <string name="async_load_sound_title">Sounds Loading..</string>
     <string name="spinner_chain">%s chain</string>
     <string name="checkbox_delete_sound">Delete Sound</string>
     <string name="saveall">Save All</string>
@@ -63,10 +63,10 @@
     <string name="save_keySound">Save keySound</string>
     <string name="save_KeyLED">Save keyLED</string>
     <string name="alert_recover">Restore \'%s\'</string>
-    <string name="alert_die_M">\'%s\' was not saved before. Do you want to restore it?</string>
+    <string name="alert_die_M">\'%s\' was not saved before. Do you want to restore it? If you don\'t, your file which you edited before will disappear forever.</string>
     <string name="alert_die_OK">Restore</string>
     <string name="alert_die_NO">No</string>
     <string name="edit_repeattime">Repeat Time(Not required)</string>
     <string name="edit_wormhole">Wormhole(Not required)</string>
-    <string name="async_duplicate_sound_title">Read Sounds Info..</string>
+    <string name="async_duplicate_sound_title">Reading Sounds Info..</string>
 </resources>
