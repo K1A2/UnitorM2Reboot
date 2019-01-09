@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ddddddddddddddddd"
+            android:text="Title"
             android:id="@+id/list_unipack_title"
             android:textSize="15dp"
             android:textColor="@color/title"/>
@@ -31,7 +31,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="ddddddddddddddddd"
+                android:text="producer"
                 android:textSize="10dp"
                 android:textColor="@color/sub"
                 android:layout_marginTop="7dp"
@@ -43,7 +43,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="ddddddddddddddddd"
+                android:text="path(location)"
                 android:textColor="@color/sub"
                 android:layout_marginTop="7dp"
                 android:layout_marginRight="5dp"
