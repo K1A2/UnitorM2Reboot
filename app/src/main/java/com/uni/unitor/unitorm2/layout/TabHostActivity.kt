@@ -171,6 +171,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         soundList = keySoundIO.getSoundFile(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!)
     }
 
+    //keysound에서 복제가 끝나면 work폴더에서 가져옴
     fun setKeysoundWork() {
         keysoundList = keySoundIO.getKeySoundWork()
         keySoundFragment.soundloadFinish()
@@ -211,44 +212,26 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
             ListenerKey.KEY_SOUND_CHAIN_T -> {
                 chain = content
             }
+            ListenerKey.KEY_SOUND_WAVFILE -> {
+                keySoundFragment.receiveWavs(soundList)
+            }
         }
     }
 
     //play
     fun play(name:String, repeat:String, whole:String) {
         play(name, repeat)
-    }//play
-    fun play(name:String, repeat:String) {
-        for (sound in soundLoaded) {
-            if (sound[0].toString().equals(name)) {
-                soundPool.play(sound[1] as Int, 1f, 1f, 0, 0, 1f)
-            }
-        }
+        keySoundFragment.setWormwhole(whole)
     }
 
-    //뷰페이져에 프래그먼트 붙이기
-    private inner class TabPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
-
-        override fun getItem(position: Int): Fragment? {
-            when (position) {
-                0 -> {
-                    return infoFragment
+    //play
+    fun play(name:String, repeat:String) {
+        for (sound in soundLoaded) {
+            for (i in 1..repeat.toInt()) {
+                if (sound[0].toString().equals(name)) {
+                    soundPool.play(sound[1] as Int, 1f, 1f, 0, 0, 1f)
                 }
-
-                1 -> {
-                    return keySoundFragment
-                }
-
-                2 -> {
-                    return keyLEDFragment
-                }
-
-                else -> return null
             }
-        }
-
-        override fun getCount(): Int {
-            return 3
         }
     }
 
@@ -311,6 +294,33 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         soundPool = sound
     }
 
+
+
+    //뷰페이져에 프래그먼트 붙이기
+    private inner class TabPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+
+        override fun getItem(position: Int): Fragment? {
+            when (position) {
+                0 -> {
+                    return infoFragment
+                }
+
+                1 -> {
+                    return keySoundFragment
+                }
+
+                2 -> {
+                    return keyLEDFragment
+                }
+
+                else -> return null
+            }
+        }
+
+        override fun getCount(): Int {
+            return 3
+        }
+    }
 
     //사운드 로딩
     class LoadSound(context: Context, sounds:ArrayList<Array<String>>) : AsyncTask<String, String, Boolean>() {

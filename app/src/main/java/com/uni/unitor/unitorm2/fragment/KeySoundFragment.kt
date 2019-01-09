@@ -5,6 +5,10 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,19 +20,24 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.TextView
 import com.uni.unitor.unitorm2.view.buttons.PlayButton
-
-
-
-
-
+import android.widget.RadioGroup
+import com.uni.unitor.unitorm2.layout.LayoutKey
+import com.uni.unitor.unitorm2.view.recycler.FileListAdapter
+import com.uni.unitor.unitorm2.view.recycler.FileListItem
+import com.uni.unitor.unitorm2.view.recycler.UnipackListItem
+import com.uni.unitor.unitorm2.view.recycler.listener.RecyclerItemClickListener
 
 
 class KeySoundFragment : Fragment(){
 
     private lateinit var linear_buttons:LinearLayout
     private lateinit var spinner_chain:Spinner
+    private lateinit var radioG_mode:RadioGroup
+    private lateinit var list_sounds:RecyclerView
 
     private lateinit var onRequestListener:OnKeySoundRequestListener
+    private var soundListAdapter:FileListAdapter = FileListAdapter()
+    private var isPlay:Boolean = false
     private lateinit var root:View
     private var chain:String = "1"
 
@@ -43,26 +52,27 @@ class KeySoundFragment : Fragment(){
 
         linear_buttons = root.findViewById<LinearLayout>(R.id.Layout_Btns)
         spinner_chain = root.findViewById<Spinner>(R.id.Spinner_chain)
+        radioG_mode = root.findViewById<RadioGroup>(R.id.RadioG_mode)
+        list_sounds = root.findViewById<RecyclerView>(R.id.List_KeySound)
 
-        //tabhost에 chain갯수 요청
-        onRequestListener.onRequest(ListenerKey.KEY_SOUND_CHAIN, "")
+        list_sounds.layoutManager = LinearLayoutManager(activity)
+        list_sounds.itemAnimator = DefaultItemAnimator()
+        list_sounds.adapter = soundListAdapter
+
+        for (vertical in 1..8) {
+            for (horizontal in 1..8) {
+                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                playButton.setActivity(LayoutKey.PLAYBTN_LAYOUT_SOUND)
+            }
+        }
 
         //체인 선택 리스너뷰
         spinner_chain.onItemSelectedListener = object : OnItemSelectedListener {
 
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 (parent.getChildAt(0) as TextView).setTextColor(Color.WHITE)
-            }
-
-            override fun onNothingSelected(arg0: AdapterView<*>) {
-            }
-        }
-
-        //체인변경
-        spinner_chain.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
                 try {
-                    val chain_selected = (spinner_chain.getItemAtPosition(i) as String).split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
+                    val chain_selected = (spinner_chain.getItemAtPosition(position) as String).split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
                     chain = chain_selected
                     setChainButton()
                     //onRequestListener.onRequest(ListenerKey.KEY_SOUND_CHAIN_T, chain_selected)
@@ -70,22 +80,66 @@ class KeySoundFragment : Fragment(){
                 } catch (e: Exception) {
                     //fileIO.showErr(e.message)
                 }
-
             }
 
-            override fun onNothingSelected(adapterView: AdapterView<*>) {
-
+            override fun onNothingSelected(arg0: AdapterView<*>) {
             }
         }
+
+        //모드변경 라스너
+        radioG_mode.setOnCheckedChangeListener { radioGroup, i ->
+            when (i) {
+                R.id.Radio_Edit//편집
+                -> {
+                    isPlay = false
+                    setIsPlayButton()
+                }
+
+                R.id.Radio_Test//테스트
+                -> {
+                    isPlay = true
+                    setIsPlayButton()
+                }
+            }
+        }
+
+        //파일 선택 리스너
+        list_sounds.addOnItemTouchListener(RecyclerItemClickListener(container!!.context, list_sounds, object : RecyclerItemClickListener.OnItemClickListener {
+            //클릭=
+            override fun onItemClicked(view: View, position: Int) {
+
+            }
+
+            override fun onLongItemClicked(view: View?, position: Int) {
+
+            }
+        }))
+
+        //tabhost에 chain갯수 요청
+        onRequestListener.onRequest(ListenerKey.KEY_SOUND_CHAIN, "")
+
+        //tabhost에 wav파일 리스트 요철
+        onRequestListener.onRequest(ListenerKey.KEY_SOUND_WAVFILE, "")
+
         return root
     }
 
-    //chain설정
+    //playbutton에 chain설정
     private fun setChainButton() {
         for (vertical in 1..8) {
             for (horizontal in 1..8) {
                 val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
                 playButton.setcurrentChain(chain)
+            }
+        }
+    }
+
+    //platbutton에 isplay설정
+    private fun setIsPlayButton() {
+        for (vertical in 1..8) {
+            for (horizontal in 1..8) {
+                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                playButton.setIsPlay(isPlay)
             }
         }
     }
@@ -134,6 +188,16 @@ class KeySoundFragment : Fragment(){
                     }
                 }
             }
+        }
+    }
+
+    //tabhost에 wav파일 목록 요청 결과 처리
+    fun receiveWavs(wavs:ArrayList<Array<String>>) {
+        for (w in wavs) {
+            val s = FileListItem()
+            s.fname = w[0]
+            s.fpath = w[1]
+            soundListAdapter.addItem(s)
         }
     }
 
