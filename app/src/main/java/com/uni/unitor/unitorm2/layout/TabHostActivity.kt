@@ -108,6 +108,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
             }
         })
 
+        //임시저장 정보 받아옴
         if (savedInstanceState != null) {
             keysoundInit = savedInstanceState.getBoolean(LayoutKey.TABHOST_KEYSOUND_INIT)
             when (savedInstanceState.getInt(LayoutKey.TABHOST_TAB_SELECTED)) {
@@ -122,6 +123,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         initKeySound()
     }
 
+    /**메뉴처리**/
     //메뉴생성
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val menuInflater = menuInflater
@@ -160,23 +162,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         }
     }
 
-    //keysound 초기화
-    private fun initKeySound() {//TODO: keysound초기화
-        if (keysoundInit) {
-            keySoundIO.mkKeySoundWork()
-            KeySoundIO.DupliSaveSound(this, FileKey.KEY_SOUND_WORK_DUPLICATE,
-                    sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-            keysoundInit = false
-        }
-        soundList = keySoundIO.getSoundFile(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!)
-    }
-
-    //keysound에서 복제가 끝나면 work폴더에서 가져옴
-    fun setKeysoundWork() {
-        keysoundList = keySoundIO.getKeySoundWork()
-        keySoundFragment.soundloadFinish()
-    }
-
+    /**Info 처리**/
     //info저장
     private fun saveInfo() {
         try {
@@ -194,10 +180,30 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     override fun onInfoChaged(type:String, content:String) {
         //최초요청시 전달
         if (type.equals(ListenerKey.KEY_INFO_START)) {
-            infoFragment.requestInfo(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_TITLE, ""), sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PRODUCER, ""), sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_CHAIN, ""))
+            infoFragment.requestInfo(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_TITLE, ""),
+                    sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PRODUCER, ""),
+                    sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_CHAIN, ""))
         } else {//일반적인경우(edittext편집)
             sharedPreferenceIO.setString(type, content)
         }
+    }
+
+    /**KeySound처리**/
+    //keysound 초기화
+    private fun initKeySound() {//TODO: keysound초기화
+        if (keysoundInit) {
+            keySoundIO.mkKeySoundWork()
+            KeySoundIO.DupliSaveSound(this, FileKey.KEY_SOUND_WORK_DUPLICATE,
+                    sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+            keysoundInit = false
+        }
+        soundList = keySoundIO.getSoundFile(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!)
+    }
+
+    //keysound에서 복제가 끝나면 work폴더에서 가져옴
+    fun setKeysoundWork() {
+        keysoundList = keySoundIO.getKeySoundWork()
+        keySoundFragment.soundloadFinish()
     }
 
     //(keysound)
@@ -215,6 +221,9 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
             ListenerKey.KEY_SOUND_WAVFILE -> {
                 keySoundFragment.receiveWavs(soundList)
             }
+            ListenerKey.KEY_SOUND_PLAY -> {
+                play(content, "1")
+            }
         }
     }
 
@@ -227,14 +236,38 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     //play
     fun play(name:String, repeat:String) {
         for (sound in soundLoaded) {
-            for (i in 1..repeat.toInt()) {
-                if (sound[0].toString().equals(name)) {
+            if (sound[0].toString().equals(name)) {
+                if (repeat.toInt()-1==-1) {
                     soundPool.play(sound[1] as Int, 1f, 1f, 0, 0, 1f)
+                    break
+                } else {
+                    soundPool.play(sound[1] as Int, 1f, 1f, 0, repeat.toInt() - 1, 1f)
+                    break
                 }
             }
         }
     }
 
+    //로딩된 리스트 가져옴
+    fun setLoad(sl:ArrayList<Array<Any>>, sound: SoundPool) {
+        soundLoaded = sl
+        soundPool = sound
+    }
+
+    /**동시처리**/
+    fun isButtonClicked(activity:String, tag:String, list:ArrayList<Array<String>>) {
+        when (activity) {
+            LayoutKey.PLAYBTN_LAYOUT_SOUND -> {//sound버튼이 클릭
+                keySoundFragment.isPlayButtonClicked(tag, list)
+            }
+            LayoutKey.PLAYBTN_LAYOUT_LED -> {//led버튼이 클릭
+
+            }
+        }
+    }
+
+    /**액티비티가 백그라운드로 전환될때 처리
+     * 사운드 언로딩, 정보 일시저장**/
     //정보 일시저장
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
@@ -286,12 +319,6 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
             Toast.makeText(this@TabHostActivity, getString(R.string.toast_back), Toast.LENGTH_SHORT).show()
             backKeyPress = System.currentTimeMillis()
         }
-    }
-
-    //로딩된 리스트 가져옴
-    fun setLoad(sl:ArrayList<Array<Any>>, sound: SoundPool) {
-        soundLoaded = sl
-        soundPool = sound
     }
 
 

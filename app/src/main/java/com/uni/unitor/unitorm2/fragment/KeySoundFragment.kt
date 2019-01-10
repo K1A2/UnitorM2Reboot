@@ -9,10 +9,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
+import android.view.*
 import android.widget.*
 import com.uni.unitor.unitorm2.R
 import java.lang.Exception
@@ -26,6 +23,12 @@ import com.uni.unitor.unitorm2.view.recycler.FileListAdapter
 import com.uni.unitor.unitorm2.view.recycler.FileListItem
 import com.uni.unitor.unitorm2.view.recycler.UnipackListItem
 import com.uni.unitor.unitorm2.view.recycler.listener.RecyclerItemClickListener
+import com.uni.unitor.unitorm2.R.string.text_current
+import android.support.v7.widget.DividerItemDecoration
+
+
+
+
 
 
 class KeySoundFragment : Fragment(){
@@ -34,12 +37,16 @@ class KeySoundFragment : Fragment(){
     private lateinit var spinner_chain:Spinner
     private lateinit var radioG_mode:RadioGroup
     private lateinit var list_sounds:RecyclerView
+    private lateinit var list_playlist:RecyclerView
+    private lateinit var text_current:TextView
 
     private lateinit var onRequestListener:OnKeySoundRequestListener
     private var soundListAdapter:FileListAdapter = FileListAdapter()
+    private var soundPlayListAdapter:FileListAdapter = FileListAdapter()
     private var isPlay:Boolean = false
     private lateinit var root:View
     private var chain:String = "1"
+    private var buttonCurrent:String = ""
 
     //tabhostactivity에 등록된 리스너를 가져옴
     override fun onAttach(context: Context?) {
@@ -54,10 +61,20 @@ class KeySoundFragment : Fragment(){
         spinner_chain = root.findViewById<Spinner>(R.id.Spinner_chain)
         radioG_mode = root.findViewById<RadioGroup>(R.id.RadioG_mode)
         list_sounds = root.findViewById<RecyclerView>(R.id.List_KeySound)
+        list_playlist = root.findViewById<RecyclerView>(R.id.list_sound_playlist)
+        text_current = root.findViewById<TextView>(R.id.Text_current_sound)
 
+        //sound files
         list_sounds.layoutManager = LinearLayoutManager(activity)
         list_sounds.itemAnimator = DefaultItemAnimator()
         list_sounds.adapter = soundListAdapter
+
+        //sound playlist
+        list_playlist.layoutManager = LinearLayoutManager(activity)
+        list_playlist.itemAnimator = DefaultItemAnimator()
+        val dividerItemDecoration = DividerItemDecoration(activity, LinearLayoutManager(activity).orientation)
+        list_playlist.addItemDecoration(dividerItemDecoration)
+        list_playlist.adapter = soundPlayListAdapter
 
         for (vertical in 1..8) {
             for (horizontal in 1..8) {
@@ -107,11 +124,68 @@ class KeySoundFragment : Fragment(){
         list_sounds.addOnItemTouchListener(RecyclerItemClickListener(container!!.context, list_sounds, object : RecyclerItemClickListener.OnItemClickListener {
             //클릭=
             override fun onItemClicked(view: View, position: Int) {
+                val popupMenu = PopupMenu(context, view)
+                popupMenu.menuInflater.inflate(R.menu.menu_sound, popupMenu.menu)
+                popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+                    override fun onMenuItemClick(menuItem: MenuItem): Boolean {
+                        val item = soundListAdapter.getItem(position)
+                        when (menuItem.itemId) {
+                            R.id.menu_sound_select -> {
+                                if (!buttonCurrent.equals("")) {
+                                    val playButton = root.findViewWithTag(buttonCurrent) as PlayButton
+                                    playButton.addSound(chain, item.fname!!, "1")
+                                    val s = FileListItem()
+                                    s.fname = chain + " " + buttonCurrent + " " + item.fname + " 1"
+                                    s.fpath = item.fname
+                                    soundPlayListAdapter.addItem(s)
+                                }
+                            }
 
+                            R.id.menu_sound_play -> {
+                                onRequestListener.onRequest(ListenerKey.KEY_SOUND_PLAY, item.fname!!)
+                            }
+
+                            R.id.menu_sound_delete -> {
+                                //TODO: sound delete
+                            }
+                        }
+                        return true
+                    }
+                })
+                popupMenu.show()
             }
 
             override fun onLongItemClicked(view: View?, position: Int) {
 
+            }
+        }))
+
+        //list 클릭처리
+        list_playlist.addOnItemTouchListener(RecyclerItemClickListener(container!!.context, list_playlist, object : RecyclerItemClickListener.OnItemClickListener {
+            //클릭=
+            override fun onItemClicked(view: View, position: Int) {
+
+            }
+
+            override fun onLongItemClicked(view: View?, position: Int) {
+                val popupMenu = PopupMenu(context, view)
+                popupMenu.menuInflater.inflate(R.menu.menu_sound, popupMenu.menu)
+                popupMenu.menu.getItem(0).setVisible(false)
+                popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+                    override fun onMenuItemClick(menuItem: MenuItem): Boolean {
+                        val item = soundPlayListAdapter.getItem(position)
+                        when (menuItem.itemId) {R.id.menu_sound_play -> {
+                                onRequestListener.onRequest(ListenerKey.KEY_SOUND_PLAY, item.fpath!!)
+                            }
+
+                            R.id.menu_sound_delete -> {
+                                //TODO: sound delete
+                            }
+                        }
+                        return true
+                    }
+                })
+                popupMenu.show()
             }
         }))
 
@@ -124,6 +198,8 @@ class KeySoundFragment : Fragment(){
         return root
     }
 
+
+    /**tabhost에 요총한 결과 처리**/
     //playbutton에 chain설정
     private fun setChainButton() {
         for (vertical in 1..8) {
@@ -145,7 +221,7 @@ class KeySoundFragment : Fragment(){
     }
 
     //tabhost에 chain갯수 요청 결과 처리
-    public fun setChain(chain:String?) {
+    fun setChain(chain:String?) {
         var adapter:ArrayAdapter<String?>? = null
         try {
             val chain_num = chain!!.toInt()
@@ -201,38 +277,61 @@ class KeySoundFragment : Fragment(){
         }
     }
 
+    //tabhost에 keysound파일 요청
     fun soundloadFinish() {
-        //tabhost에 keysound파일 요청
         onRequestListener.onRequest(ListenerKey.KEY_SOUND_FILE, "")
     }
 
     //웜홀 처리
     fun setWormwhole(chain:String) {
-        spinner_chain.setSelection(chain.toInt())
+        try {
+            spinner_chain.setSelection(chain.toInt())
+        } catch (e:Exception) {
+
+        }
     }
+
+    //playbutton 클릭 처리
+    fun isPlayButtonClicked(tag:String, list:ArrayList<Array<String>>) {//TODO: keysound눌렀을때 편집 처리
+        soundPlayListAdapter.clearItem()
+        text_current.text = "Selected: " + chain + " " + tag
+        buttonCurrent = tag
+        for (l in list) {
+            val s = FileListItem()
+            s.fpath = l[0]
+            if (l.size == 3) {
+                s.fname = chain + " " + tag + " " + l[0] + " " + l[1] + " " + l[2]
+                soundPlayListAdapter.addItem(s)
+            } else {
+                s.fname = chain + " " + tag + " " + l[0] + " " + l[1]
+                soundPlayListAdapter.addItem(s)
+            }
+        }
+    }
+
 
     //버튼 크기조절
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val viewTreeObserver = linear_buttons.getViewTreeObserver()
+        val viewTreeObserver = linear_buttons.viewTreeObserver
         viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    linear_buttons.getViewTreeObserver().removeOnGlobalLayoutListener(this)
+                    linear_buttons.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 } else {
-                    linear_buttons.getViewTreeObserver().removeGlobalOnLayoutListener(this)
+                    linear_buttons.viewTreeObserver.removeGlobalOnLayoutListener(this)
                 }
-                val height = linear_buttons.getHeight()
+                val height = linear_buttons.height
                 val params = RelativeLayout.LayoutParams(height, height)
                 params.addRule(RelativeLayout.CENTER_HORIZONTAL)
-                linear_buttons.setLayoutParams(params)
+                linear_buttons.layoutParams = params
             }
         })
     }
 
-    //keysound수정시 tabhost로 데이터 요청하는/전달하는 리스너 interface 구현
-    public interface OnKeySoundRequestListener {
+    //keysound수정시 tabhost로 데이터 요청/전달하는 리스너 interface 구현
+    interface OnKeySoundRequestListener {
         fun onRequest(type:String, content:String) {
 
         }

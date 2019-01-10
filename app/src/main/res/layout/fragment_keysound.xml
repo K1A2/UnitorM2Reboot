@@ -127,20 +127,19 @@
                 android:textColorHint="@color/colorEdittextHint"
                 android:textColor="@color/colorTextNormal"/>
 
-            <CheckBox
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/Check_deleteSound"
-                android:text="@string/checkbox_delete_sound"
-                android:theme="@style/radiobutton_style"
-                android:textColor="@color/colorTextNormal"/>
+            <!--<CheckBox-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/Check_deleteSound"-->
+                <!--android:text="@string/checkbox_delete_sound"-->
+                <!--android:theme="@style/radiobutton_style"-->
+                <!--android:layout_marginBottom="3dp"-->
+                <!--android:textColor="@color/colorTextNormal"/>-->
 
-            <TextView
+            <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/text_content"
-                android:scrollbars="vertical"/>
+                android:id="@+id/list_sound_playlist"></android.support.v7.widget.RecyclerView>
 
         </LinearLayout>
 

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="@string/menu_sound_select"/>
+    <item android:title="@string/menu_sound_add"
+        android:id="@+id/menu_sound_select"/>
+    <item android:title="@string/menu_sound_play"
+        android:id="@+id/menu_sound_play"/>
+    <item android:title="@string/menu_sound_delete"
+        android:id="@+id/menu_sound_delete"/>
 </menu>

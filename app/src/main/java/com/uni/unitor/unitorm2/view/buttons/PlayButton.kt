@@ -90,7 +90,18 @@ class PlayButton : LinearLayout {
                     }
                 }
             } else {//edit mode
+                val list:ArrayList<Array<String>> = ArrayList()
+                for (s in soundlist) {
+                    if (s[1].equals(currenrchain)) {
+                        if (s.size == 5) {
 
+                            list.add(arrayOf(s[2], s[3], s[4]))
+                        } else {
+                            list.add(arrayOf(s[2], s[3]))
+                        }
+                    }
+                }
+                (con as TabHostActivity).isButtonClicked(activity, textView.text.toString(), list)
             }
         }
     }

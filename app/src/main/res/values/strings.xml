@@ -52,7 +52,7 @@
     <string name="button_edit_another">Edit Another</string>
     <string name="save">Save</string>
     <string name="text_nochain">Please set \'Chain\' in Info tab</string>
-    <string name="menu_sound_select">Select</string>
+    <string name="menu_sound_add">Add</string>
     <string name="menu_sound_delete">Delete</string>
     <string name="menu_sound_play">Play</string>
     <string name="async_load_sound_title">Sounds Loading..</string>
