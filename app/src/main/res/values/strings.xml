@@ -66,7 +66,9 @@
     <string name="alert_die_M">\'%s\' was not saved before. Do you want to restore it? If you don\'t, your file which you edited before will disappear forever.</string>
     <string name="alert_die_OK">Restore</string>
     <string name="alert_die_NO">No</string>
-    <string name="edit_repeattime">Repeat Time(Not required)</string>
-    <string name="edit_wormhole">Wormhole(Not required)</string>
+    <string name="edit_repeattime">Repeat Time(Not required):</string>
+    <string name="edit_wormhole">Wormhole(Not required):</string>
     <string name="async_duplicate_sound_title">Reading Sounds Info..</string>
+    <string name="toast_sound_noselect">Please select a button</string>
+    <string name="dialog_sound_add">Change</string>
 </resources>

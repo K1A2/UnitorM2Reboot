@@ -224,6 +224,56 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
             ListenerKey.KEY_SOUND_PLAY -> {
                 play(content, "1")
             }
+            ListenerKey.KEY_SOUND_ADD -> {
+                keysoundList!!.add(content)
+                keySoundIO.saveKeySoundWork(keysoundList)
+            }
+            ListenerKey.KEY_SOUND_REMOVE -> {
+                val s = content.split("\\s+".toRegex())
+                var int:Int? = null
+                for (i in 0..keysoundList!!.size - 1) {
+                    val content = keysoundList!!.get(i)
+                    if (s.size == 5) {
+                        if (content.equals(s[0] + " " + s[1] + " " + s[2] + " " + s[3])||content.equals(s[0] + " " + s[1] + " " + s[2] + " " + s[3] + " " + s[4])) {
+                            int = i
+                            break
+                        }
+                    } else {
+                        if (content.equals(s[0] + " " + s[1] + " " + s[2] + " " + s[3] + " " + s[4] + " " + s[5])) {
+                            int = i
+                            break
+                        }
+                    }
+                }
+                if (int != null) {
+                    keysoundList!!.removeAt(int)
+                    keySoundIO.saveKeySoundWork(keysoundList)
+                }
+            }
+        }
+    }
+    override fun onRequest(type:String, content1:String, content2: String) {
+        when (type) {
+            ListenerKey.KEY_SOUND_CHANGE -> {
+                if (keysoundList != null) {
+                    val s = content1.split("\\s+".toRegex())
+                    for (i in 0..keysoundList!!.size - 1) {
+                        val a = keysoundList!!.get(i)
+                        if (s.size == 5) {
+                            if (a.equals(s[0] + " " + s[1] + " " + s[2] + " " + s[3])||a.equals(s[0] + " " + s[1] + " " + s[2] + " " + s[3] + " " + s[4])) {
+                                keysoundList!!.set(i, content2)
+                                break
+                            }
+                        } else {
+                            if (a.equals(s[0] + " " + s[1] + " " + s[2] + " " + s[3] + " " + s[4] + " " + s[5])) {
+                                keysoundList!!.set(i, content2)
+                                break
+                            }
+                        }
+                    }
+                    keySoundIO.saveKeySoundWork(keysoundList)
+                }
+            }
         }
     }
 

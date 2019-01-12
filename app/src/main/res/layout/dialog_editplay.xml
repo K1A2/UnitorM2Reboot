@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:orientation="vertical" android:padding="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/edit_repeattime"
+            android:gravity="center_vertical"
+            android:layout_marginRight="3dp"
+            android:textColor="@color/sub"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Edit_Repeattime"
+            android:layout_marginBottom="3dp"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:textColorHint="@color/sub"
+            android:textColor="@color/title"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/edit_wormhole"
+            android:gravity="center_vertical"
+            android:layout_marginRight="3dp"
+            android:textColor="@color/sub"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Edit_Whomwhole"
+            android:layout_marginBottom="3dp"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:textColor="@color/title"/>
+
+    </LinearLayout>
+
+</LinearLayout>

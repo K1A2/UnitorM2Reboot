@@ -1,9 +1,12 @@
 package com.uni.unitor.unitorm2.fragment
 
+import android.Manifest
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
@@ -115,6 +118,9 @@ class KeySoundFragment : Fragment(){
                 R.id.Radio_Test//테스트
                 -> {
                     isPlay = true
+                    soundPlayListAdapter.clearItem()
+                    text_current.setText("")
+                    buttonCurrent = ""
                     setIsPlayButton()
                 }
             }
@@ -138,6 +144,9 @@ class KeySoundFragment : Fragment(){
                                     s.fname = chain + " " + buttonCurrent + " " + item.fname + " 1"
                                     s.fpath = item.fname
                                     soundPlayListAdapter.addItem(s)
+                                    onRequestListener.onRequest(ListenerKey.KEY_SOUND_ADD, chain + " " + buttonCurrent + " " + item.fname + " 1")
+                                } else {
+                                    Toast.makeText(activity, getString(R.string.toast_sound_noselect), Toast.LENGTH_SHORT).show()
                                 }
                             }
 
@@ -160,11 +169,57 @@ class KeySoundFragment : Fragment(){
             }
         }))
 
-        //list 클릭처리
+        //playlist 클릭처리
         list_playlist.addOnItemTouchListener(RecyclerItemClickListener(container!!.context, list_playlist, object : RecyclerItemClickListener.OnItemClickListener {
-            //클릭=
+            //클릭시 수정창 띄우기
             override fun onItemClicked(view: View, position: Int) {
+                val item = soundPlayListAdapter.getItem(position)
+                val s = item.fname!!.split("\\s+".toRegex())
 
+                val layout: LinearLayout = View.inflate(activity, R.layout.dialog_editplay, null) as LinearLayout
+                val delete = AlertDialog.Builder(activity!!)
+                delete.setView(layout)
+                val reapet = layout.findViewById<EditText>(R.id.Edit_Repeattime)
+                val worwhole = layout.findViewById<EditText>(R.id.Edit_Whomwhole)
+                reapet.setText(s[4])
+                if (s.size == 6) {
+                    worwhole.setText(s[5])//배열이 6개일경우 웜홀도 추가
+                }
+                delete.setPositiveButton(getString(R.string.dialog_sound_add)) { dialog, which ->//TODO: playlist
+                    val list = soundPlayListAdapter.getAllItem()
+                    var slist = s[0] + " " + s[1] + " " + s[2] + " " + s[3]
+
+                    if (!reapet.text.toString().isEmpty()) {
+                        slist  += " " + reapet.text.toString()
+                    } else {
+                        slist += " 1"
+
+                    }
+
+                    if (!worwhole.text.toString().isEmpty()) {
+                        if (!worwhole.text.toString().equals("0")) {
+                            slist += " " + worwhole.text.toString()
+                        }
+                    }
+
+                    onRequestListener.onRequest(ListenerKey.KEY_SOUND_CHANGE, item.fname!!, slist)
+
+                    val itemn = FileListItem()
+                    itemn.fname = slist
+                    itemn.fpath = s[3]
+                    list.set(position, itemn)
+                    soundPlayListAdapter.dataChanged(position)
+
+                    val playButton = root.findViewWithTag(buttonCurrent) as PlayButton
+                    val a = slist.split("\\s+".toRegex())
+                    if (a.size == 6) {
+                        playButton.changeSound(item.fname!!, a[0], a[3], a[4], a[5])
+                    } else {
+                        playButton.changeSound(item.fname!!, a[0], a[3], a[4])
+                    }
+                }
+                delete.setNegativeButton(getString(R.string.cancel), null)
+                delete.show()
             }
 
             override fun onLongItemClicked(view: View?, position: Int) {
@@ -179,7 +234,11 @@ class KeySoundFragment : Fragment(){
                             }
 
                             R.id.menu_sound_delete -> {
-                                //TODO: sound delete
+                                val item = soundPlayListAdapter.getItem(position)
+                                soundPlayListAdapter.removeItem(position)
+                                onRequestListener.onRequest(ListenerKey.KEY_SOUND_REMOVE, item.fname!!)
+                                val playButton = root.findViewWithTag(buttonCurrent) as PlayButton
+                                playButton.removeSound(item.fname!!)
                             }
                         }
                         return true
@@ -284,10 +343,8 @@ class KeySoundFragment : Fragment(){
 
     //웜홀 처리
     fun setWormwhole(chain:String) {
-        try {
-            spinner_chain.setSelection(chain.toInt())
-        } catch (e:Exception) {
-
+        if (chain.toInt() <= spinner_chain.count) {
+            spinner_chain.setSelection(chain.toInt() - 1)
         }
     }
 
@@ -335,5 +392,6 @@ class KeySoundFragment : Fragment(){
         fun onRequest(type:String, content:String) {
 
         }
+        fun onRequest(type:String, content1:String, content2: String)
     }
 }

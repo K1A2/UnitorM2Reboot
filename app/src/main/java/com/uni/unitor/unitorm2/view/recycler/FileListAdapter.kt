@@ -58,6 +58,10 @@ class FileListAdapter : RecyclerView.Adapter<FileListAdapter.ViewHolder>() {
         notifyItemInserted(fileItems.size)
     }
 
+    fun getAllItem(): MutableList<FileListItem> {
+        return fileItems
+    }
+
     fun getItem(position: Int): FileListItem {
         return fileItems[position]
     }
@@ -66,5 +70,9 @@ class FileListAdapter : RecyclerView.Adapter<FileListAdapter.ViewHolder>() {
         val count = fileItems.size
         fileItems.clear()
         notifyItemRangeRemoved(0, count)
+    }
+
+    fun dataChanged(p:Int) {
+        notifyItemChanged(p)
     }
 }

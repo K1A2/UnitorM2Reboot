@@ -103,29 +103,29 @@
                 android:layout_marginBottom="3dp"
                 android:theme="@style/spinner_style"></Spinner>
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/edit_repeattime"
-                android:id="@+id/Edit_Repeattime"
-                android:layout_marginBottom="3dp"
-                android:inputType="number"
-                android:imeOptions="actionDone"
-                android:theme="@style/edittext_darkback"
-                android:textColorHint="@color/colorEdittextHint"
-                android:textColor="@color/colorTextNormal"/>
+            <!--<EditText-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="@string/edit_repeattime"-->
+                <!--android:id="@+id/Edit_Repeattime"-->
+                <!--android:layout_marginBottom="3dp"-->
+                <!--android:inputType="number"-->
+                <!--android:imeOptions="actionDone"-->
+                <!--android:theme="@style/edittext_darkback"-->
+                <!--android:textColorHint="@color/colorEdittextHint"-->
+                <!--android:textColor="@color/colorTextNormal"/>-->
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/edit_wormhole"
-                android:id="@+id/Edit_Whomwhole"
-                android:layout_marginBottom="3dp"
-                android:inputType="number"
-                android:imeOptions="actionDone"
-                android:theme="@style/edittext_darkback"
-                android:textColorHint="@color/colorEdittextHint"
-                android:textColor="@color/colorTextNormal"/>
+            <!--<EditText-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="@string/edit_wormhole"-->
+                <!--android:id="@+id/Edit_Whomwhole"-->
+                <!--android:layout_marginBottom="3dp"-->
+                <!--android:inputType="number"-->
+                <!--android:imeOptions="actionDone"-->
+                <!--android:theme="@style/edittext_darkback"-->
+                <!--android:textColorHint="@color/colorEdittextHint"-->
+                <!--android:textColor="@color/colorTextNormal"/>-->
 
             <!--<CheckBox-->
                 <!--android:layout_width="match_parent"-->

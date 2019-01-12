@@ -22,7 +22,6 @@ class PlayButton : LinearLayout {
     lateinit var con: Context
     private var soundlist:ArrayList<Array<String>> = ArrayList()
     private var multilist:ArrayList<Array<Int>> = ArrayList()
-    private var count:Int = 0
     private lateinit var activity: String
     private var isPlay:Boolean = false
     private var currenrchain:String = "1"
@@ -134,14 +133,12 @@ class PlayButton : LinearLayout {
     //whole있을때
     fun addSound(chain:String, name:String, rpeat:String, whole:String) {
         soundlist.add(arrayOf("0", chain, name, rpeat, whole))
-        count = soundlist.size
         setMulti()
     }
 
     //whole없을떄
     fun addSound(chain:String, name:String, rpeat:String) {
         soundlist.add(arrayOf("0", chain, name, rpeat))
-        count = soundlist.size
         setMulti()
     }
 
@@ -197,6 +194,41 @@ class PlayButton : LinearLayout {
     fun resetSound() {
         soundlist.clear()
         multilist.clear()
+    }
+
+    //sound 반복/웜홀 변경
+    fun changeSound(p:String, chain:String, name:String, rpeat:String, whole:String) {
+        soundlist.set(findSound(p), arrayOf("0", chain, name, rpeat, whole))
+    }
+
+    //sound 반복 변경
+    fun changeSound(p:String, chain:String, name:String, rpeat:String) {
+        soundlist.set(findSound(p), arrayOf("0", chain, name, rpeat))
+    }
+
+    private fun findSound(p:String): Int {
+        val spl = p.split("\\s+".toRegex())
+        if (spl.size == 6) {
+            for (a in 0..soundlist.size-1) {
+                val i = soundlist.get(a)
+                if (i[1].equals(spl[0])&&i[2].equals(spl[3])&&i[3].equals(spl[4])&&i[4].equals(spl[5])) {
+                    return a
+                }
+            }
+        } else {
+            for (a in 0..soundlist.size-1) {
+                val i = soundlist.get(a)
+                if (i[1].equals(spl[0])&&i[2].equals(spl[3])&&i[3].equals(spl[4])) {
+                    return a
+                }
+            }
+        }
+        return 0
+    }
+
+    fun removeSound(p:String) {
+        soundlist.removeAt(findSound(p))
+        setMulti()
     }
 
     //현제 액티비티가 뭔지 판별

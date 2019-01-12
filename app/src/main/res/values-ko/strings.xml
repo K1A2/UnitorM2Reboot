@@ -66,7 +66,9 @@
     <string name="alert_die_M">\'%s\'가 저장되지 않고 종료되었습니다. 이어서 만들겠습니까? 거부하면 이전 편집본은 영원히 사라집니다.</string>
     <string name="alert_die_OK">이어하기</string>
     <string name="alert_die_NO">안하기</string>
-    <string name="edit_repeattime">반복 횟수(필수 아님)</string>
-    <string name="edit_wormhole">웜홀(필수 아님)</string>
+    <string name="edit_repeattime">반복 횟수(필수 아님):</string>
+    <string name="edit_wormhole">웜홀(필수 아님):</string>
     <string name="async_duplicate_sound_title">사운드 정보 읽는중..</string>
+    <string name="toast_sound_noselect">버튼을 선택해주세요</string>
+    <string name="dialog_sound_add">변경</string>
 </resources>
