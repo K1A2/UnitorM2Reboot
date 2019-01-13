@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.uni.unitor.unitorm2.File.FileIO
 import com.uni.unitor.unitorm2.File.FileKey
 import com.uni.unitor.unitorm2.File.InfoIO
 import com.uni.unitor.unitorm2.File.KeySoundIO
@@ -142,7 +143,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
                             saveInfo()
                         }
                         1 -> {
-                            //onSaveListener2.onSave(ActivityKey.KEY_INT_SOUND)
+                            saveKeySound()
                         }
                         2 -> {
                             //onSaveListener3.onSave(ActivityKey.KEY_INT_LED)
@@ -190,7 +191,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
 
     /**KeySound처리**/
     //keysound 초기화
-    private fun initKeySound() {//TODO: keysound초기화
+    private fun initKeySound() {//keysound초기화
         if (keysoundInit) {
             keySoundIO.mkKeySoundWork()
             KeySoundIO.DupliSaveSound(this, FileKey.KEY_SOUND_WORK_DUPLICATE,
@@ -250,6 +251,9 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
                     keySoundIO.saveKeySoundWork(keysoundList)
                 }
             }
+            ListenerKey.KEY_SOUND_DELETE -> {
+                FileIO.DeleteFile(this, FileKey.KEY_FILE_DELETE_SOUND, content).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+            }
         }
     }
     override fun onRequest(type:String, content1:String, content2: String) {
@@ -302,6 +306,23 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     fun setLoad(sl:ArrayList<Array<Any>>, sound: SoundPool) {
         soundLoaded = sl
         soundPool = sound
+    }
+
+    //sound저장
+    private fun saveKeySound() {
+        try {
+            keySoundIO.saveKeySound(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!)
+            Toast.makeText(this, getString(R.string.toast_save_succeed), Toast.LENGTH_SHORT).show()
+        } catch (e:Exception) {
+            Toast.makeText(this, getString(R.string.toast_save_fail), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun deleteFinish() {
+        soundUnLoad()
+        soundList = keySoundIO.getSoundFile(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!)
+        loadSound = LoadSound(this, soundList)
+        loadSound.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
     /**동시처리**/

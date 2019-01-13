@@ -136,7 +136,7 @@ class KeySoundFragment : Fragment(){
                     override fun onMenuItemClick(menuItem: MenuItem): Boolean {
                         val item = soundListAdapter.getItem(position)
                         when (menuItem.itemId) {
-                            R.id.menu_sound_select -> {
+                            R.id.menu_sound_select -> {//선택
                                 if (!buttonCurrent.equals("")) {
                                     val playButton = root.findViewWithTag(buttonCurrent) as PlayButton
                                     playButton.addSound(chain, item.fname!!, "1")
@@ -150,12 +150,13 @@ class KeySoundFragment : Fragment(){
                                 }
                             }
 
-                            R.id.menu_sound_play -> {
+                            R.id.menu_sound_play -> {//재생
                                 onRequestListener.onRequest(ListenerKey.KEY_SOUND_PLAY, item.fname!!)
                             }
 
-                            R.id.menu_sound_delete -> {
-                                //TODO: sound delete
+                            R.id.menu_sound_delete -> {//삭제
+                                soundListAdapter.removeItem(position)
+                                onRequestListener.onRequest(ListenerKey.KEY_SOUND_DELETE, item.fpath!!)
                             }
                         }
                         return true
@@ -185,7 +186,7 @@ class KeySoundFragment : Fragment(){
                 if (s.size == 6) {
                     worwhole.setText(s[5])//배열이 6개일경우 웜홀도 추가
                 }
-                delete.setPositiveButton(getString(R.string.dialog_sound_add)) { dialog, which ->//TODO: playlist
+                delete.setPositiveButton(getString(R.string.dialog_sound_add)) { dialog, which ->
                     val list = soundPlayListAdapter.getAllItem()
                     var slist = s[0] + " " + s[1] + " " + s[2] + " " + s[3]
 
@@ -229,11 +230,12 @@ class KeySoundFragment : Fragment(){
                 popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
                     override fun onMenuItemClick(menuItem: MenuItem): Boolean {
                         val item = soundPlayListAdapter.getItem(position)
-                        when (menuItem.itemId) {R.id.menu_sound_play -> {
+                        when (menuItem.itemId) {
+                            R.id.menu_sound_play -> {//재생
                                 onRequestListener.onRequest(ListenerKey.KEY_SOUND_PLAY, item.fpath!!)
                             }
 
-                            R.id.menu_sound_delete -> {
+                            R.id.menu_sound_delete -> {//삭제
                                 val item = soundPlayListAdapter.getItem(position)
                                 soundPlayListAdapter.removeItem(position)
                                 onRequestListener.onRequest(ListenerKey.KEY_SOUND_REMOVE, item.fname!!)

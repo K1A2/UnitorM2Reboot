@@ -11,4 +11,5 @@ public interface ListenerKey {
     String KEY_SOUND_ADD = "AS";
     String KEY_SOUND_CHANGE = "CS";
     String KEY_SOUND_REMOVE = "RS";
+    String KEY_SOUND_DELETE = "DS";
 }

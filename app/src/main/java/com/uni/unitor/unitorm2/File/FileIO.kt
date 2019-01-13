@@ -1,10 +1,13 @@
 package com.uni.unitor.unitorm2.File
 
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.ContextWrapper
+import android.os.AsyncTask
 import android.os.Environment
 import com.uni.unitor.unitorm2.R
+import com.uni.unitor.unitorm2.layout.TabHostActivity
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
@@ -60,5 +63,74 @@ class FileIO(private val context: Context) : ContextWrapper(context) {
         alertErr.setMessage(e)
         alertErr.setPositiveButton(getString(R.string.alert_ok), null)
         alertErr.show()
+    }
+
+    class DeleteFile(context: Context, type:String, path:String) : AsyncTask<String, String, Boolean>() {
+
+        private val prograssDialog: ProgressDialog = ProgressDialog(context)
+
+        private val context:Context = context
+        private val type:String = type
+        private val path:String = path
+
+        override fun onPreExecute() {
+            prograssDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+            prograssDialog.setCancelable(false)
+            prograssDialog.setCanceledOnTouchOutside(false)
+            when (type) {
+                FileKey.KEY_FILE_DELETE_SOUND -> {
+                    prograssDialog.setTitle(context.getString(R.string.async_file_deleteS))
+                }
+                FileKey.KEY_FILE_DELETE_LED -> {
+                    prograssDialog.setTitle(context.getString(R.string.async_file_deleteL))
+                }
+            }
+            prograssDialog.show()
+        }
+
+        override fun doInBackground(vararg params: String?): Boolean {
+            try {
+                delete(path)
+                return true
+            } catch (e:java.lang.Exception) {
+                return false
+            }
+        }
+
+        override fun onPostExecute(result: Boolean) {
+            prograssDialog.dismiss()
+            if (result) {
+                when (type) {
+                    FileKey.KEY_FILE_DELETE_SOUND -> {
+                        (context as TabHostActivity).deleteFinish()
+                    }
+                    FileKey.KEY_FILE_DELETE_LED -> {
+
+                    }
+                }
+            } else {
+
+            }
+        }
+
+        @Throws(Exception::class)
+        private fun delete(path: String) {
+            val d = File(path)
+            if (d.exists()) {
+                if (d.isFile) {
+                    d.delete()
+                } else {
+                    val childFileList = d.listFiles()
+                    for (childFile in childFileList!!) {
+                        if (childFile.isDirectory) {
+                            delete(childFile.path)
+                        } else {
+                            childFile.delete()
+                        }
+                    }
+                    d.delete()
+                }
+            }
+        }
     }
 }

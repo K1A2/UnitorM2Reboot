@@ -89,7 +89,8 @@ class KeySoundIO(private val context: Context) : ContextWrapper(context) {
     @Throws(Exception::class)
     fun saveKeySound(path: String) {
         val content = getKeySoundWork()
-        val file = File(path)
+        val path1 = path + "keySound"
+        val file = File(path1)
         fileIO.isExists(file, FileKey.KEY_FILE_INT)
 
         val printWriter = PrintWriter(file)

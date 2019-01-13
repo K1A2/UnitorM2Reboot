@@ -71,4 +71,6 @@
     <string name="async_duplicate_sound_title">사운드 정보 읽는중..</string>
     <string name="toast_sound_noselect">버튼을 선택해주세요</string>
     <string name="dialog_sound_add">변경</string>
+    <string name="async_file_deleteS">사운드 파일 삭제</string>
+    <string name="async_file_deleteL">LED 파일 삭제</string>
 </resources>

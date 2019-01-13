@@ -71,4 +71,6 @@
     <string name="async_duplicate_sound_title">Reading Sounds Info..</string>
     <string name="toast_sound_noselect">Please select a button</string>
     <string name="dialog_sound_add">Change</string>
+    <string name="async_file_deleteS">Delete Sound Files</string>
+    <string name="async_file_deleteL">Delete LED Files</string>
 </resources>

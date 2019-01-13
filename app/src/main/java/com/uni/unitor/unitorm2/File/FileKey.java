@@ -10,10 +10,12 @@ public interface FileKey {
     String KEY_INFO_CONTENT = "title=%s\nproducerName=%s\nbuttonX=8\nbuttonY=8\nchain=%s\nsquareButton=true\nlandscape=true";
 
     String KEY_DELETE_UNIPACK = "deleteUnipack";
-    String KEY_COPY_SOUND = "copySound";
     String KEY_COPY_LED = "copyLED";
 
     String KEY_SOUND_WORK_DUPLICATE = "DUPLICATE";
     String KEY_SOUND_WORK_SAVE = "WSAVE";
     String KEY_SOUND_MAIN_SAVE = "MSAVE";
+
+    String KEY_FILE_DELETE_SOUND = "DS";
+    String KEY_FILE_DELETE_LED = "DL";
 }
