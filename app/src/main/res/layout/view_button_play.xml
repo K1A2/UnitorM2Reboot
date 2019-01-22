@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:id="@+id/View_Play_text" android:textSize="10dp" android:textColor="@color/colorTextNormal"
-    android:gravity="center" android:background="@drawable/playbutton">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
 
-</TextView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_playbutton_pressed"
+        android:id="@+id/view_play_showin"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/View_Play_text"
+        android:textSize="10dp" android:textColor="@color/colorTextNormal"
+        android:gravity="center"
+        android:background="@drawable/playbutton"/>
+
+</RelativeLayout>

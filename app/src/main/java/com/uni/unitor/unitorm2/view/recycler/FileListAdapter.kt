@@ -16,7 +16,7 @@ class FileListAdapter : RecyclerView.Adapter<FileListAdapter.ViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_list_file, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_list_source, parent, false)
         return ViewHolder(view)
     }
 
@@ -37,7 +37,6 @@ class FileListAdapter : RecyclerView.Adapter<FileListAdapter.ViewHolder>() {
         var textPath: TextView
 
         init {
-
             textName = view.findViewById(R.id.list_file_title)
             textPath = view.findViewById(R.id.list_file_path)
         }

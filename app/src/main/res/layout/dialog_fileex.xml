@@ -27,11 +27,13 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"/>
 
-    <android.support.v7.widget.RecyclerView
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:id="@+id/recycle_files"></android.support.v7.widget.RecyclerView>
+        android:dividerHeight="0dp"
+        android:divider="#00ffffff"
+        android:id="@+id/recycle_files"></ListView>
 
     <RelativeLayout
         android:layout_width="match_parent"

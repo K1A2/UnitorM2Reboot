@@ -7,4 +7,8 @@ public interface LayoutKey {
 
     String PLAYBTN_LAYOUT_SOUND = "LASA";
     String PLAYBTN_LAYOUT_LED = "LALE";
+
+    String DIALOG_FILEEX_TAG = "FET";
+    String DIALOG_FILEEX_SOUND = "SFE";
+    String DIALOG_FILEEX_UNIPACK = "LFE";
 }

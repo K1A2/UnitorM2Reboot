@@ -42,6 +42,7 @@ class KeySoundFragment : Fragment(){
     private lateinit var list_sounds:RecyclerView
     private lateinit var list_playlist:RecyclerView
     private lateinit var text_current:TextView
+    private lateinit var button_add:ImageButton
 
     private lateinit var onRequestListener:OnKeySoundRequestListener
     private var soundListAdapter:FileListAdapter = FileListAdapter()
@@ -66,6 +67,7 @@ class KeySoundFragment : Fragment(){
         list_sounds = root.findViewById<RecyclerView>(R.id.List_KeySound)
         list_playlist = root.findViewById<RecyclerView>(R.id.list_sound_playlist)
         text_current = root.findViewById<TextView>(R.id.Text_current_sound)
+        button_add = root.findViewById<ImageButton>(R.id.Button_Image_add)
 
         //sound files
         list_sounds.layoutManager = LinearLayoutManager(activity)
@@ -86,6 +88,11 @@ class KeySoundFragment : Fragment(){
             }
         }
 
+        //사운드 파일 추가
+        button_add.setOnClickListener {
+            onRequestListener.onRequest(ListenerKey.KEY_SOUND_ADD_FILE, "")
+        }
+
         //체인 선택 리스너뷰
         spinner_chain.onItemSelectedListener = object : OnItemSelectedListener {
 
@@ -95,10 +102,8 @@ class KeySoundFragment : Fragment(){
                     val chain_selected = (spinner_chain.getItemAtPosition(position) as String).split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
                     chain = chain_selected
                     setChainButton()
-                    //onRequestListener.onRequest(ListenerKey.KEY_SOUND_CHAIN_T, chain_selected)
-                    //setButtonSound(chain_selected)
                 } catch (e: Exception) {
-                    //fileIO.showErr(e.message)
+
                 }
             }
 

@@ -13,13 +13,14 @@ import com.uni.unitor.unitorm2.R
 import com.uni.unitor.unitorm2.fragment.KeySoundFragment
 import com.uni.unitor.unitorm2.layout.TabHostActivity
 import android.os.Bundle
+import android.widget.RelativeLayout
 
 
-
-class PlayButton : LinearLayout {
+class PlayButton : RelativeLayout {
 
     lateinit var textView: TextView
-    lateinit var con: Context
+    lateinit var viewIn:View
+    private lateinit var con: Context
     private var soundlist:ArrayList<Array<String>> = ArrayList()
     private var multilist:ArrayList<Array<Int>> = ArrayList()
     private lateinit var activity: String
@@ -52,6 +53,7 @@ class PlayButton : LinearLayout {
         val layoutInflater = getContext().getSystemService(infService) as LayoutInflater
         val view = layoutInflater.inflate(R.layout.view_button_play, this@PlayButton, false)
         textView = view.findViewById(R.id.View_Play_text)
+        viewIn = view.findViewById<View>(R.id.view_play_showin)
 
         this.isClickable = true
         textView.isClickable = true

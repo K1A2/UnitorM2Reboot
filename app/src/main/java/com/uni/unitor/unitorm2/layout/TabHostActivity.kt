@@ -29,13 +29,19 @@ import com.uni.unitor.unitorm2.fragment.ListenerKey
 import com.uni.unitor.unitorm2.File.sharedpreference.PreferenceKey
 import com.uni.unitor.unitorm2.File.sharedpreference.SharedPreferenceIO
 import com.uni.unitor.unitorm2.R
+import com.uni.unitor.unitorm2.fragment.dialog.FileExplorerdDialog
 import java.lang.Exception
 
-class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, KeySoundFragment.OnKeySoundRequestListener {
+class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, KeySoundFragment.OnKeySoundRequestListener, FileExplorerdDialog.OnFileSelectListener {
 
     private lateinit var toolbarV: Toolbar
     private lateinit var tablayout:TabLayout
     private lateinit var viewPager:ViewPager
+
+    private val infoFragment:InfoFragment = InfoFragment()
+    private val keySoundFragment:KeySoundFragment = KeySoundFragment()
+    private val keyLEDFragment:KeyLEDFragment = KeyLEDFragment()
+    private val fileexDialog:FileExplorerdDialog = FileExplorerdDialog()
 
     private lateinit var keySoundIO: KeySoundIO
     private lateinit var infoIO: InfoIO
@@ -43,9 +49,6 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     private lateinit var sharedPreferenceIO: SharedPreferenceIO
     private var keysoundList:ArrayList<String>? = ArrayList()
     private var soundList:ArrayList<Array<String>> = ArrayList()
-    private val infoFragment:InfoFragment = InfoFragment()
-    private val keySoundFragment:KeySoundFragment = KeySoundFragment()
-    private val keyLEDFragment:KeyLEDFragment = KeyLEDFragment()
     private var backKeyPress: Long = 0
     private var keysoundInit:Boolean = true
     private var soundLoaded:ArrayList<Array<Any>> = ArrayList()
@@ -254,6 +257,12 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
             ListenerKey.KEY_SOUND_DELETE -> {
                 FileIO.DeleteFile(this, FileKey.KEY_FILE_DELETE_SOUND, content).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
             }
+            ListenerKey.KEY_SOUND_ADD_FILE -> {
+                val bundle = Bundle()
+                bundle.putString(LayoutKey.DIALOG_FILEEX_TAG, LayoutKey.DIALOG_FILEEX_SOUND)
+                fileexDialog.arguments = bundle
+                fileexDialog.show(supportFragmentManager, LayoutKey.DIALOG_FILEEX_TAG)
+            }
         }
     }
     override fun onRequest(type:String, content1:String, content2: String) {
@@ -390,6 +399,11 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
             Toast.makeText(this@TabHostActivity, getString(R.string.toast_back), Toast.LENGTH_SHORT).show()
             backKeyPress = System.currentTimeMillis()
         }
+    }
+
+    //파일선택리스너
+    override fun onFileSelect(files: ArrayList<Array<String>>) {
+
     }
 
 
