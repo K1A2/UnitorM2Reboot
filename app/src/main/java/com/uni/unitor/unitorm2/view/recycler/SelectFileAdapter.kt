@@ -7,9 +7,12 @@ import android.view.ViewGroup
 import android.widget.*
 import com.uni.unitor.unitorm2.R
 import android.graphics.drawable.Drawable
+import android.media.AudioManager
+import android.media.SoundPool
 import android.widget.TextView
 import android.widget.BaseAdapter
 import com.uni.unitor.unitorm2.layout.LayoutKey
+import java.io.File
 
 
 class SelectFileAdapter(type:String) : BaseAdapter() {
@@ -50,6 +53,28 @@ class SelectFileAdapter(type:String) : BaseAdapter() {
         title = listItem.titlef
         path = listItem.pathf
         icon = listItem.iconf
+
+        if (type == LayoutKey.DIALOG_FILEEX_SOUND) {
+            val playBtn = convertView!!.findViewById(R.id.list_button_play) as ImageButton
+
+            if (File(listItem.pathf).name.endsWith(".wav")||File(path).name.endsWith(".mp3")) {
+                playBtn.visibility = View.VISIBLE
+                (convertView!!.findViewById(R.id.Fragdial_file_isSelect) as CheckBox).visibility = View.VISIBLE
+
+                playBtn.setOnClickListener {
+                    val sound = SoundPool(1, AudioManager.STREAM_MUSIC, 0)
+
+                    sound.setOnLoadCompleteListener { soundPool, sampleId, status ->
+                        sound.play(sampleId, 1f, 1f, 0, 0, 1f)
+                    }
+
+                    sound.load(listItem.pathf, 0)
+                }
+            } else {
+                playBtn.visibility = View.GONE
+                (convertView!!.findViewById(R.id.Fragdial_file_isSelect) as CheckBox).visibility = View.GONE
+            }
+        }
 
         nameView.text = title
         pathView.text = path

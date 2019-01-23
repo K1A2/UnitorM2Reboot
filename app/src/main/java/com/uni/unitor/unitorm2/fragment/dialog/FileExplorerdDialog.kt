@@ -25,6 +25,7 @@ import android.widget.Toast
 import com.uni.unitor.unitorm2.view.recycler.FileListItem
 import android.widget.AdapterView
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class FileExplorerdDialog : DialogFragment() {
@@ -88,6 +89,27 @@ class FileExplorerdDialog : DialogFragment() {
             } else if (fileListItem.titlef.equals(".../") && fileListItem.pathf.equals("")) {//상위폴더 이동
                 val parent_path = File(text_path.getText().toString()).getParent()
                 showList(parent_path + "/")//재귀호출로 상위폴더의 파일을 보여줌
+            }
+        }
+
+        //추가 버튼 리스너
+        btn_add.setOnClickListener {
+            when (now) {
+                LayoutKey.DIALOG_FILEEX_SOUND -> {
+                    val checkedId = list_files.checkedItemPositions
+                    val count = checkedId.size()
+                    val selected = ArrayList<Array<String>>()
+                    for (i in 0..count - 1) {
+                        if (checkedId.get(i)) {
+                            val item = selectFileAdapter.getItem(i)
+                            selected.add(arrayOf(item.titlef!!, item.pathf!!))
+                        }
+                    }
+                    onFileSelectListener.onFileSelect(selected)
+                }
+                LayoutKey.DIALOG_FILEEX_UNIPACK -> {
+
+                }
             }
         }
 
@@ -178,9 +200,4 @@ class FileExplorerdDialog : DialogFragment() {
         super.onAttach(context)
         con = context!!
     }
-
-//    override fun onAttach(activity: Activity) {
-//        super.onAttach(activity)
-//        activityA = activity
-//    }
 }

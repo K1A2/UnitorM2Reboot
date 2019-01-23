@@ -403,7 +403,8 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
 
     //파일선택리스너
     override fun onFileSelect(files: ArrayList<Array<String>>) {
-
+        fileexDialog.dismiss()
+        //TODO: 선택된 사운드 sounds폴더로 복사하는 작업 해야됨
     }
 
 
