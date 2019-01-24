@@ -197,7 +197,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     private fun initKeySound() {//keysound초기화
         if (keysoundInit) {
             keySoundIO.mkKeySoundWork()
-            KeySoundIO.DupliSaveSound(this, FileKey.KEY_SOUND_WORK_DUPLICATE,
+            KeySoundIO.DupliSaveSound(this,
                     sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
             keysoundInit = false
         }
@@ -327,11 +327,16 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         }
     }
 
-    fun deleteFinish() {
+    //사운드 파일에 변화(삭제,추기) 있을때 처리
+    fun soundsChange(isAdd:Boolean) {
         soundUnLoad()
+        soundList = ArrayList()
         soundList = keySoundIO.getSoundFile(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!)
         loadSound = LoadSound(this, soundList)
         loadSound.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+        if (isAdd) {
+            keySoundFragment.addSound(soundList)
+        }
     }
 
     /**동시처리**/
@@ -401,10 +406,10 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         }
     }
 
-    //파일선택리스너
+    //사운파일선택리스너
     override fun onFileSelect(files: ArrayList<Array<String>>) {
         fileexDialog.dismiss()
-        //TODO: 선택된 사운드 sounds폴더로 복사하는 작업 해야됨
+        KeySoundIO.GetSoundsFile(this, files, sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
 

@@ -97,15 +97,17 @@ class FileExplorerdDialog : DialogFragment() {
             when (now) {
                 LayoutKey.DIALOG_FILEEX_SOUND -> {
                     val checkedId = list_files.checkedItemPositions
-                    val count = checkedId.size()
-                    val selected = ArrayList<Array<String>>()
-                    for (i in 0..count - 1) {
-                        if (checkedId.get(i)) {
-                            val item = selectFileAdapter.getItem(i)
-                            selected.add(arrayOf(item.titlef!!, item.pathf!!))
+                    if (checkedId != null) {
+                        val count = checkedId.size()
+                        val selected = ArrayList<Array<String>>()
+                        for (i in 1..count) {
+                            if (checkedId.get(i)) {
+                                val item = selectFileAdapter.getItem(i)
+                                selected.add(arrayOf(item.titlef!!, item.pathf!!))
+                            }
                         }
+                        onFileSelectListener.onFileSelect(selected)
                     }
-                    onFileSelectListener.onFileSelect(selected)
                 }
                 LayoutKey.DIALOG_FILEEX_UNIPACK -> {
 

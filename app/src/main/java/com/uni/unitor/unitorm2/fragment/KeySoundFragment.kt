@@ -373,6 +373,17 @@ class KeySoundFragment : Fragment(){
         }
     }
 
+    //리스트뷰에 사운드 추가
+    fun addSound(list: ArrayList<Array<String>>) {
+        soundListAdapter.clearItem()
+        for (i in list) {
+            val ia = FileListItem()
+            ia.fname = i[0]
+            ia.fpath = i[1]
+            soundListAdapter.addItem(ia)
+        }
+    }
+
 
     //버튼 크기조절
     override fun onActivityCreated(savedInstanceState: Bundle?) {

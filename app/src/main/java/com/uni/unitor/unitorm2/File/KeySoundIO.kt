@@ -2,6 +2,7 @@ package com.uni.unitor.unitorm2.File
 
 import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.app.usage.StorageStatsManager
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.AsyncTask
@@ -13,9 +14,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.uni.unitor.unitorm2.R
 import com.uni.unitor.unitorm2.layout.TabHostActivity
-import java.io.File
-import java.io.FileFilter
-import java.io.PrintWriter
+import java.io.*
 
 class KeySoundIO(private val context: Context) : ContextWrapper(context) {
 
@@ -102,7 +101,8 @@ class KeySoundIO(private val context: Context) : ContextWrapper(context) {
         printWriter.close()
     }
 
-    class DupliSaveSound(context: Context, type:String, path:String?) : AsyncTask<String, String, Boolean>() {
+    //keysoudn 복제
+    class DupliSaveSound(context: Context, path:String?) : AsyncTask<String, String, Boolean>() {
 
         private val keysoundIO:KeySoundIO = KeySoundIO(context)
         private val prograssDialog:ProgressDialog = ProgressDialog(context)
@@ -110,7 +110,6 @@ class KeySoundIO(private val context: Context) : ContextWrapper(context) {
 //        private val progressDialog:AlertDialog.Builder = AlertDialog.Builder(context)
 //        val layout: RelativeLayout = View.inflate(context, R.layout.dialog_progress, null) as RelativeLayout
 
-        private val type:String = type
         private val context:Context = context
         private val path:String? = path
 //        private val text_Title:TextView = layout.findViewById<TextView>(R.id.dialog_progress_title)
@@ -123,26 +122,18 @@ class KeySoundIO(private val context: Context) : ContextWrapper(context) {
             prograssDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
             prograssDialog.setCancelable(false)
             prograssDialog.setCanceledOnTouchOutside(false)
-            when (type) {
-                FileKey.KEY_SOUND_WORK_DUPLICATE -> {
-//                    text_Title.setText(R.string.async_duplicate_sound_title)
-//                    text_Sub.visibility = View.GONE
-                    prograssDialog.setTitle(context.getString(R.string.async_duplicate_sound_title))
-                }
-            }
+//                   text_Title.setText(R.string.async_duplicate_sound_title)
+//                   text_Sub.visibility = View.GONE
+            prograssDialog.setTitle(context.getString(R.string.async_duplicate_sound_title))
             prograssDialog.show()
         }
 
         override fun doInBackground(vararg params: String?): Boolean {
-            when (type) {
-                FileKey.KEY_SOUND_WORK_DUPLICATE -> {
-                    try {
-                        keysoundIO.saveKeySoundWork(keysoundIO.getKeySound(path!!))
-                        return true
-                    } catch (e:Exception) {
-                        return false
-                    }
-                } else -> {return false}
+            try {
+                keysoundIO.saveKeySoundWork(keysoundIO.getKeySound(path!!))
+                return true
+            } catch (e:Exception) {
+                return false
             }
         }
 
@@ -150,6 +141,74 @@ class KeySoundIO(private val context: Context) : ContextWrapper(context) {
             if (result!!) {
                 prograssDialog.dismiss()
                 (context as TabHostActivity).setKeysoundWork()
+            } else {
+                prograssDialog.dismiss()
+            }
+        }
+    }
+
+    //sounds 복제
+    class GetSoundsFile(context: Context, files:ArrayList<Array<String>>, path: String) : AsyncTask<String, String, Boolean>() {
+
+        private val keysoundIO:KeySoundIO = KeySoundIO(context)
+        private val prograssDialog:ProgressDialog = ProgressDialog(context)
+
+        private val context:Context = context
+        private val files = files
+        private val root = path
+
+        override fun onPreExecute() {
+            prograssDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+            prograssDialog.setCancelable(false)
+            prograssDialog.setTitle(context.getString(R.string.async_copy_sound_title))
+            prograssDialog.setCanceledOnTouchOutside(false)
+            prograssDialog.max = files.size
+            prograssDialog.show()
+        }
+
+        override fun doInBackground(vararg params: String?): Boolean {
+            try {
+                val byte = ByteArray(2048)
+                for (i in 0 until files.size) {
+                    val inside = files.get(i)
+                    val path = inside[1]
+                    val name = inside[0]
+                    publishProgress(i.toString(), path)
+
+                    val inputStream = FileInputStream(File(path))
+                    val outputStream = FileOutputStream(root + "sounds/" + name)
+                    val fcain = inputStream.channel
+                    val fout = outputStream.channel
+                    val size = fcain.size()
+                    fcain.transferTo(0, size, fout)
+                    fout.close()
+                    fcain.close()
+//                    var data = 0
+//                    do {
+//                        data = inputStream.read()
+//                        if (data == -1) {
+//                            break
+//                        }
+//                        outputStream.write(byte, 0, data)
+//                    } while (true)
+                    outputStream.close()
+                    inputStream.close()
+                }
+                return true
+            } catch (e:Exception) {
+                return false
+            }
+        }
+
+        override fun onProgressUpdate(vararg values: String?) {
+            prograssDialog.setMessage(values[1])
+            prograssDialog.progress = values[0]!!.toInt()
+        }
+
+        override fun onPostExecute(result: Boolean?) {
+            if (result!!) {
+                prograssDialog.dismiss()
+                (context as TabHostActivity).soundsChange(true)
             } else {
                 prograssDialog.dismiss()
             }

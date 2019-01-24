@@ -65,6 +65,7 @@ class FileIO(private val context: Context) : ContextWrapper(context) {
         alertErr.show()
     }
 
+    //ㅍㅏ일 삭제
     class DeleteFile(context: Context, type:String, path:String) : AsyncTask<String, String, Boolean>() {
 
         private val prograssDialog: ProgressDialog = ProgressDialog(context)
@@ -102,7 +103,7 @@ class FileIO(private val context: Context) : ContextWrapper(context) {
             if (result) {
                 when (type) {
                     FileKey.KEY_FILE_DELETE_SOUND -> {
-                        (context as TabHostActivity).deleteFinish()
+                        (context as TabHostActivity).soundsChange(false)
                     }
                     FileKey.KEY_FILE_DELETE_LED -> {
 
