@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_playbutton_pressed"
+        android:background="@drawable/background_mcbutton_pressed"
         android:id="@+id/view_play_showin"
         android:visibility="invisible"/>
 
@@ -16,6 +15,8 @@
         android:textSize="10dp"
         android:textColor="@color/colorTextNormal"
         android:gravity="center"
-        android:background="@drawable/playbutton"/>
+        android:background="@drawable/mcbutton">
+
+    </TextView>
 
 </RelativeLayout>

@@ -1,14 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@color/colorLayoutBackground">
+    android:padding="5dp" android:background="@color/colorLayoutBackground">
 
-    <TextView
+    <RelativeLayout
+        android:id="@+id/Layout_KeyLeft"
         android:layout_width="match_parent"
+        android:layout_marginRight="5dp"
         android:layout_height="match_parent"
-        android:text="KEYLED"
-        android:textColor="@color/colorTextNormal"
-        android:gravity="center"
-        android:textSize="100dp"/>
+        android:layout_toLeftOf="@+id/Layout_Btns">
+
+        <!--LED 전체뷰 레이아웃-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/Layout_LED_ALL_LEFT">
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/recycle_files"></android.support.v7.widget.RecyclerView>
+
+        </LinearLayout>
+
+        <!--LED파일 내용 편집 레이아웃-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/Layout_LED_EDIT_LEFT"></LinearLayout>
+
+    </RelativeLayout>
+
+    <include
+        layout="@layout/view_array_play"
+        android:layout_height="match_parent"
+        android:layout_width="400dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/Layout_Btns"/>
+
+    <RelativeLayout
+        android:id="@+id/Layout_KeyRight"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/Layout_Btns">
+
+        <!--LED 전체뷰 레이아웃-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/Layout_LED_ALL">
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/Spinner_chain"
+                android:layout_marginBottom="3dp"
+                android:theme="@style/spinner_style"></Spinner>
+
+        </LinearLayout>
+
+        <!--LED파일 내용 편집 레이아웃-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/Layout_LED_EDIT_RIGHT"></LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

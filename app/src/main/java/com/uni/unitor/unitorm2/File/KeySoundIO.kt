@@ -173,24 +173,21 @@ class KeySoundIO(private val context: Context) : ContextWrapper(context) {
                     val inside = files.get(i)
                     val path = inside[1]
                     val name = inside[0]
+                    var newName = root + "sounds/" + name
+                    if (File(newName).exists()) {//동일한 파일이 존재하는지 검사
+                        newName = root + "sounds/" + name.split("\\.".toRegex())[0] + "_" + File(root + "sounds/").listFiles { file ->
+                            file.getName().startsWith(name.split("\\.".toRegex())[0]) }.size + ".wav"
+                    }
                     publishProgress(i.toString(), path)
 
                     val inputStream = FileInputStream(File(path))
-                    val outputStream = FileOutputStream(root + "sounds/" + name)
+                    val outputStream = FileOutputStream(newName)
                     val fcain = inputStream.channel
                     val fout = outputStream.channel
                     val size = fcain.size()
                     fcain.transferTo(0, size, fout)
                     fout.close()
                     fcain.close()
-//                    var data = 0
-//                    do {
-//                        data = inputStream.read()
-//                        if (data == -1) {
-//                            break
-//                        }
-//                        outputStream.write(byte, 0, data)
-//                    } while (true)
                     outputStream.close()
                     inputStream.close()
                 }

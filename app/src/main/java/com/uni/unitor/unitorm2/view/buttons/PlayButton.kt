@@ -2,6 +2,7 @@ package com.uni.unitor.unitorm2.view.buttons
 
 import android.content.Context
 import android.content.res.TypedArray
+import android.graphics.Color
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.util.AttributeSet
@@ -14,6 +15,7 @@ import com.uni.unitor.unitorm2.fragment.KeySoundFragment
 import com.uni.unitor.unitorm2.layout.TabHostActivity
 import android.os.Bundle
 import android.widget.RelativeLayout
+import com.uni.unitor.unitorm2.layout.LayoutKey
 
 
 class PlayButton : RelativeLayout {
@@ -63,46 +65,55 @@ class PlayButton : RelativeLayout {
         addView(view)
         multilist.add(arrayOf(1, 0, 0, 0))//chain current allcount forcount
         textView.setOnClickListener {
-            if (isPlay) {//play mode
-                for (list in 0 until soundlist.size) {
-                    val s = soundlist.get(list)
+            //TODO: sounds와 keyled 구
+            when(activity) {
+                LayoutKey.PLAYBTN_LAYOUT_SOUND -> {
+                    if (isPlay) {//play mode
+                        for (list in 0 until soundlist.size) {
+                            val s = soundlist.get(list)
 
-                    if (s[1].equals(currenrchain)) {
-                        val count = multilist.get(s[1].toInt() - 1)
-                        if (count[1] > count[3]) {//넘길횟수 체크
-                            multilist.set(s[1].toInt() - 1, arrayOf(count[0], count[1], count[2], count[3] + 1))
-                            continue
-                        }
-                        if (count[1] <= count[2]) {//총 카운트랑 현재 카운트가 작거나 같을시 재생
-                            if (s.size == 5) {
-                                (con as TabHostActivity).play(s[2], s[3], s[4])
-                                soundlist.set(list, arrayOf("0", s[1], s[2], s[3], s[4]))
-                            } else {
-                                (con as TabHostActivity).play(s[2], s[3])
-                                soundlist.set(list, arrayOf("0", s[1], s[2], s[3]))
+                            if (s[1].equals(currenrchain)) {
+                                val count = multilist.get(s[1].toInt() - 1)
+                                if (count[1] > count[3]) {//넘길횟수 체크
+                                    multilist.set(s[1].toInt() - 1, arrayOf(count[0], count[1], count[2], count[3] + 1))
+                                    continue
+                                }
+                                if (count[1] <= count[2]) {//총 카운트랑 현재 카운트가 작거나 같을시 재생
+                                    if (s.size == 5) {
+                                        (con as TabHostActivity).play(s[2], s[3], s[4])
+                                        soundlist.set(list, arrayOf("0", s[1], s[2], s[3], s[4]))
+                                    } else {
+                                        (con as TabHostActivity).play(s[2], s[3])
+                                        soundlist.set(list, arrayOf("0", s[1], s[2], s[3]))
+                                    }
+                                }
+                                if (count[1] == count[2]) {//총 카운트랑 현재 카운트가 같을시 초기화
+                                    multilist.set(s[1].toInt() - 1, arrayOf(count[0], 1, count[2], 1))
+                                } else {//아니면 현재 카운트+1
+                                    multilist.set(s[1].toInt() - 1, arrayOf(count[0], count[1] + 1, count[2], 1))
+                                }
+                                break
                             }
                         }
-                        if (count[1] == count[2]) {//총 카운트랑 현재 카운트가 같을시 초기화
-                            multilist.set(s[1].toInt() - 1, arrayOf(count[0], 1, count[2], 1))
-                        } else {//아니면 현재 카운트+1
-                            multilist.set(s[1].toInt() - 1, arrayOf(count[0], count[1] + 1, count[2], 1))
-                        }
-                        break
-                    }
-                }
-            } else {//edit mode
-                val list:ArrayList<Array<String>> = ArrayList()
-                for (s in soundlist) {
-                    if (s[1].equals(currenrchain)) {
-                        if (s.size == 5) {
+                    } else {//edit mode
+                        val list:ArrayList<Array<String>> = ArrayList()
+                        for (s in soundlist) {
+                            if (s[1].equals(currenrchain)) {
+                                if (s.size == 5) {
 
-                            list.add(arrayOf(s[2], s[3], s[4]))
-                        } else {
-                            list.add(arrayOf(s[2], s[3]))
+                                    list.add(arrayOf(s[2], s[3], s[4]))
+                                } else {
+                                    list.add(arrayOf(s[2], s[3]))
+                                }
+                            }
                         }
+                        (con as TabHostActivity).isButtonClicked(activity, textView.text.toString(), list)
                     }
                 }
-                (con as TabHostActivity).isButtonClicked(activity, textView.text.toString(), list)
+
+                LayoutKey.PLAYBTN_LAYOUT_LED -> {
+
+                }
             }
         }
     }
@@ -157,6 +168,7 @@ class PlayButton : RelativeLayout {
         initList()
         for (s in soundlist) {
             val chain = s[1]
+
             var isIn = false
             for (m in 0..multilist.size - 1) {
                 val sin = multilist.get(m)
@@ -170,6 +182,24 @@ class PlayButton : RelativeLayout {
                 multilist.add(arrayOf(chain.toInt(), 1, 1, 1))
             }
         }
+        setButtonisIn()
+    }
+
+    //파일이 있는지 시각화
+    private fun setButtonisIn() {
+        var count = 0
+        for (s in soundlist) {
+            val chain = s[1]
+
+            if (chain==currenrchain) {
+                count++
+            }
+        }
+        if (count == 0) {
+            viewIn.visibility = View.INVISIBLE
+        } else {
+            viewIn.visibility = View.VISIBLE
+        }
     }
 
     //체인의 전체갯수
@@ -180,11 +210,7 @@ class PlayButton : RelativeLayout {
     //현재 체인 업데이트
     fun setcurrentChain(c:String) {
         currenrchain = c
-//        if (isFirst) {
-//            initList()
-//            setMulti()
-//            isFirst = false
-//        }
+        setButtonisIn()
     }
 
     //play모드인지 아닌지 판별하는것

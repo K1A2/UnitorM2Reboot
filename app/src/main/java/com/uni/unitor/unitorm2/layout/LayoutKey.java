@@ -5,6 +5,8 @@ public interface LayoutKey {
     String TABHOST_TAB_SELECTED = "SELTAB";
     String TABHOST_KEYSOUND_LIST = "LISKEY";
 
+    String KEYSOUND_BUNDLE_CHAIN = "BC";
+
     String PLAYBTN_LAYOUT_SOUND = "LASA";
     String PLAYBTN_LAYOUT_LED = "LALE";
 

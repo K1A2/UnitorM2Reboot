@@ -12,4 +12,5 @@
     <color name="colorEdittextHint">#90ffffff</color>
     <color name="black">#ffffff</color>
     <color name="text_delete">#be1717</color>
+    <color name="playbutton_in">#50ffffff</color>
 </resources>

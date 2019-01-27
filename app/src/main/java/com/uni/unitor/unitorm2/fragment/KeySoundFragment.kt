@@ -85,6 +85,11 @@ class KeySoundFragment : Fragment(){
             for (horizontal in 1..8) {
                 val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
                 playButton.setActivity(LayoutKey.PLAYBTN_LAYOUT_SOUND)
+                if (savedInstanceState != null) {
+                    playButton.setcurrentChain(savedInstanceState.getString(LayoutKey.KEYSOUND_BUNDLE_CHAIN))
+                } else {
+                    playButton.setcurrentChain("1")
+                }
             }
         }
 
@@ -102,6 +107,9 @@ class KeySoundFragment : Fragment(){
                     val chain_selected = (spinner_chain.getItemAtPosition(position) as String).split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
                     chain = chain_selected
                     setChainButton()
+                    buttonCurrent = ""
+                    text_current.setText(buttonCurrent)
+                    soundPlayListAdapter.clearItem()
                 } catch (e: Exception) {
 
                 }
@@ -109,6 +117,10 @@ class KeySoundFragment : Fragment(){
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
             }
+        }
+
+        if (savedInstanceState != null) {
+            spinner_chain.setSelection(savedInstanceState.getString(LayoutKey.KEYSOUND_BUNDLE_CHAIN).toInt() - 1)
         }
 
         //모드변경 라스너
@@ -411,5 +423,9 @@ class KeySoundFragment : Fragment(){
 
         }
         fun onRequest(type:String, content1:String, content2: String)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString(LayoutKey.KEYSOUND_BUNDLE_CHAIN, chain)
     }
 }
