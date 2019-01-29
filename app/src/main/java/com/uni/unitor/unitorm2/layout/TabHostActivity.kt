@@ -11,6 +11,7 @@ import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
@@ -32,7 +33,7 @@ import com.uni.unitor.unitorm2.R
 import com.uni.unitor.unitorm2.fragment.dialog.FileExplorerdDialog
 import java.lang.Exception
 
-class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, KeySoundFragment.OnKeySoundRequestListener, FileExplorerdDialog.OnFileSelectListener {
+class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, KeySoundFragment.OnKeySoundRequestListener, FileExplorerdDialog.OnFileSelectListener, KeyLEDFragment.OnKeyLEDRequestListener {
 
     private lateinit var toolbarV: Toolbar
     private lateinit var tablayout:TabLayout
@@ -45,7 +46,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
 
     private lateinit var keySoundIO: KeySoundIO
     private lateinit var infoIO: InfoIO
-    private lateinit var menu_save:MenuItem
+    private var menu_save:MenuItem? = null
     private lateinit var sharedPreferenceIO: SharedPreferenceIO
     private var keysoundList:ArrayList<String>? = ArrayList()
     private var soundList:ArrayList<Array<String>> = ArrayList()
@@ -93,11 +94,11 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
                 val position = tab.position
                 if (menu_save != null) {
                     when (position) {
-                        0 -> menu_save.title = getString(R.string.save_info)
+                        0 -> menu_save!!.title = getString(R.string.save_info)
 
-                        1 -> menu_save.title = getString(R.string.save_keySound)
+                        1 -> menu_save!!.title = getString(R.string.save_keySound)
 
-                        2 -> menu_save.title = getString(R.string.save_KeyLED)
+                        2 -> menu_save!!.title = getString(R.string.save_KeyLED)
                     }
                 }
                 viewPager.currentItem = position
@@ -351,6 +352,19 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         }
     }
 
+    /**KeyLED 처리**///TODO: Keyled request 처리
+    override fun onRequestLED(type:String?, content:String?) {
+        when (type) {
+            ListenerKey.KEY_LED_CHAIN -> {
+                keyLEDFragment.setChain(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_CHAIN, "1"))
+            }
+        }
+    }
+
+    override fun onRequestLED(type:String?, content1:String?, content2: String?) {
+
+    }
+
     /**액티비티가 백그라운드로 전환될때 처리
      * 사운드 언로딩, 정보 일시저장**/
     //정보 일시저장
@@ -415,7 +429,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
 
 
     //뷰페이져에 프래그먼트 붙이기
-    private inner class TabPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    private inner class TabPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment? {
             when (position) {

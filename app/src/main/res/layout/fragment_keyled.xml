@@ -53,12 +53,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:id="@+id/Layout_LED_ALL">
+            android:id="@+id/Layout_LED_ALL_RIGHT">
 
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/Spinner_chain"
+                android:id="@+id/Spinner_chain_LED"
                 android:layout_marginBottom="3dp"
                 android:theme="@style/spinner_style"></Spinner>
 

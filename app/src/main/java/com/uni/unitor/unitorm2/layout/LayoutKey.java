@@ -7,6 +7,9 @@ public interface LayoutKey {
 
     String KEYSOUND_BUNDLE_CHAIN = "BC";
 
+    String KEYLED_BUNDLE_ISPLAY = "IP";
+    String KEYLED_BUNDLE_CHAIN = "BC";
+
     String PLAYBTN_LAYOUT_SOUND = "LASA";
     String PLAYBTN_LAYOUT_LED = "LALE";
 

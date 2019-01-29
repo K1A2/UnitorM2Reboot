@@ -2,6 +2,7 @@ package com.uni.unitor.unitorm2.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.service.media.MediaBrowserService
 import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,10 +16,11 @@ import com.uni.unitor.unitorm2.R
 
 class InfoFragment : Fragment() {
 
-    private lateinit var edit_Title:EditText
-    private lateinit var edit_Producer:EditText
-    private lateinit var edit_Chain:EditText
-    private lateinit var text_Info:TextView
+    private var edit_Title:EditText? = null
+    private var edit_Producer:EditText? = null
+    private var edit_Chain:EditText? = null
+    private var text_Info:TextView? = null
+    private var root: View? = null
 
     private lateinit var onInfoChangeListener: OnInfoChangeListener
 
@@ -29,18 +31,18 @@ class InfoFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val root: View = inflater.inflate(R.layout.fragment_info, container, false)
+        root = inflater.inflate(R.layout.fragment_info, container, false)
 
-        edit_Title = root.findViewById<EditText>(R.id.Edit_Title)
-        edit_Producer = root.findViewById<EditText>(R.id.Edit_Producer)
-        edit_Chain = root.findViewById<EditText>(R.id.Edit_Chain)
-        text_Info = root.findViewById<TextView>(R.id.Edit_Title)
+        edit_Title = root!!.findViewById<EditText>(R.id.Edit_Title)
+        edit_Producer = root!!.findViewById<EditText>(R.id.Edit_Producer)
+        edit_Chain = root!!.findViewById<EditText>(R.id.Edit_Chain)
+        text_Info = root!!.findViewById<TextView>(R.id.Edit_Title)
 
         //최초 시작시 데이터 요청
         onInfoChangeListener.onInfoChaged(ListenerKey.KEY_INFO_START, "")
 
         //edittext바뀔때마다 onInfoChangeListener로 tabhost에 내용 전달
-        edit_Title.addTextChangedListener(object : TextWatcher {
+        edit_Title!!.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
 
             }
@@ -53,7 +55,7 @@ class InfoFragment : Fragment() {
                 onInfoChangeListener.onInfoChaged(PreferenceKey.KEY_INFO_TITLE, editable.toString())
             }
         })
-        edit_Producer.addTextChangedListener(object : TextWatcher {
+        edit_Producer!!.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
 
             }
@@ -66,7 +68,7 @@ class InfoFragment : Fragment() {
                 onInfoChangeListener.onInfoChaged(PreferenceKey.KEY_INFO_PRODUCER, editable.toString())
             }
         })
-        edit_Chain.addTextChangedListener(object : TextWatcher {
+        edit_Chain!!.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
 
             }
@@ -83,10 +85,10 @@ class InfoFragment : Fragment() {
     }
 
     //tabhost에 info데이터 요청
-    public fun requestInfo(title:String?, producer:String?, chain:String?) {
-        edit_Title.setText(title)
-        edit_Producer.setText(producer)
-        edit_Chain.setText(chain)
+    fun requestInfo(title:String?, producer:String?, chain:String?) {
+        edit_Title!!.setText(title)
+        edit_Producer!!.setText(producer)
+        edit_Chain!!.setText(chain)
     }
 
     //백그라운드로 들어갈때 데이터 저장

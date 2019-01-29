@@ -13,4 +13,6 @@ public interface ListenerKey {
     String KEY_SOUND_REMOVE = "RS";
     String KEY_SOUND_DELETE = "DS";
     String KEY_SOUND_ADD_FILE = "SFA";
+
+    String KEY_LED_CHAIN = "CL";
 }
