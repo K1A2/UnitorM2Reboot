@@ -73,4 +73,13 @@
     <string name="dialog_sound_add">Change</string>
     <string name="async_file_deleteS">Delete Sound Files</string>
     <string name="async_file_deleteL">Delete LED Files</string>
+    <string name="async_led_content">Read LEDs...</string>
+    <string name="menu_led_play">Play</string>
+    <string name="menu_led_select">Select</string>
+    <string name="menu_led_delete">Delete</string>
+    <string name="async_led_initial">Get LEDs..</string>
+    <string name="async_led_initial_delete">Remove Previous LEDs..</string>
+    <string name="text_led_seek_explain">You can select a Frame when you move this bar</string>
+    <!--<string name="menu_led_content_select">Select</string>-->
+    <!--<string name="menu_led_content_delete">Delete</string>-->
 </resources>

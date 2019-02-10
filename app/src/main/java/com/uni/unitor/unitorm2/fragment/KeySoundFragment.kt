@@ -28,10 +28,8 @@ import com.uni.unitor.unitorm2.view.recycler.UnipackListItem
 import com.uni.unitor.unitorm2.view.recycler.listener.RecyclerItemClickListener
 import com.uni.unitor.unitorm2.R.string.text_current
 import android.support.v7.widget.DividerItemDecoration
-
-
-
-
+import java.util.*
+import kotlin.Comparator
 
 
 class KeySoundFragment : Fragment(){
@@ -44,6 +42,7 @@ class KeySoundFragment : Fragment(){
     private lateinit var text_current:TextView
     private lateinit var button_add:ImageButton
 
+    private var bundle: Bundle? = null
     private lateinit var onRequestListener:OnKeySoundRequestListener
     private var soundListAdapter:FileListAdapter = FileListAdapter()
     private var soundPlayListAdapter:FileListAdapter = FileListAdapter()
@@ -60,6 +59,10 @@ class KeySoundFragment : Fragment(){
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_keysound, container, false)
+
+        if (savedInstanceState != null) bundle = savedInstanceState
+
+        onRequestListener.setKeySoundContext(this)
 
         linear_buttons = root.findViewById<LinearLayout>(R.id.Layout_Btns)
         spinner_chain = root.findViewById<Spinner>(R.id.Spinner_chain)
@@ -93,34 +96,33 @@ class KeySoundFragment : Fragment(){
             }
         }
 
-        //사운드 파일 추가
-        button_add.setOnClickListener {
-            onRequestListener.onRequest(ListenerKey.KEY_SOUND_ADD_FILE, "")
-        }
-
         //체인 선택 리스너뷰
         spinner_chain.onItemSelectedListener = object : OnItemSelectedListener {
 
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                (parent.getChildAt(0) as TextView).setTextColor(Color.WHITE)
-                try {
-                    val chain_selected = (spinner_chain.getItemAtPosition(position) as String).split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
-                    chain = chain_selected
-                    setChainButton()
-                    buttonCurrent = ""
-                    text_current.setText(buttonCurrent)
-                    soundPlayListAdapter.clearItem()
-                } catch (e: Exception) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (parent!!.childCount != 0) {
+                    (parent.getChildAt(0) as TextView).setTextColor(Color.WHITE)
+                    try {
+                        val chain_selected = (spinner_chain.getItemAtPosition(position) as String).split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
+                        chain = chain_selected
+                        setChainButton()
+                        buttonCurrent = ""
+                        text_current.setText(buttonCurrent)
+                        soundPlayListAdapter.clearItem()
+                    } catch (e: Exception) {
 
+                    }
+                } else {
+                    if (bundle != null) {
+                        spinner_chain.setSelection(bundle!!.getString(LayoutKey.KEYLED_BUNDLE_CHAIN).toInt() - 1)
+                    } else {
+                        spinner_chain.setSelection(0)
+                    }
                 }
             }
 
-            override fun onNothingSelected(arg0: AdapterView<*>) {
+            override fun onNothingSelected(arg0: AdapterView<*>?) {
             }
-        }
-
-        if (savedInstanceState != null) {
-            spinner_chain.setSelection(savedInstanceState.getString(LayoutKey.KEYSOUND_BUNDLE_CHAIN).toInt() - 1)
         }
 
         //모드변경 라스너
@@ -267,15 +269,23 @@ class KeySoundFragment : Fragment(){
             }
         }))
 
-        //tabhost에 chain갯수 요청
-        onRequestListener.onRequest(ListenerKey.KEY_SOUND_CHAIN, "")
-
-        //tabhost에 wav파일 리스트 요철
-        onRequestListener.onRequest(ListenerKey.KEY_SOUND_WAVFILE, "")
-
         return root
     }
 
+    override fun onStart() {
+        super.onStart()
+        //사운드 파일 추가
+        button_add.setOnClickListener {
+            onRequestListener.onRequest(ListenerKey.KEY_SOUND_ADD_FILE, "")
+        }
+        //tabhost에 chain갯수 요청
+        onRequestListener.onRequest(ListenerKey.KEY_SOUND_CHAIN, "")
+    }
+
+    fun loadFinish() {
+        //tabhost에 wav파일 리스트 요철
+        onRequestListener.onRequest(ListenerKey.KEY_SOUND_WAVFILE, "")
+    }
 
     /**tabhost에 요총한 결과 처리**/
     //playbutton에 chain설정
@@ -309,11 +319,11 @@ class KeySoundFragment : Fragment(){
                 chainlist[i] = String.format(getString(R.string.spinner_chain), i+1)
             }
             adapter = ArrayAdapter(context, android.support.design.R.layout.support_simple_spinner_dropdown_item, chainlist)
+            spinner_chain.adapter = adapter
         } catch (e:Exception) {
             val s = arrayOf<String>(1.toString())
             s[0] = String.format(getString(R.string.spinner_chain), "1")
             adapter = ArrayAdapter(context, android.support.design.R.layout.support_simple_spinner_dropdown_item, s)
-        } finally {
             spinner_chain.adapter = adapter
         }
         for (vertical in 1..8) {
@@ -333,12 +343,16 @@ class KeySoundFragment : Fragment(){
                 playButton.textView.isFocusable = true
                 for (s in sound) {
                     val spl = s.split("\\s+".toRegex())//c x y n r w
-                    if (spl[1].equals(vertical.toString())&&spl[2].equals(horizontal.toString())) {
-                        when (spl.size) {
-                            4 -> {playButton.addSound(spl[0], spl[3], "1")}
-                            5 -> {playButton.addSound(spl[0], spl[3], spl[4])}
-                            6 -> {playButton.addSound(spl[0], spl[3], spl[4], spl[5])}
+                    try {
+                        if (spl[1].equals(vertical.toString())&&spl[2].equals(horizontal.toString())) {
+                            when (spl.size) {
+                                4 -> {playButton.addSound(spl[0], spl[3], "1")}
+                                5 -> {playButton.addSound(spl[0], spl[3], spl[4])}
+                                6 -> {playButton.addSound(spl[0], spl[3], spl[4], spl[5])}
+                            }
                         }
+                    } catch (e:Exception) {
+                        continue
                     }
                 }
             }
@@ -347,6 +361,7 @@ class KeySoundFragment : Fragment(){
 
     //tabhost에 wav파일 목록 요청 결과 처리
     fun receiveWavs(wavs:ArrayList<Array<String>>) {
+        soundListAdapter.clearItem()
         for (w in wavs) {
             val s = FileListItem()
             s.fname = w[0]
@@ -423,6 +438,9 @@ class KeySoundFragment : Fragment(){
 
         }
         fun onRequest(type:String, content1:String, content2: String)
+        fun setKeySoundContext(keySoundFragment: KeySoundFragment) {
+
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

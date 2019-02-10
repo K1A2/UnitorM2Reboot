@@ -16,4 +16,7 @@ public interface LayoutKey {
     String DIALOG_FILEEX_TAG = "FET";
     String DIALOG_FILEEX_SOUND = "SFE";
     String DIALOG_FILEEX_UNIPACK = "LFE";
+
+    String BROAD_ACTION_ON = "ON";
+    String BROAD_ACTION_OFF = "OFF";
 }

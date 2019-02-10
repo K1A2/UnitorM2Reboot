@@ -33,13 +33,12 @@ class InfoFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         root = inflater.inflate(R.layout.fragment_info, container, false)
 
+        onInfoChangeListener.setInfoContext(this)
+
         edit_Title = root!!.findViewById<EditText>(R.id.Edit_Title)
         edit_Producer = root!!.findViewById<EditText>(R.id.Edit_Producer)
         edit_Chain = root!!.findViewById<EditText>(R.id.Edit_Chain)
         text_Info = root!!.findViewById<TextView>(R.id.Edit_Title)
-
-        //최초 시작시 데이터 요청
-        onInfoChangeListener.onInfoChaged(ListenerKey.KEY_INFO_START, "")
 
         //edittext바뀔때마다 onInfoChangeListener로 tabhost에 내용 전달
         edit_Title!!.addTextChangedListener(object : TextWatcher {
@@ -84,6 +83,12 @@ class InfoFragment : Fragment() {
         return root
     }
 
+    override fun onStart() {
+        super.onStart()
+        //최초 시작시 데이터 요청
+        onInfoChangeListener.onInfoChaged(ListenerKey.KEY_INFO_START, "")
+    }
+
     //tabhost에 info데이터 요청
     fun requestInfo(title:String?, producer:String?, chain:String?) {
         edit_Title!!.setText(title)
@@ -99,6 +104,9 @@ class InfoFragment : Fragment() {
     //info수정시 tabhost로 데이터 전달하는 리스너 interface 구현
     public interface OnInfoChangeListener {
         fun onInfoChaged(type:String, content:String) {
+
+        }
+        fun setInfoContext(infoFragment: InfoFragment) {
 
         }
     }

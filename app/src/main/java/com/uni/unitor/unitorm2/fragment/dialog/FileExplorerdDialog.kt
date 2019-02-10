@@ -37,6 +37,7 @@ class FileExplorerdDialog : DialogFragment() {
     
     private lateinit var selectFileAdapter:SelectFileAdapter
 
+    private var checkSelected:ArrayList<Int> = ArrayList()
     private lateinit var con:Context
     private lateinit var now:String
     private lateinit var fileIO:FileIO
@@ -89,6 +90,20 @@ class FileExplorerdDialog : DialogFragment() {
             } else if (fileListItem.titlef.equals(".../") && fileListItem.pathf.equals("")) {//상위폴더 이동
                 val parent_path = File(text_path.getText().toString()).getParent()
                 showList(parent_path + "/")//재귀호출로 상위폴더의 파일을 보여줌
+            } else if (clicked.getName().endsWith(".wav") || clicked.getName().endsWith(".mp3")) {
+                var remove:Int? = null
+                for (c in 0..checkSelected.size - 1) {
+                    val ch = checkSelected.get(c)
+                    if (ch.equals(i)) {
+                        remove = c
+                        break
+                    }
+                }
+                if (remove != null) {
+                    checkSelected.removeAt(remove)
+                } else {
+                    checkSelected.add(i)
+                }
             }
         }
 
@@ -96,18 +111,23 @@ class FileExplorerdDialog : DialogFragment() {
         btn_add.setOnClickListener {
             when (now) {
                 LayoutKey.DIALOG_FILEEX_SOUND -> {
-                    val checkedId = list_files.checkedItemPositions
-                    if (checkedId != null) {
-                        val count = checkedId.size()
-                        val selected = ArrayList<Array<String>>()
-                        for (i in 1..count) {
-                            if (checkedId.get(i)) {
-                                val item = selectFileAdapter.getItem(i)
-                                selected.add(arrayOf(item.titlef!!, item.pathf!!))
-                            }
-                        }
-                        onFileSelectListener.onFileSelect(selected)
+//                    val checkedId = list_files.checkedItemPositions
+//                    val ids = list_files.checkedItemIds
+//                    if (ids != null) {
+//                        val count = ids.size
+//                        val selected = ArrayList<Array<String>>()
+//                        for (i in 0..count-1) {
+//                                val item = selectFileAdapter.getItem(ids.get(i) as Int)
+//                                selected.add(arrayOf(item.titlef!!, item.pathf!!))
+//                        }
+//                        onFileSelectListener.onFileSelect(selected)
+//                    }
+                    val selected = ArrayList<Array<String>>()
+                    for (i in checkSelected) {
+                        val item = selectFileAdapter.getItem(i)
+                        selected.add(arrayOf(item.titlef!!, item.pathf!!))
                     }
+                    onFileSelectListener.onFileSelect(selected)
                 }
                 LayoutKey.DIALOG_FILEEX_UNIPACK -> {
 
@@ -130,6 +150,7 @@ class FileExplorerdDialog : DialogFragment() {
     }
 
     private fun showList(path:String) {
+        checkSelected = ArrayList()
         var filelist:Array<File>? = null
 
         text_path.setText(path)

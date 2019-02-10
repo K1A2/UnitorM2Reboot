@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:id="@+id/Layout_LED_ALL_LEFT">
+            android:id="@+id/Layout_LED_ALL_LEFT"
+            android:visibility="invisible">
 
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
@@ -30,7 +31,75 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:id="@+id/Layout_LED_EDIT_LEFT"></LinearLayout>
+            android:id="@+id/Layout_LED_EDIT_LEFT">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="3dp"
+                android:gravity="center_vertical">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/round_keyboard_backspace_white_24"
+                    android:background="#00000000"
+                    android:id="@+id/button_edit_previous"
+                    android:layout_marginRight="3dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/text_current_led"
+                    android:textColor="@color/colorTextNormal"
+                    android:gravity="center_vertical"/>
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginBottom="3dp"
+                android:id="@+id/recycle_content"></android.support.v7.widget.RecyclerView>
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="3dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:orientation="vertical">-->
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextNormal"
+                    android:gravity="center_vertical"
+                    android:id="@+id/text_current_frame"
+                    android:layout_marginBottom="3dp"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/recycle_frame"></android.support.v7.widget.RecyclerView>
+
+            <!--</LinearLayout>-->
+
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/text_led_seek_explain"-->
+                <!--android:textColor="@color/colorTextNormal"-->
+                <!--android:textSize="14dp"/>-->
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/seekbar_frame"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 
@@ -53,7 +122,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:id="@+id/Layout_LED_ALL_RIGHT">
+            android:id="@+id/Layout_LED_ALL_RIGHT"
+            android:visibility="invisible">
 
             <Spinner
                 android:layout_width="match_parent"
@@ -69,7 +139,55 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:id="@+id/Layout_LED_EDIT_RIGHT"></LinearLayout>
+            android:id="@+id/Layout_LED_EDIT_RIGHT">
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:theme="@style/radiobutton_style"
+                android:checkedButton="@id/radio_edit_on">
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextNormal"
+                    android:text="On"
+                    android:id="@+id/radio_edit_on"
+                    android:layout_marginBottom="3dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:id="@+id/layout_edit_on">
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/spinner_style"
+                        android:id="@+id/spinner_velocity"></Spinner>
+
+                </LinearLayout>
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextNormal"
+                    android:text="Off"
+                    android:id="@+id/radio_edit_off"
+                    android:layout_marginBottom="3dp"/>
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextNormal"
+                    android:text="Delay"
+                    android:id="@+id/radio_edit_delay"
+                    android:layout_marginBottom="3dp"/>
+
+            </RadioGroup>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

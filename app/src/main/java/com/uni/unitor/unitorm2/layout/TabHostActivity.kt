@@ -19,10 +19,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.uni.unitor.unitorm2.File.FileIO
-import com.uni.unitor.unitorm2.File.FileKey
-import com.uni.unitor.unitorm2.File.InfoIO
-import com.uni.unitor.unitorm2.File.KeySoundIO
+import com.uni.unitor.unitorm2.File.*
 import com.uni.unitor.unitorm2.fragment.InfoFragment
 import com.uni.unitor.unitorm2.fragment.KeyLEDFragment
 import com.uni.unitor.unitorm2.fragment.KeySoundFragment
@@ -32,6 +29,7 @@ import com.uni.unitor.unitorm2.File.sharedpreference.SharedPreferenceIO
 import com.uni.unitor.unitorm2.R
 import com.uni.unitor.unitorm2.fragment.dialog.FileExplorerdDialog
 import java.lang.Exception
+import java.security.Key
 
 class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, KeySoundFragment.OnKeySoundRequestListener, FileExplorerdDialog.OnFileSelectListener, KeyLEDFragment.OnKeyLEDRequestListener {
 
@@ -39,11 +37,13 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     private lateinit var tablayout:TabLayout
     private lateinit var viewPager:ViewPager
 
-    private val infoFragment:InfoFragment = InfoFragment()
-    private val keySoundFragment:KeySoundFragment = KeySoundFragment()
-    private val keyLEDFragment:KeyLEDFragment = KeyLEDFragment()
+    private var infoFragment:InfoFragment? = InfoFragment()
+    private var keySoundFragment:KeySoundFragment? = KeySoundFragment()
+    private var keyLEDFragment:KeyLEDFragment? = KeyLEDFragment()
     private val fileexDialog:FileExplorerdDialog = FileExplorerdDialog()
+    private var tabPagerAdapter:TabPagerAdapter? = null
 
+    private lateinit var keyLEDIO: KeyLEDIO
     private lateinit var keySoundIO: KeySoundIO
     private lateinit var infoIO: InfoIO
     private var menu_save:MenuItem? = null
@@ -64,6 +64,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         setContentView(R.layout.activity_tabhost)
         if (supportActionBar != null) supportActionBar!!.hide()
 
+        keyLEDIO = KeyLEDIO(this)
         keySoundIO = KeySoundIO(this)
         infoIO = InfoIO(this)
         sharedPreferenceIO = SharedPreferenceIO(this, PreferenceKey.KEY_REPOSITORY_INFO)
@@ -85,33 +86,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         ledTab.text = "KeyLED"
         tablayout.addTab(ledTab)
 
-        //뷰페이저 스와이프 할때마다 탭 바뀌게 리스너/탭 리스너 추가
-        val tabPagerAdapter = TabPagerAdapter(supportFragmentManager)
-        viewPager.adapter = tabPagerAdapter
-        viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tablayout))
-        tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                val position = tab.position
-                if (menu_save != null) {
-                    when (position) {
-                        0 -> menu_save!!.title = getString(R.string.save_info)
-
-                        1 -> menu_save!!.title = getString(R.string.save_keySound)
-
-                        2 -> menu_save!!.title = getString(R.string.save_KeyLED)
-                    }
-                }
-                viewPager.currentItem = position
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {
-
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab) {
-
-            }
-        })
+        setPageAdapter()
 
         //임시저장 정보 받아옴
         if (savedInstanceState != null) {
@@ -124,8 +99,8 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
             keysoundList = savedInstanceState.getStringArrayList(LayoutKey.TABHOST_KEYSOUND_LIST)
         }
 
-        //keysound초기화
-        initKeySound()
+//        //keysound초기화
+        //initKeySound()
     }
 
     /**메뉴처리**/
@@ -167,6 +142,55 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         }
     }
 
+    /**info, sound, led 가져옴**/
+    override fun setInfoContext(infoFragment: InfoFragment) {
+        this.infoFragment = infoFragment
+        //if (tabPagerAdapter == null) setPageAdapter()
+    }
+
+    override fun setKeySoundContext(keySoundFragment: KeySoundFragment) {
+        this.keySoundFragment = keySoundFragment
+
+        //keysound초기화
+        initKeySound()
+        //if (tabPagerAdapter == null) setPageAdapter()
+    }
+
+    override fun setKeyLEDContext(keyLEDFragment: KeyLEDFragment) {
+        this.keyLEDFragment = keyLEDFragment
+        //if (tabPagerAdapter == null) setPageAdapter()
+    }
+
+    private fun setPageAdapter() {
+        //뷰페이저 스와이프 할때마다 탭 바뀌게 리스너/탭 리스너 추가
+        tabPagerAdapter = TabPagerAdapter(supportFragmentManager)
+        viewPager.adapter = tabPagerAdapter
+        viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tablayout))
+        tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                val position = tab.position
+                if (menu_save != null) {
+                    when (position) {
+                        0 -> menu_save!!.title = getString(R.string.save_info)
+
+                        1 -> menu_save!!.title = getString(R.string.save_keySound)
+
+                        2 -> menu_save!!.title = getString(R.string.save_KeyLED)
+                    }
+                }
+                viewPager.currentItem = position
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab) {
+
+            }
+        })
+    }
+
     /**Info 처리**/
     //info저장
     private fun saveInfo() {
@@ -185,7 +209,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     override fun onInfoChaged(type:String, content:String) {
         //최초요청시 전달
         if (type.equals(ListenerKey.KEY_INFO_START)) {
-            infoFragment.requestInfo(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_TITLE, ""),
+            infoFragment!!.requestInfo(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_TITLE, ""),
                     sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PRODUCER, ""),
                     sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_CHAIN, ""))
         } else {//일반적인경우(edittext편집)
@@ -200,31 +224,36 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
             keySoundIO.mkKeySoundWork()
             KeySoundIO.DupliSaveSound(this,
                     sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-            keysoundInit = false
+        } else {
+            setKeysoundWork()
         }
-        soundList = keySoundIO.getSoundFile(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!)
     }
 
     //keysound에서 복제가 끝나면 work폴더에서 가져옴
     fun setKeysoundWork() {
+        soundList = keySoundIO.getSoundFile(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!)
         keysoundList = keySoundIO.getKeySoundWork()
-        keySoundFragment.soundloadFinish()
+        keySoundFragment!!.soundloadFinish()
+        if (!isUnload) {
+            loadSound = LoadSound(this, soundList)
+            loadSound.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+        }
     }
 
     //(keysound)
     override fun onRequest(type:String, content:String) {
         when (type) {
             ListenerKey.KEY_SOUND_CHAIN -> {
-                keySoundFragment.setChain(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_CHAIN, "1"))
+                keySoundFragment!!.setChain(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_CHAIN, "1"))
             }
             ListenerKey.KEY_SOUND_FILE -> {
-                if (keysoundList != null) keySoundFragment.setButton(keysoundList!!)
+                if (keysoundList != null) keySoundFragment!!.setButton(keysoundList!!)
             }
             ListenerKey.KEY_SOUND_CHAIN_T -> {
                 chain = content
             }
             ListenerKey.KEY_SOUND_WAVFILE -> {
-                keySoundFragment.receiveWavs(soundList)
+                keySoundFragment!!.receiveWavs(soundList)
             }
             ListenerKey.KEY_SOUND_PLAY -> {
                 play(content, "1")
@@ -294,7 +323,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     //play
     fun play(name:String, repeat:String, whole:String) {
         play(name, repeat)
-        keySoundFragment.setWormwhole(whole)
+        keySoundFragment!!.setWormwhole(whole)
     }
 
     //play
@@ -316,6 +345,11 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     fun setLoad(sl:ArrayList<Array<Any>>, sound: SoundPool) {
         soundLoaded = sl
         soundPool = sound
+        keySoundFragment!!.loadFinish()
+        if (keysoundInit) {
+            KeyLEDIO.getLedWork(this, sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+            keysoundInit = false
+        }
     }
 
     //sound저장
@@ -335,16 +369,16 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         soundList = keySoundIO.getSoundFile(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!)
         loadSound = LoadSound(this, soundList)
         loadSound.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-        if (isAdd) {
-            keySoundFragment.addSound(soundList)
-        }
+//        if (isAdd) {
+//            keySoundFragment!!.addSound(soundList)
+//        }
     }
 
     /**동시처리**/
     fun isButtonClicked(activity:String, tag:String, list:ArrayList<Array<String>>) {
         when (activity) {
             LayoutKey.PLAYBTN_LAYOUT_SOUND -> {//sound버튼이 클릭
-                keySoundFragment.isPlayButtonClicked(tag, list)
+                keySoundFragment!!.isPlayButtonClicked(tag, list)
             }
             LayoutKey.PLAYBTN_LAYOUT_LED -> {//led버튼이 클릭
 
@@ -356,12 +390,30 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     override fun onRequestLED(type:String?, content:String?) {
         when (type) {
             ListenerKey.KEY_LED_CHAIN -> {
-                keyLEDFragment.setChain(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_CHAIN, "1"))
+                keyLEDFragment!!.setChain(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_CHAIN, "1"))
+            }
+            ListenerKey.KEY_LED_FILE -> {
+                KeyLEDIO.GetKeySoundContent(this, sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
             }
         }
     }
 
     override fun onRequestLED(type:String?, content1:String?, content2: String?) {
+
+    }
+
+    //LED 가져
+    fun recieveLED(ledlist:ArrayList<Array<String>>) {
+        keyLEDFragment!!.setLEDList(ledlist)
+    }
+
+    //LED 내용 가져오기 (원본 파일)
+    fun getLEDContentFinish(content : ArrayList<Array<String>>?) {
+        keyLEDFragment!!.setLEDFile(content)
+    }
+
+    //LED 초기화 끝나고
+    fun setLedInitFinish() {
 
     }
 
@@ -378,9 +430,17 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     //화면 돌아오면 사운드 로딩
     override fun onResume() {
         super.onResume()
-        if (!isUnload) {
-            loadSound = LoadSound(this, soundList)
-            loadSound.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+//        if (!isUnload) {
+//            loadSound = LoadSound(this, soundList)
+//            loadSound.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+//        }
+    }
+
+    //다이얼로그 보일시 강제로 비활
+    override fun onPause() {
+        super.onPause()
+        if (fileexDialog.dialog != null&&fileexDialog.dialog.isShowing&&!fileexDialog.isRemoving) {
+            fileexDialog.dismiss()
         }
     }
 
@@ -434,15 +494,15 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         override fun getItem(position: Int): Fragment? {
             when (position) {
                 0 -> {
-                    return infoFragment
+                    if (infoFragment != null) return infoFragment else return  null
                 }
 
                 1 -> {
-                    return keySoundFragment
+                    if (keysoundInit != null) return keySoundFragment else return  null
                 }
 
                 2 -> {
-                    return keyLEDFragment
+                    if (keyLEDFragment != null) return keyLEDFragment else return  null
                 }
 
                 else -> return null

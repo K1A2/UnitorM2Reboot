@@ -168,7 +168,6 @@ class KeySoundIO(private val context: Context) : ContextWrapper(context) {
 
         override fun doInBackground(vararg params: String?): Boolean {
             try {
-                val byte = ByteArray(2048)
                 for (i in 0 until files.size) {
                     val inside = files.get(i)
                     val path = inside[1]

@@ -1,5 +1,7 @@
 package com.uni.unitor.unitorm2.fragment;
 
+import android.renderscript.ScriptGroup;
+
 public interface ListenerKey {
     String KEY_INFO_START = "Start";
 
@@ -15,4 +17,5 @@ public interface ListenerKey {
     String KEY_SOUND_ADD_FILE = "SFA";
 
     String KEY_LED_CHAIN = "CL";
+    String KEY_LED_FILE = "LEDF";
 }
