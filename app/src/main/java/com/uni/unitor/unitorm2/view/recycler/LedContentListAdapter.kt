@@ -65,10 +65,45 @@ class LedContentListAdapter : RecyclerView.Adapter<LedContentListAdapter.ViewHol
         return contentItems[position]
     }
 
+    fun changeItem(pos:Int, item: LedContentListItem) {
+        contentItems.set(pos, item)
+        notifyItemChanged(pos)
+    }
+
     fun clearItem() {
         val count = contentItems.size
         contentItems.clear()
         notifyItemRangeRemoved(0, count)
+    }
+
+    fun deleteItem(content:String) {
+        var count = 0
+        var find = false
+        for (i in contentItems) {
+            if (i.line.equals(content)) {
+                find = true
+                break
+            } else {
+                count++
+            }
+        }
+        if (find) {
+            contentItems.removeAt(count)
+            notifyItemRemoved(count)
+        }
+
+    }
+
+    fun changeName() {
+        var count = 0
+        for (i in contentItems) {
+            val con = LedContentListItem()
+            con.line = "Frame " + (count + 1).toString()
+            con.contents = i.contents
+            contentItems.set(count, con)
+            notifyItemChanged(count)
+            count++
+        }
     }
 
     fun dataChanged(p:Int) {

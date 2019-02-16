@@ -78,43 +78,43 @@ class PlayButton : RelativeLayout, KeyLEDFragment.OnPlayLED {
         addView(view)
         multilist.add(arrayOf(1, 0, 0, 0))//chain current allcount forcount
 
-        val receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                when (intent.action) {
-                    LayoutKey.BROAD_ACTION_ON -> {
-                        Thread(Runnable {
-                            val list = intent.getStringArrayListExtra("on")
-                            for (i in list) {
-                                val o = i.split("\\n".toRegex())
-                                if (o[0].startsWith(textView.text.toString())) {
-                                    (con as TabHostActivity).runOnUiThread {
-                                        onLED(o[1].toInt())
-                                    }
-                                }
-                            }
-                        }).start()
-                    }
-                    LayoutKey.BROAD_ACTION_OFF -> {
-                        Thread(Runnable {
-                            val list = intent.getStringArrayListExtra("off")
-                            for (i in list) {
-                                val o = i.split("\\n".toRegex())
-                                if (o[0].startsWith(textView.text.toString())) {
-                                    (con as TabHostActivity).runOnUiThread {
-                                        offLED()
-                                    }
-                                }
-                            }
-                        }).start()
-
-                    }
-                }
-            }
-        }
-        val filter = IntentFilter()
-        filter.addAction(LayoutKey.BROAD_ACTION_ON)
-        filter.addAction(LayoutKey.BROAD_ACTION_OFF)
-        con.registerReceiver(receiver, filter)
+//        val receiver = object : BroadcastReceiver() {
+//            override fun onReceive(context: Context, intent: Intent) {
+//                when (intent.action) {
+//                    LayoutKey.BROAD_ACTION_ON -> {
+//                        Thread(Runnable {
+//                            val list = intent.getStringArrayListExtra("on")
+//                            for (i in list) {
+//                                val o = i.split("\\n".toRegex())
+//                                if (o[0].startsWith(textView.text.toString())) {
+//                                    (con as TabHostActivity).runOnUiThread {
+//                                        onLED(o[1].toInt())
+//                                    }
+//                                }
+//                            }
+//                        }).start()
+//                    }
+//                    LayoutKey.BROAD_ACTION_OFF -> {
+//                        Thread(Runnable {
+//                            val list = intent.getStringArrayListExtra("off")
+//                            for (i in list) {
+//                                val o = i.split("\\n".toRegex())
+//                                if (o[0].startsWith(textView.text.toString())) {
+//                                    (con as TabHostActivity).runOnUiThread {
+//                                        offLED()
+//                                    }
+//                                }
+//                            }
+//                        }).start()
+//
+//                    }
+//                }
+//            }
+//        }
+//        val filter = IntentFilter()
+//        filter.addAction(LayoutKey.BROAD_ACTION_ON)
+//        filter.addAction(LayoutKey.BROAD_ACTION_OFF)
+//        con.registerReceiver(receiver, filter)
 
         textView.setOnClickListener {
             //TODO: sounds와 keyled 구
@@ -166,20 +166,24 @@ class PlayButton : RelativeLayout, KeyLEDFragment.OnPlayLED {
 
                 //LED일때
                 LayoutKey.PLAYBTN_LAYOUT_LED -> {
-                    val ledGet:ArrayList<Array<String>> = ArrayList()
-                    for (i in ledlist) {
-                        if (currenrchain.equals(i[2])) {
-                            when (i.size) {
-                                3 -> {
-                                    ledGet.add(arrayOf(i[0], i[1], i[2]))
-                                }
-                                4 -> {
-                                    ledGet.add(arrayOf(i[0], i[1], i[2], i[3]))
+                    if (isEdit) {//편집모드
+                        (con as TabHostActivity).editLED(textView.text.toString())
+                    } else {//전체모드
+                        val ledGet:ArrayList<Array<String>> = ArrayList()
+                        for (i in ledlist) {
+                            if (currenrchain.equals(i[2])) {
+                                when (i.size) {
+                                    3 -> {
+                                        ledGet.add(arrayOf(i[0], i[1], i[2]))
+                                    }
+                                    4 -> {
+                                        ledGet.add(arrayOf(i[0], i[1], i[2], i[3]))
+                                    }
                                 }
                             }
                         }
+                        (con as TabHostActivity).recieveLED(ledGet, textView.text.toString())
                     }
-                    (con as TabHostActivity).recieveLED(ledGet)
                 }
             }
         }
@@ -299,6 +303,27 @@ class PlayButton : RelativeLayout, KeyLEDFragment.OnPlayLED {
                 ledlist.add(arrayOf(content, name, names[0], names[4]))
             }
         }
+        setButtonisInLed()
+    }
+
+    fun changeLed(con:String, name:String) {
+        var count = 0
+        for (i in ledlist) {
+            if (i[1].equals(name)) {
+                break
+            } else {
+                count++
+            }
+        }
+        val names = name.split("\\s+".toRegex())
+        when (names.size) {
+            4 -> {//content name chain
+                ledlist.set(count, arrayOf(con, name, names[0]))
+            }
+            5 -> {//content name chain multi
+                ledlist.set(count, arrayOf(con, name, names[0], names[4]))
+            }
+        }
     }
 
     //led멀티 설정
@@ -335,6 +360,23 @@ class PlayButton : RelativeLayout, KeyLEDFragment.OnPlayLED {
         for (s in soundlist) {
             val chain = s[1]
 
+            if (chain.equals(currenrchain)) {
+                count++
+            }
+        }
+        if (count == 0) {
+            viewIn.visibility = View.INVISIBLE
+        } else {
+            viewIn.visibility = View.VISIBLE
+        }
+    }
+
+    //파일이 있는지 시각화
+    fun setButtonisInLed() {
+        var count = 0
+        for (s in ledlist) {
+            val chain = s[2]
+
             if (chain==currenrchain) {
                 count++
             }
@@ -344,6 +386,10 @@ class PlayButton : RelativeLayout, KeyLEDFragment.OnPlayLED {
         } else {
             viewIn.visibility = View.VISIBLE
         }
+    }
+
+    fun disableShow() {
+        viewIn.visibility = View.INVISIBLE
     }
 
     //체인의 전체갯수
@@ -364,13 +410,17 @@ class PlayButton : RelativeLayout, KeyLEDFragment.OnPlayLED {
 
     //edit모드인지 아닌지 판별하는것 led
     fun setIsEdit(isedit:Boolean) {
-        isEdit = isEdit
+        isEdit = isedit
     }
 
     //리스트 전체 리셋
     fun resetSound() {
         soundlist.clear()
         multilist.clear()
+    }
+
+    fun resetLed() {
+        ledlist.clear()
     }
 
     //현제 액티비티가 뭔지 판별

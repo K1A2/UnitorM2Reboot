@@ -52,6 +52,18 @@ class MainActivity : AppCompatActivity() {
         recycler_unipack.adapter = unipackAdapter
         showUnipack()
 
+        floating_import.setOnClickListener {
+
+        }
+
+        floating_new.setOnClickListener {
+
+        }
+
+        floating_setting.setOnClickListener {
+
+        }
+
         //유니팩 리스트 리스너
         recycler_unipack.addOnItemTouchListener(RecyclerItemClickListener(this, recycler_unipack, object : RecyclerItemClickListener.OnItemClickListener {
             //클릭=편집시작

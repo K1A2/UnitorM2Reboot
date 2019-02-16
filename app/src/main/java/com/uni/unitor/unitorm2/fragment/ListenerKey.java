@@ -18,4 +18,8 @@ public interface ListenerKey {
 
     String KEY_LED_CHAIN = "CL";
     String KEY_LED_FILE = "LEDF";
+    String KEY_LED_MODIFIDE = "KMO";
+    String KEY_LED_DELAY_MODIFIDE = "DMK";
+    String KEY_LED_FILE_NEW = "MKLF";
+    String KEY_LED_FILE_DELETE = "DELF";
 }

@@ -125,7 +125,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
                             saveKeySound()
                         }
                         2 -> {
-                            //onSaveListener3.onSave(ActivityKey.KEY_INT_LED)
+                            savKeyLED()
                         }
                     }
                     return true
@@ -387,6 +387,10 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     }
 
     /**KeyLED 처리**///TODO: Keyled request 처리
+    fun savKeyLED() {
+        KeyLEDIO.SaveLED(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+    }
+
     override fun onRequestLED(type:String?, content:String?) {
         when (type) {
             ListenerKey.KEY_LED_CHAIN -> {
@@ -395,16 +399,36 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
             ListenerKey.KEY_LED_FILE -> {
                 KeyLEDIO.GetKeySoundContent(this, sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
             }
+            ListenerKey.KEY_LED_FILE_NEW -> {
+                keyLEDIO.makeNewLED(content!!)
+            }
+            ListenerKey.KEY_LED_FILE_DELETE -> {
+                keyLEDIO.deleteLedFile(content!!, sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!)
+            }
         }
     }
 
     override fun onRequestLED(type:String?, content1:String?, content2: String?) {
+        when (type) {
+            ListenerKey.KEY_LED_MODIFIDE -> {
+                keyLEDIO.saveLedWork(content1!!, content2!!)
+            }
+        }
+    }
 
+    //led rename finished
+    fun ledRenameFinished(ic:ArrayList<Array<String>>) {
+        keyLEDFragment!!.ledDeleteFinished(ic)
     }
 
     //LED 가져
-    fun recieveLED(ledlist:ArrayList<Array<String>>) {
-        keyLEDFragment!!.setLEDList(ledlist)
+    fun recieveLED(ledlist:ArrayList<Array<String>>, clicked:String) {
+        keyLEDFragment!!.setLEDList(ledlist, clicked)
+    }
+
+    //led 편집
+    fun editLED(id:String) {
+        keyLEDFragment!!.receiveEdit(id)
     }
 
     //LED 내용 가져오기 (원본 파일)

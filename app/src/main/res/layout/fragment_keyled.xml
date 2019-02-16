@@ -16,8 +16,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:id="@+id/Layout_LED_ALL_LEFT"
-            android:visibility="invisible">
+            android:id="@+id/Layout_LED_ALL_LEFT">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/outline_add_white_24"
+                android:background="#00000000"
+                android:id="@+id/button_edit_add_led"
+                android:layout_marginRight="3dp"/>
 
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
@@ -31,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:visibility="invisible"
             android:id="@+id/Layout_LED_EDIT_LEFT">
 
             <LinearLayout
@@ -52,8 +60,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/text_current_led"
+                    android:layout_weight="1"
                     android:textColor="@color/colorTextNormal"
-                    android:gravity="center_vertical"/>
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="3dp"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/outline_add_white_24"
+                    android:background="#00000000"
+                    android:id="@+id/button_edit_add"
+                    android:layout_marginRight="3dp"/>
 
             </LinearLayout>
 
@@ -70,20 +88,6 @@
                 <!--android:layout_marginBottom="3dp"-->
                 <!--android:layout_weight="1"-->
                 <!--android:orientation="vertical">-->
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorTextNormal"
-                    android:gravity="center_vertical"
-                    android:id="@+id/text_current_frame"
-                    android:layout_marginBottom="3dp"/>
-
-                <android.support.v7.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:id="@+id/recycle_frame"></android.support.v7.widget.RecyclerView>
 
             <!--</LinearLayout>-->
 
@@ -122,8 +126,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:id="@+id/Layout_LED_ALL_RIGHT"
-            android:visibility="invisible">
+            android:id="@+id/Layout_LED_ALL_RIGHT">
 
             <Spinner
                 android:layout_width="match_parent"
@@ -132,6 +135,12 @@
                 android:layout_marginBottom="3dp"
                 android:theme="@style/spinner_style"></Spinner>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/alert"
+                android:textColor="@color/colorTextNormal"/>
+
         </LinearLayout>
 
         <!--LED파일 내용 편집 레이아웃-->
@@ -139,12 +148,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:visibility="invisible"
             android:id="@+id/Layout_LED_EDIT_RIGHT">
 
             <RadioGroup
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:theme="@style/radiobutton_style"
+                android:id="@+id/group_command"
                 android:checkedButton="@id/radio_edit_on">
 
                 <RadioButton
@@ -159,7 +170,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
-                    android:id="@+id/layout_edit_on">
+                    android:id="@+id/layout_edit_on"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorTextNormal"
+                        android:text="@string/text_select_led"/>
 
                     <Spinner
                         android:layout_width="match_parent"
@@ -177,15 +195,56 @@
                     android:id="@+id/radio_edit_off"
                     android:layout_marginBottom="3dp"/>
 
-                <RadioButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorTextNormal"
-                    android:text="Delay"
-                    android:id="@+id/radio_edit_delay"
-                    android:layout_marginBottom="3dp"/>
+                <!--<RadioButton-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textColor="@color/colorTextNormal"-->
+                    <!--android:text="Delay"-->
+                    <!--android:id="@+id/radio_edit_delay"-->
+                    <!--android:layout_marginBottom="3dp"/>-->
 
             </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delay: "
+                    android:textSize="17dp"
+                    android:textColor="@color/colorTextNormal" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_delay"
+                    android:inputType="number"
+                    android:imeOptions="actionDone"
+                    android:layout_marginBottom="3dp"
+                    android:theme="@style/edittext_darkback"
+                    android:textColorHint="@color/colorEdittextHint"
+                    android:textColor="@color/colorTextNormal"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextNormal"
+                android:gravity="center_vertical"
+                android:id="@+id/text_current_frame"
+                android:layout_marginBottom="3dp"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginBottom="3dp"
+                android:id="@+id/recycle_frame"></android.support.v7.widget.RecyclerView>
 
         </LinearLayout>
 

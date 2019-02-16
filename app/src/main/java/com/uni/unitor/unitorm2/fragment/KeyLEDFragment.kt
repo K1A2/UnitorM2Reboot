@@ -1,18 +1,24 @@
 package com.uni.unitor.unitorm2.fragment
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
 import android.widget.*
 import com.uni.unitor.unitorm2.File.PlayLED
+import com.uni.unitor.unitorm2.File.sharedpreference.PreferenceKey
 import com.uni.unitor.unitorm2.R
 import com.uni.unitor.unitorm2.layout.LayoutKey
 import com.uni.unitor.unitorm2.view.buttons.PlayButton
@@ -21,8 +27,12 @@ import com.uni.unitor.unitorm2.view.recycler.FileListItem
 import com.uni.unitor.unitorm2.view.recycler.LedContentListAdapter
 import com.uni.unitor.unitorm2.view.recycler.LedContentListItem
 import com.uni.unitor.unitorm2.view.recycler.listener.RecyclerItemClickListener
-import java.lang.StringBuilder
 import kotlin.Exception
+import kotlin.text.StringBuilder
+import com.uni.unitor.unitorm2.view.spinner.SpinnerColordapter
+import java.util.*
+import java.util.Collections.addAll
+
 
 
 
@@ -41,6 +51,11 @@ class KeyLEDFragment : Fragment(){
     private lateinit var seekBar_frame:SeekBar
     private lateinit var text_current_con:TextView
     private lateinit var recycler_frame:RecyclerView
+    private lateinit var button_add:ImageButton
+    private lateinit var edit_delay:EditText
+    private lateinit var group_command:RadioGroup
+    private lateinit var spinner_velocity:Spinner
+    private lateinit var button_add_led:ImageButton
 
     private val ledFrameAapter:LedContentListAdapter = LedContentListAdapter()
     private val ledContentAdapter:LedContentListAdapter = LedContentListAdapter()
@@ -50,6 +65,7 @@ class KeyLEDFragment : Fragment(){
     private var chain:String = ""
     private var isEdit: Boolean = false
     private lateinit var onRequestListener:OnKeyLEDRequestListener
+    private var clickedButton:String = ""
 
     protected lateinit var velocity:IntArray
 
@@ -123,6 +139,11 @@ class KeyLEDFragment : Fragment(){
         seekBar_frame = root.findViewById(R.id.seekbar_frame)
         text_current_con = root.findViewById(R.id.text_current_frame)
         recycler_frame = root.findViewById(R.id.recycle_frame)
+        button_add = root.findViewById(R.id.button_edit_add)
+        edit_delay = root.findViewById(R.id.edit_delay)
+        group_command = root.findViewById(R.id.group_command)
+        spinner_velocity = root.findViewById(R.id.spinner_velocity)
+        button_add_led = root.findViewById(R.id.button_edit_add_led)
 
         for (vertical in 1..8) {
             for (horizontal in 1..8) {
@@ -135,6 +156,19 @@ class KeyLEDFragment : Fragment(){
                 }
             }
         }
+
+        val LED_num = ArrayList<String>()
+        val color = ArrayList<Int>()
+        val v = arrayOfNulls<Int>(velocity.size)
+        for (t in 0 until velocity.size) {
+            color.add(velocity[t])
+        }
+        for (i in 0..127) {
+            val s = i.toString()
+            LED_num.add(s)
+        }
+        val spinnerColordapter = SpinnerColordapter(activity!!, LED_num, color)
+        spinner_velocity.setAdapter(spinnerColordapter)
 
         recycler_LED.layoutManager = LinearLayoutManager(activity)
         recycler_LED.itemAnimator = DefaultItemAnimator()
@@ -160,8 +194,41 @@ class KeyLEDFragment : Fragment(){
             for (vertical in 1..8) {
                 for (horizontal in 1..8) {
                     val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
-                    playButton.setIsEdit(false)
+                    isEdit = false
+                    playButton.setIsEdit(isEdit)
+                    playButton.offLED()
+                    playButton.setButtonisInLed()
                 }
+            }
+            layout_editRight.isEnabled = false
+            ledFrameAapter.clearItem()
+            edit_delay.setText("")
+            text_current_con.setText("")
+        }
+
+        //frame 추가 버튼
+        button_add.setOnClickListener {
+            val con = LedContentListItem()
+            con.line = "Frame " + (ledContentAdapter.itemCount + 1)
+            con.contents = "d 10\n"
+            ledContentAdapter.addItem(con)
+            modifiedLed()
+            seekBar_frame.max = ledContentAdapter.itemCount - 1
+            seekBar_frame.progress = ledContentAdapter.itemCount - 1
+        }
+
+        //led파일 추가 버튼
+        button_add_led.setOnClickListener {
+            if (!clickedButton.isEmpty()) {
+                val con = FileListItem()
+                val name = chain + " " + clickedButton + " 1 " + ledListAdpater.itemCount.toString()
+                val path = Environment.getExternalStorageDirectory().absolutePath + "/unipackProject/work/keyLED/" + name
+                con.fname = name
+                con.fpath = ""
+                onRequestListener.onRequestLED(ListenerKey.KEY_LED_FILE_NEW, path)
+                ledListAdpater.addItem(con)
+
+                onRequestListener.onRequestLED(ListenerKey.KEY_LED_FILE, "")
             }
         }
 
@@ -216,21 +283,34 @@ class KeyLEDFragment : Fragment(){
                                         builder.append(i + "\n")
                                     }
                                 }
-                                seekBar_frame.max = ledContentAdapter.itemCount - 1
-                                seekBar_frame.progress = 0
-
+                                if (ledContentAdapter.itemCount != 0)  {
+                                    seekBar_frame.max = ledContentAdapter.itemCount - 1
+                                    seekBar_frame.progress = 0
+                                }
                                 for (vertical in 1..8) {
                                     for (horizontal in 1..8) {
                                         val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
-                                        playButton.setIsEdit(true)
+                                        isEdit = false
+                                        playButton.disableShow()
                                     }
                                 }
+                                ledListAdpater.clearItem()
                             }
                             R.id.menu_led_play -> {//TODO: Play LED
                                 //PlayLED(x.fpath!!, root).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
                                 //com.uni.unitor.unitorm2.File.PlayLED(x.fpath, root, context, velocity.toTypedArray()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
                             }
-                            R.id.menu_led_delete -> {}
+                            R.id.menu_led_delete -> {
+                                val x = ledListAdpater.getItem(position)
+                                val dialog = AlertDialog.Builder(context)
+                                dialog.setTitle(String.format(context!!.getString(R.string.dialog_title_delete_frame), x.fname))
+                                dialog.setMessage(context!!.getString(R.string.dialog_delete_led))
+                                dialog.setPositiveButton(context!!.getString(R.string.dialog_button_frame_delete)) { dialog, which ->
+                                    onRequestListener.onRequestLED(ListenerKey.KEY_LED_FILE_DELETE, x.fname)
+                                }
+                                dialog.setNegativeButton(context!!.getString(R.string.cancel), null)
+                                dialog.show()
+                            }
                         }
                         return true
                     }
@@ -243,11 +323,81 @@ class KeyLEDFragment : Fragment(){
             }
         }))
 
+        //frame select
         recycler_content.addOnItemTouchListener(RecyclerItemClickListener(container!!.context, recycler_content, object : RecyclerItemClickListener.OnItemClickListener {
 
             override fun onItemClicked(view: View, position: Int) {
                 seekBar_frame.progress = position
                 setSelectFrame(position)
+                layout_editRight.isEnabled = true
+            }
+
+            override fun onLongItemClicked(view: View?, position: Int) {
+                val x = ledContentAdapter.getItem(position)
+                val dialog = AlertDialog.Builder(context)
+                dialog.setTitle(String.format(context!!.getString(R.string.dialog_title_delete_frame), x.line))
+                dialog.setPositiveButton(context!!.getString(R.string.dialog_button_frame_delete)) { dialog, which ->
+                    ledContentAdapter.deleteItem(x.line!!)
+                    ledContentAdapter.changeName()
+                    modifiedLed()
+                    ledFrameAapter.clearItem()
+                    text_current_led.text = ""
+                }
+                dialog.setNegativeButton(context!!.getString(R.string.cancel), null)
+                dialog.show()
+            }
+        }))
+
+        //프레임 리스트뷰
+        recycler_frame.addOnItemTouchListener(RecyclerItemClickListener(container!!.context, recycler_frame, object : RecyclerItemClickListener.OnItemClickListener {
+
+            override fun onItemClicked(view: View, position: Int) {
+                //delete
+                val x = ledFrameAapter.getItem(position)
+                val dialog = AlertDialog.Builder(context)
+                dialog.setTitle(String.format(context!!.getString(R.string.dialog_title_delete_frame), x.line))
+                dialog.setPositiveButton(context!!.getString(R.string.dialog_button_frame_delete)) { dialog, which ->
+                    ledFrameAapter.deleteItem(x.line!!)
+//                    val s = x.line!!.split("\\s+".toRegex())
+//                    (root.findViewWithTag(s[1] + " " + s[2]) as PlayButton).offLED()
+//                    for (q in ledFrameAapter.getAllItem().asReversed()) {
+//                        if (q.line!!.contains(s[1] + " " + s[2])) {
+//                            if (q.line!!.startsWith("o")&&q.line!!.startsWith("on")) {
+//                                try {
+//                                    (root.findViewWithTag(s[1] + " " + s[2]) as PlayButton).onLED(velocity[q.line!!.split("\\s+".toRegex())[4].toInt()])
+//                                } catch (e:Exception) {
+//
+//                                }
+//                            }
+//                        }
+//                    }
+                    var c = 0
+                    for (h in ledContentAdapter.getAllItem()) {
+                        if (h.line.equals(text_current_con.text.substring(10))) {
+                            val builder = StringBuilder()
+                            val list = ArrayList<String>()
+                            for (m in h.contents!!.split("\\n+".toRegex())) {
+                                if (!m.isEmpty()&&!m.equals(x.line)) {
+                                    list.add(m)
+                                }
+                            }
+                            for (k in list) {
+                                builder.append(k + "\n")
+                            }
+                            val l = LedContentListItem()
+                            l.line = h.line
+                            l.contents = builder.toString()
+                            ledContentAdapter.changeItem(c, l)
+                            modifiedLed()
+                            break
+                        } else {
+                            c++
+                        }
+                    }
+                    setSelectFrame(c)
+                }
+                dialog.setNegativeButton(context!!.getString(R.string.cancel), null)
+                dialog.show()
             }
 
             override fun onLongItemClicked(view: View?, position: Int) {
@@ -267,9 +417,43 @@ class KeyLEDFragment : Fragment(){
             }
 
             override fun onProgressChanged(seekBar:SeekBar , progress:Int, fromUser:Boolean) {
-                recycler_content.layoutManager!!.scrollToPosition(progress)
-                val con = ledContentAdapter.getItem(progress)
-                text_current_con.setText("Selected: " +  con.line)
+                if (progress <= ledContentAdapter.itemCount - 1) {
+                    recycler_content.layoutManager!!.scrollToPosition(progress)
+                }
+            }
+        })
+
+        //edittext바뀔때마다 delay 변경 전달
+        edit_delay!!.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+
+            }
+
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+
+            }
+
+            override fun afterTextChanged(editable: Editable) {
+                if (isEdit&&!text_current_con.text.isEmpty()) {
+                    var modifide = "1"
+                    if (!editable.toString().isEmpty()) {
+                        modifide = editable.toString()
+                    }
+                    val pos = text_current_con.text.substring(16).toInt() - 1
+                    val builder = StringBuilder()
+                    for (i in ledContentAdapter.getItem(pos).contents!!.split("\\n".toRegex())) {
+                        if (i.startsWith("d")||i.startsWith("delay")) {
+                            builder.append("d " + modifide + "\n")
+                        } else {
+                            builder.append(i + "\n")
+                        }
+                    }
+                    val con = LedContentListItem()
+                    con.line = ledContentAdapter.getItem(pos).line
+                    con.contents = builder.toString()
+                    ledContentAdapter.changeItem(pos, con)
+                    modifiedLed()
+                }
             }
         })
 
@@ -278,22 +462,37 @@ class KeyLEDFragment : Fragment(){
             chain = "1"
         } else {
             chain = savedInstanceState.getString(LayoutKey.KEYLED_BUNDLE_CHAIN)
-            if (savedInstanceState!!.getBoolean(LayoutKey.KEYLED_BUNDLE_ISPLAY)) {
-                setLayoutMode(true)
-            } else {
-                setLayoutMode(false)
-            }
+//            if (savedInstanceState!!.getBoolean(LayoutKey.KEYLED_BUNDLE_ISPLAY)) {
+//                setLayoutMode(true)
+//            } else {
+//                setLayoutMode(false)
+//            }
         }
 
         return root
     }
 
+    //led 수정
+    private fun modifiedLed() {
+        val builder = StringBuilder()
+        for (i in ledContentAdapter.getAllItem()) {
+            builder.append(i.contents)
+        }
+        onRequestListener.onRequestLED(ListenerKey.KEY_LED_MODIFIDE, builder.toString(), text_current_led.text.toString())
+        val s = text_current_led.text.toString().split("\\s+".toRegex())
+        val playButton = root.findViewWithTag(s[1] + " " + s[2]) as PlayButton
+        playButton.changeLed(builder.toString(), text_current_led.text.toString())
+    }
+
+    //frame 선택
     private fun setSelectFrame(position:Int) {
         ledFrameAapter.clearItem()
 
+        isEdit = true
         for (vertical in 1..8) {
             for (horizontal in 1..8) {
                 val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                playButton.setIsEdit(isEdit)
                 playButton.offLED()
             }
         }
@@ -302,8 +501,11 @@ class KeyLEDFragment : Fragment(){
 
         val con = ledContentAdapter.getItem(now)
 
+        text_current_con.setText("Selected: " +  con.line)
+
         for (i in con.contents!!.split("\\n".toRegex())) {
             if (i.startsWith("d")||i.startsWith("delay")) {
+                edit_delay.setText(i.split("\\s+".toRegex())[1])
                 continue
             } else if (!i.isEmpty()) {
                 if (i.startsWith("o")||i.startsWith("on")) {
@@ -331,6 +533,7 @@ class KeyLEDFragment : Fragment(){
         }
     }
 
+    //layout 모드 변경
     private fun setLayoutMode(mode:Boolean) {
         if (mode) {//true = edit mode
             layout_editRight.visibility = View.VISIBLE
@@ -349,6 +552,92 @@ class KeyLEDFragment : Fragment(){
         super.onStart()
         onRequestListener.onRequestLED(ListenerKey.KEY_LED_CHAIN, "")
         onRequestListener.onRequestLED(ListenerKey.KEY_LED_FILE, "")
+    }
+
+    //receive edit
+    fun receiveEdit(id:String) {//TODO: led modifiy
+        val playButton = root.findViewWithTag(id) as PlayButton
+        when (group_command.checkedRadioButtonId) {
+
+            R.id.radio_edit_on -> {
+                playButton.onLED(velocity[spinner_velocity.selectedItemPosition])
+                val command = "o " + id + " a " + spinner_velocity.selectedItemPosition
+                val i = LedContentListItem()
+                i.line = command
+                i.contents = ""
+                ledFrameAapter.addItem(i)
+                var c = 0
+                for (h in ledContentAdapter.getAllItem()) {
+                    if (h.line.equals(text_current_con.text.substring(10))) {
+                        val builder = StringBuilder()
+                        var count=  0
+                        val list = ArrayList<String>()
+                        for (m in h.contents!!.split("\\n+".toRegex())) {
+                            if (!m.isEmpty()) {
+                                list.add(m)
+                            }
+                        }
+                        for (k in list) {
+                            if (count+1 == list.size) {
+                                builder.append(command + "\n")
+                            }
+                            builder.append(k + "\n")
+                            count++
+                        }
+                        val l = LedContentListItem()
+                        l.line = h.line
+                        l.contents = builder.toString()
+                        ledContentAdapter.changeItem(c, l)
+                        modifiedLed()
+                        break
+                    } else {
+                        c++
+                    }
+                }
+            }
+
+            R.id.radio_edit_off -> {
+                playButton.offLED()
+                val command = "f " + id
+                val i = LedContentListItem()
+                i.line = command
+                i.contents = ""
+                ledFrameAapter.addItem(i)
+                var c = 0
+                for (h in ledContentAdapter.getAllItem()) {
+                    if (h.line.equals(text_current_con.text.substring(10))) {
+                        val builder = StringBuilder()
+                        var count = 0
+                        val list = ArrayList<String>()
+                        for (m in h.contents!!.split("\\n+".toRegex())) {
+                            if (!m.isEmpty()) {
+                                list.add(m)
+                            }
+                        }
+                        for (k in list) {
+                            if (count+1 == list.size) {
+                                builder.append(command + "\n")
+                            }
+                            builder.append(k + "\n")
+                            count++
+                        }
+                        val l = LedContentListItem()
+                        l.line = h.line
+                        l.contents = builder.toString()
+                        ledContentAdapter.changeItem(c, l)
+                        modifiedLed()
+                        break
+                    } else {
+                        c++
+                    }
+                }
+            }
+        }
+    }
+
+    //led 삭제 끝
+    fun ledDeleteFinished(newlist:ArrayList<Array<String>>) {
+        setLEDList(newlist, clickedButton)
     }
 
     //tabhost에 chain갯수 요청 결과 처리
@@ -389,12 +678,19 @@ class KeyLEDFragment : Fragment(){
             for (horizontal in 1..8) {
                 val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
                 playButton.setcurrentChain(chain)
+                playButton.setButtonisInLed()
             }
         }
     }
 
     //led파일 가져오기
     fun setLEDFile(content : ArrayList<Array<String>>?) {//TODO: led파일 버튼에 처리
+        for (vertical in 1..8) {
+            for (horizontal in 1..8) {
+                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                playButton.resetLed()
+            }
+        }
         if (content != null) {
              for (i in content) {
                  val name = i[0]
@@ -413,7 +709,8 @@ class KeyLEDFragment : Fragment(){
     }
 
     //LED파일 리스트에 등록
-    fun setLEDList(ledlist:ArrayList<Array<String>>) {
+    fun setLEDList(ledlist:ArrayList<Array<String>>, clicked:String) {
+        clickedButton = clicked
         ledListAdpater.clearItem()
         for (i in ledlist) {
             val name = i[1]
@@ -444,6 +741,27 @@ class KeyLEDFragment : Fragment(){
                 linear_buttons.layoutParams = params
             }
         })
+    }
+
+    override fun onStop() {
+        super.onStop()
+        clickedButton = ""
+        isEdit = false
+        ledContentAdapter.clearItem()
+        text_current_led.setText("")
+        for (vertical in 1..8) {
+            for (horizontal in 1..8) {
+                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                playButton.setIsEdit(isEdit)
+                playButton.setButtonisInLed()
+                playButton.offLED()
+            }
+        }
+        layout_editRight.isEnabled = false
+        ledFrameAapter.clearItem()
+        edit_delay.setText("")
+        text_current_con.setText("")
+        setLayoutMode(false)
     }
 
     //keyled수정시 tabhost로 데이터 요청/전달하는 리스너 interface 구현
