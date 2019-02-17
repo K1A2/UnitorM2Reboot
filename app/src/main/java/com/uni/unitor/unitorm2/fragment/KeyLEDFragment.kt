@@ -270,18 +270,31 @@ class KeyLEDFragment : Fragment(){
                                 setLayoutMode(true)
                                 text_current_led.text = x.fname
 
+                                var finised = false
                                 val builder = StringBuilder()//프레임 단위로 정리
                                 for (i in x.fpath!!.split("\\n".toRegex())) {
-                                    if (i.startsWith("d")||i.startsWith("delay")) {
-                                        builder.append(i + "\n")
-                                        val con = LedContentListItem()
-                                        con.line = "Frame " + (ledContentAdapter.itemCount + 1).toString()
-                                        con.contents = builder.toString()
-                                        ledContentAdapter.addItem(con)
-                                        builder.clear()
-                                    } else {
-                                        builder.append(i + "\n")
+                                    if (!i.isEmpty()) {
+                                        if (i.startsWith("d")||i.startsWith("delay")) {
+                                            builder.append(i + "\n")
+                                            val con = LedContentListItem()
+                                            con.line = "Frame " + (ledContentAdapter.itemCount + 1).toString()
+                                            con.contents = builder.toString()
+                                            ledContentAdapter.addItem(con)
+                                            builder.clear()
+                                            finised = true
+                                        } else {
+                                            builder.append(i + "\n")
+                                            finised = false
+                                        }
                                     }
+                                }
+                                if (!finised) {//마지막에 딜레이가 없을때 추가해줌
+                                    builder.append("d 10\n")
+                                    val con = LedContentListItem()
+                                    con.line = "Frame " + (ledContentAdapter.itemCount + 1).toString()
+                                    con.contents = builder.toString()
+                                    ledContentAdapter.addItem(con)
+                                    builder.clear()
                                 }
                                 if (ledContentAdapter.itemCount != 0)  {
                                     seekBar_frame.max = ledContentAdapter.itemCount - 1
@@ -341,7 +354,7 @@ class KeyLEDFragment : Fragment(){
                     ledContentAdapter.changeName()
                     modifiedLed()
                     ledFrameAapter.clearItem()
-                    text_current_led.text = ""
+                    text_current_con.text = ""
                 }
                 dialog.setNegativeButton(context!!.getString(R.string.cancel), null)
                 dialog.show()
@@ -705,6 +718,12 @@ class KeyLEDFragment : Fragment(){
                      }
                  }
              }
+        }
+        for (vertical in 1..8) {
+            for (horizontal in 1..8) {
+                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                playButton.setButtonisInLed()
+            }
         }
     }
 

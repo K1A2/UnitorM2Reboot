@@ -1,10 +1,14 @@
 package com.uni.unitor.unitorm2.layout
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.media.AudioManager
 import android.media.SoundPool
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -29,6 +33,7 @@ import com.uni.unitor.unitorm2.File.sharedpreference.SharedPreferenceIO
 import com.uni.unitor.unitorm2.R
 import com.uni.unitor.unitorm2.fragment.dialog.FileExplorerdDialog
 import java.lang.Exception
+import java.net.URL
 import java.security.Key
 
 class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, KeySoundFragment.OnKeySoundRequestListener, FileExplorerdDialog.OnFileSelectListener, KeyLEDFragment.OnKeyLEDRequestListener {
@@ -57,12 +62,18 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     private lateinit var soundPool:SoundPool
     private var isUnload:Boolean = false
     private var chain:String = "1"
+    private lateinit var preKill:SharedPreferenceIO
+    private var isKilled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_tabhost)
         if (supportActionBar != null) supportActionBar!!.hide()
+
+        preKill = SharedPreferenceIO(this, PreferenceKey.KEY_REPOSITORY_KILL)
+        isKilled = preKill.getBoolean(PreferenceKey.KEY_KILL_DIED, false)
+        keysoundInit = preKill.getBoolean(PreferenceKey.KEY_SOUND_INIT, true)
 
         keyLEDIO = KeyLEDIO(this)
         keySoundIO = KeySoundIO(this)
@@ -90,7 +101,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
 
         //임시저장 정보 받아옴
         if (savedInstanceState != null) {
-            keysoundInit = savedInstanceState.getBoolean(LayoutKey.TABHOST_KEYSOUND_INIT)
+            //keysoundInit = savedInstanceState.getBoolean(LayoutKey.TABHOST_KEYSOUND_INIT)
             when (savedInstanceState.getInt(LayoutKey.TABHOST_TAB_SELECTED)) {
                 0 -> {infoTab.select()}
                 1 -> {soundTab.select()}
@@ -116,6 +127,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item != null) {
             when (item.itemId) {
+
                 R.id.menu_save -> {
                     when (tablayout.selectedTabPosition) {
                         0 -> {
@@ -125,14 +137,26 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
                             saveKeySound()
                         }
                         2 -> {
-                            savKeyLED()
+                            savKeyLED(false)
                         }
                     }
                     return true
                 }
+
                 R.id.menu_saveall -> {
+                    saveInfo()
+                    saveKeySound()
+                    savKeyLED(false)
                     return true
                 }
+
+                R.id.menu_export -> {
+                    saveInfo()
+                    saveKeySound()
+                    savKeyLED(true)
+                    return true
+                }
+
                 else -> {
                     return super.onOptionsItemSelected(item)
                 }
@@ -140,6 +164,32 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         } else {
             return super.onOptionsItemSelected(item)
         }
+    }
+
+    //내보내기 처리
+    fun zipUnipack() {
+        FileIO.Export(this, sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_TITLE,"")!!
+                , sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+    }
+
+    fun zipFinish(result: Boolean, out:String) {
+        val dialog = AlertDialog.Builder(this)
+        if (result) {
+            dialog.setTitle(getString(R.string.dialog_export_finish_suc))
+            dialog.setMessage(String.format(getString(R.string.dialog_export_mes_suc), out))
+//            dialog.setPositiveButton(getString(R.string.dialog_export_button_go), DialogInterface.OnClickListener { dialog, which ->
+//                val intent = Intent("android.intent.action.VIEW");
+//                intent.setData(Uri.EMPTY); // uri of directory from FileProvider, DocumentProvider or uri with file scheme, can be empty.
+//                intent.putExtra("org.openintents.extra.ABSOLUTE_PATH", out); // String
+//                if (intent.resolveActivity(getPackageManager()) != null) {
+//                    startActivity(intent);
+//                }
+//            })
+        } else {
+            dialog.setTitle(getString(R.string.dialog_export_finish_fail))
+        }
+        dialog.setNegativeButton(getString(R.string.dialog_export_button_ok), null)
+        dialog.show()
     }
 
     /**info, sound, led 가져옴**/
@@ -199,9 +249,9 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
                     sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PRODUCER, ""),
                     sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_CHAIN, ""),
                     sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "") + "info")
-            Toast.makeText(this, getString(R.string.toast_save_succeed), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_save_succeed) + ": INFO", Toast.LENGTH_SHORT).show()
         } catch (e:Exception) {
-            Toast.makeText(this, getString(R.string.toast_save_fail), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_save_fail) + ": INFO", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -220,7 +270,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     /**KeySound처리**/
     //keysound 초기화
     private fun initKeySound() {//keysound초기화
-        if (keysoundInit) {
+        if (keysoundInit&&!isKilled) {
             keySoundIO.mkKeySoundWork()
             KeySoundIO.DupliSaveSound(this,
                     sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
@@ -285,7 +335,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
                 }
             }
             ListenerKey.KEY_SOUND_DELETE -> {
-                FileIO.DeleteFile(this, FileKey.KEY_FILE_DELETE_SOUND, content).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+                FileIO.DeleteFile(this, FileKey.KEY_FILE_DELETE_SOUND, content, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
             }
             ListenerKey.KEY_SOUND_ADD_FILE -> {
                 val bundle = Bundle()
@@ -346,9 +396,10 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         soundLoaded = sl
         soundPool = sound
         keySoundFragment!!.loadFinish()
-        if (keysoundInit) {
+        if (keysoundInit&&!isKilled) {
             KeyLEDIO.getLedWork(this, sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
             keysoundInit = false
+            preKill.setBoolean(PreferenceKey.KEY_SOUND_INIT, false)
         }
     }
 
@@ -356,9 +407,9 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     private fun saveKeySound() {
         try {
             keySoundIO.saveKeySound(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!)
-            Toast.makeText(this, getString(R.string.toast_save_succeed), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_save_succeed) + ": KEYSOUND", Toast.LENGTH_SHORT).show()
         } catch (e:Exception) {
-            Toast.makeText(this, getString(R.string.toast_save_fail), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_save_fail) + ": KEYSOUND", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -387,8 +438,8 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     }
 
     /**KeyLED 처리**///TODO: Keyled request 처리
-    fun savKeyLED() {
-        KeyLEDIO.SaveLED(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+    fun savKeyLED(isZip:Boolean) {
+        KeyLEDIO.SaveLED(sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_PATH, "")!!, this, isZip).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
     override fun onRequestLED(type:String?, content:String?) {
@@ -466,6 +517,8 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         if (fileexDialog.dialog != null&&fileexDialog.dialog.isShowing&&!fileexDialog.isRemoving) {
             fileexDialog.dismiss()
         }
+//        preKill.setBoolean(PreferenceKey.KEY_SOUND_INIT, keysoundInit)
+//        preKill.setBoolean(PreferenceKey.KEY_KILL_DIED, PreferenceKey.KEY_KILL_FORCE)
     }
 
     //백그라운드로 돌아갈시 언로딩
@@ -494,8 +547,9 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     override fun onBackPressed() {
         if (System.currentTimeMillis() - backKeyPress < 2000) {
 //            soundUnLoad()
-//            isKilledSelf = true//스스로 종료시
-//            sharedPKill.setBoolean(PreferenceKey.KEY_KILL_DIED, PreferenceKey.KEY_KILL_SELF)
+            isKilled = true//스스로 종료시
+            preKill.setBoolean(PreferenceKey.KEY_KILL_DIED, true)
+            preKill.setBoolean(PreferenceKey.KEY_SOUND_INIT, true)
             startActivity(Intent(this@TabHostActivity, MainActivity::class.java))
             finish()
         } else {
@@ -522,7 +576,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
                 }
 
                 1 -> {
-                    if (keysoundInit != null) return keySoundFragment else return  null
+                    if (keySoundFragment != null) return keySoundFragment else return  null
                 }
 
                 2 -> {

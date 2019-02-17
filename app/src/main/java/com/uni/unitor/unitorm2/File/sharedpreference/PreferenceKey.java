@@ -10,6 +10,7 @@ public interface PreferenceKey {
     String KEY_INFO_PATH = "Path";
 
     String KEY_KILL_DIED = "Killed";
-    boolean KEY_KILL_SELF = false;
-    boolean KEY_KILL_FORCE = true;
+    String KEY_SOUND_INIT = "SIN";
+    boolean KEY_KILL_SELF = true;
+    boolean KEY_KILL_FORCE = false;
 }

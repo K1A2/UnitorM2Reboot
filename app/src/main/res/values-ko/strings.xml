@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">UnitorM2</string>
     <string name="app_version">5.0.0b1</string>
+    <string name="ad">ca-app-pub-7873521316289922/7696297430</string>
+    <string name="adtest">ca-app-pub-3940256099942544/6300978111</string>
     <string name="per_re_title">권한 요청</string>
     <string name="per_re_content">유니팩을 저장하기위해 \'저장소 쓰기 (EXTERNAL_WRITE)\' 권한이 필요합니다. 거부할경우, 저장이 불가능 합니다.</string>
     <string name="agree">동의</string>
@@ -86,4 +88,18 @@
     <string name="alert">아직 led플레이 기능은 개발중입니다. 조금만 기다려 주세요. 고등학생이라 시간이 조금 걸립니다.</string>
     <string name="dialog_delete_led">정말 삭제하시겠습니까? 삭제버튼을 누른다면, 다시 복구시킬수 없습니다.</string>
     <string name="async_save_led">LED 저장중..</string>
+    <string name="async_delete_unipack">유니팩 \'%s\' 삭제중..</string>
+    <string name="menu_actionbar_export_unipack">유니팩 내보내기</string>
+    <string name="dialog_export_finish_suc">내보내기 성공</string>
+    <string name="dialog_export_finish_fail">내보내기 실패</string>
+    <string name="dialog_export_mes_suc">\'%s\'에 내보내기 성공</string>
+    <string name="dialog_export_button_go">보기</string>
+    <string name="dialog_export_button_ok">확인</string>
+    <string name="pre_contact">개발자에게 문의하기</string>
+    <string name="pre_contact_sum">개발자에게 메일 보내기 (jckim0307@gmail.com)</string>
+    <string name="pre_categoty_info">앱 정보</string>
+    <string name="alert_restore">\'%s\'를 복구하시겠습니까?</string>
+    <string name="alert_restore_msg">앱이 비정상적으로 종료되었었습니다. \'%s\'를 복구시킬수 있습니다. 만약 \'아니오\'를 선택한다면, 다시는 복구시킬수 없습니다.</string>
+    <string name="alert_restore_ok">복구하기</string>
+    <string name="alert_restore_no">아니오</string>
 </resources>

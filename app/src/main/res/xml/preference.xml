@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pre_categoty_info">
+        <Preference android:title="@string/pre_contact"
+            android:summary="@string/pre_contact_sum">
+            <intent android:action="android.intent.action.SENDTO"
+                android:data="mailto:jckim0307@gmail.com"/>
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>

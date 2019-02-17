@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.os.AsyncTask
 import android.os.Environment
+import android.widget.Toast
 import com.uni.unitor.unitorm2.R
 import com.uni.unitor.unitorm2.layout.TabHostActivity
 import java.io.*
@@ -262,11 +263,12 @@ class KeyLEDIO(private val context: Context) : ContextWrapper(context) {
         }
     }
 
-    class SaveLED(path:String, context: Context) : AsyncTask<String, String, Boolean>() {
+    class SaveLED(path:String, context: Context, isZip:Boolean) : AsyncTask<String, String, Boolean>() {
 
         val path = path + "/keyLED/"
         val context = context
         val workpath = Environment.getExternalStorageDirectory().absolutePath + "/unipackProject/work/keyLED"
+        val isUnzip = isZip
 
         private val prograssDialog = ProgressDialog(context)
 
@@ -313,9 +315,12 @@ class KeyLEDIO(private val context: Context) : ContextWrapper(context) {
         override fun onPostExecute(result: Boolean?) {
             prograssDialog.dismiss()
             if (result!!) {
-
+                Toast.makeText(context, context.getString(R.string.toast_save_succeed) + ": KEYLED", Toast.LENGTH_SHORT).show()
             } else {
-
+                Toast.makeText(context, context.getString(R.string.toast_save_fail) + ": KEYLED", Toast.LENGTH_SHORT).show()
+            }
+            if (isUnzip) {
+                (context as TabHostActivity).zipUnipack()
             }
         }
     }

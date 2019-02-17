@@ -69,40 +69,67 @@ class FileExplorerdDialog : DialogFragment() {
             LayoutKey.DIALOG_FILEEX_UNIPACK -> {
                 onUnipackSelectListener = con as OnUnipackSelectListener
                 text_order.setText(getString(R.string.dialog_title_unipack))
+                btn_add.visibility = View.GONE
             }
         }
 
         list_files.setOnItemClickListener { adapterView, view, i, l ->
-            val fileListItem = selectFileAdapter.getItem(i)
+            when (now) {
+                LayoutKey.DIALOG_FILEEX_SOUND -> {
+                    val fileListItem = selectFileAdapter.getItem(i)
 
-            //클릭된 파일 경로 가져옴
-            val clicked = File(fileListItem.pathf)
+                    //클릭된 파일 경로 가져옴
+                    val clicked = File(fileListItem.pathf)
 
-            //클릭된 항목이 폴더인지 파일인지 구분
-            if (clicked.isDirectory()) {//폴더일때
-                if (clicked.canRead()) {//읽을수 있는지 없는지 확인
-                    list_files.choiceMode = AbsListView.CHOICE_MODE_SINGLE
-                    showList(fileListItem.pathf!!)//폴더이므로 재귀호출로 하뤼폴더 리스트에 보여줌
-                } else {//못읽으면 토스트로 오류출력
-                    //Toast.makeText(con, getString(R.string.DialogFrag_FileS_cant), Toast.LENGTH_LONG).show()
-                }
-                list_files.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
-            } else if (fileListItem.titlef.equals(".../") && fileListItem.pathf.equals("")) {//상위폴더 이동
-                val parent_path = File(text_path.getText().toString()).getParent()
-                showList(parent_path + "/")//재귀호출로 상위폴더의 파일을 보여줌
-            } else if (clicked.getName().endsWith(".wav") || clicked.getName().endsWith(".mp3")) {
-                var remove:Int? = null
-                for (c in 0..checkSelected.size - 1) {
-                    val ch = checkSelected.get(c)
-                    if (ch.equals(i)) {
-                        remove = c
-                        break
+                    //클릭된 항목이 폴더인지 파일인지 구분
+                    if (clicked.isDirectory()) {//폴더일때
+                        if (clicked.canRead()) {//읽을수 있는지 없는지 확인
+                            list_files.choiceMode = AbsListView.CHOICE_MODE_SINGLE
+                            showList(fileListItem.pathf!!)//폴더이므로 재귀호출로 하뤼폴더 리스트에 보여줌
+                        } else {//못읽으면 토스트로 오류출력
+                            //Toast.makeText(con, getString(R.string.DialogFrag_FileS_cant), Toast.LENGTH_LONG).show()
+                        }
+                        list_files.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
+                    } else if (fileListItem.titlef.equals(".../") && fileListItem.pathf.equals("")) {//상위폴더 이동
+                        val parent_path = File(text_path.getText().toString()).getParent()
+                        showList(parent_path + "/")//재귀호출로 상위폴더의 파일을 보여줌
+                    } else if (clicked.getName().endsWith(".wav") || clicked.getName().endsWith(".mp3")) {
+                        var remove:Int? = null
+                        for (c in 0..checkSelected.size - 1) {
+                            val ch = checkSelected.get(c)
+                            if (ch.equals(i)) {
+                                remove = c
+                                break
+                            }
+                        }
+                        if (remove != null) {
+                            checkSelected.removeAt(remove)
+                        } else {
+                            checkSelected.add(i)
+                        }
                     }
                 }
-                if (remove != null) {
-                    checkSelected.removeAt(remove)
-                } else {
-                    checkSelected.add(i)
+                LayoutKey.DIALOG_FILEEX_UNIPACK -> {
+                    val fileListItem = selectFileAdapter.getItem(i)
+
+                    //클릭된 파일 경로 가져옴
+                    val clicked = File(fileListItem.pathf)
+
+                    //클릭된 항목이 폴더인지 파일인지 구분
+                    if (clicked.isDirectory()) {//폴더일때
+                        if (clicked.canRead()) {//읽을수 있는지 없는지 확인
+                            list_files.choiceMode = AbsListView.CHOICE_MODE_SINGLE
+                            showList(fileListItem.pathf!!)//폴더이므로 재귀호출로 하뤼폴더 리스트에 보여줌
+                        } else {//못읽으면 토스트로 오류출력
+                            //Toast.makeText(con, getString(R.string.DialogFrag_FileS_cant), Toast.LENGTH_LONG).show()
+                        }
+                        list_files.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
+                    } else if (fileListItem.titlef.equals(".../") && fileListItem.pathf.equals("")) {//상위폴더 이동
+                        val parent_path = File(text_path.getText().toString()).getParent()
+                        showList(parent_path + "/")//재귀호출로 상위폴더의 파일을 보여줌
+                    } else if (clicked.getName().endsWith(".zip")) {
+                        onUnipackSelectListener.onUnipackSelect(clicked.name, clicked.absolutePath)
+                    }
                 }
             }
         }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:padding="5dp">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Title"
+        android:imeOptions="actionNext"
+        android:id="@+id/Edit_Title_new"
+        android:layout_marginBottom="3dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Producer"
+        android:imeOptions="actionNext"
+        android:id="@+id/Edit_Producer_new"
+        android:layout_marginBottom="3dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Chain"
+        android:imeOptions="actionDone"
+        android:inputType="number"
+        android:id="@+id/Edit_Chain_new"/>
+
+</LinearLayout>

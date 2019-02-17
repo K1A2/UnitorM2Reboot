@@ -21,6 +21,7 @@
         </activity>
         <activity android:name="com.uni.unitor.unitorm2.layout.MainActivity" android:screenOrientation="sensorLandscape"/>
         <activity android:name="com.uni.unitor.unitorm2.layout.TabHostActivity" android:screenOrientation="sensorLandscape" android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:name=".preference.PreferenceActivity" android:screenOrientation="sensorLandscape"/>
     </application>
 
 </manifest>

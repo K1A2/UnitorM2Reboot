@@ -18,4 +18,5 @@ public interface FileKey {
 
     String KEY_FILE_DELETE_SOUND = "DS";
     String KEY_FILE_DELETE_LED = "DL";
+    String KEY_UNIPACKP_DELETE = "DUP";
 }

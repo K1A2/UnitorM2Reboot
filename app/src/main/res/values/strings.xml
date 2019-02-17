@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">UnitorM2</string>
     <string name="app_version">5.0.0b1</string>
+    <string name="ad">ca-app-pub-7873521316289922/7696297430</string>
+    <string name="adtest">ca-app-pub-3940256099942544/6300978111</string>
     <string name="per_re_title">Permission Request</string>
     <string name="per_re_content">Unitor needs \'Write to storage (EXTERNAL_WRITE)\' permission. If you don\'t Unitor cna\'t save Unipack!</string>
     <string name="agree">Agree</string>
@@ -86,6 +88,20 @@
     <string name="alert">This is beta version. Led play function is developing now. Please wait a little time, please.</string>
     <string name="dialog_delete_led">Do you really delete this file? If you click \'delete\', it won\'t be able to restore.</string>
     <string name="async_save_led">Saving LEDs..</string>
+    <string name="async_delete_unipack">Delete Unipack \'%s\'..</string>
+    <string name="menu_actionbar_export_unipack">Export Unipack</string>
+    <string name="dialog_export_finish_suc">Export Finish</string>
+    <string name="dialog_export_finish_fail">Export Fail</string>
+    <string name="dialog_export_mes_suc">Export to \'%s\'</string>
+    <string name="dialog_export_button_go">show</string>
+    <string name="dialog_export_button_ok">ok</string>
+    <string name="pre_contact">Contact to Developer</string>
+    <string name="pre_contact_sum">Send an email to Developer (jckim0307@gmail.com)</string>
+    <string name="pre_categoty_info">App Info</string>
+    <string name="alert_restore">Restore \'%s\'?</string>
+    <string name="alert_restore_msg">The app has been terminated abnormally before. You can restore \'%s\'. If you press \'no\', you cat\'t restore anymore.</string>
+    <string name="alert_restore_ok">restore</string>
+    <string name="alert_restore_no">no</string>
     <!--<string name="menu_led_content_select">Select</string>-->
     <!--<string name="menu_led_content_delete">Delete</string>-->
 </resources>
