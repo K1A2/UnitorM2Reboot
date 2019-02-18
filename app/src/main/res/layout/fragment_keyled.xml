@@ -18,13 +18,29 @@
             android:orientation="vertical"
             android:id="@+id/Layout_LED_ALL_LEFT">
 
-            <ImageButton
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/outline_add_white_24"
-                android:background="#00000000"
-                android:id="@+id/button_edit_add_led"
-                android:layout_marginRight="3dp"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="3dp">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/outline_add_white_24"
+                    android:background="#00000000"
+                    android:id="@+id/button_edit_add_led"
+                    android:layout_marginRight="3dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/colorTextNormal"
+                    android:gravity="center_vertical"
+                    android:id="@+id/text_current_button"/>
+
+            </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"

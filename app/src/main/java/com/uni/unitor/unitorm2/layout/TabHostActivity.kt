@@ -201,8 +201,6 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     override fun setKeySoundContext(keySoundFragment: KeySoundFragment) {
         this.keySoundFragment = keySoundFragment
 
-        //keysound초기화
-        initKeySound()
         //if (tabPagerAdapter == null) setPageAdapter()
     }
 
@@ -264,6 +262,10 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
                     sharedPreferenceIO.getString(PreferenceKey.KEY_INFO_CHAIN, ""))
         } else {//일반적인경우(edittext편집)
             sharedPreferenceIO.setString(type, content)
+            if (type.equals(PreferenceKey.KEY_INFO_CHAIN)) {
+                if (keySoundFragment != null) keySoundFragment!!.setChain(content)
+                if (keyLEDFragment != null) keyLEDFragment!!.setChain(content)
+            }
         }
     }
 
@@ -342,6 +344,10 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
                 bundle.putString(LayoutKey.DIALOG_FILEEX_TAG, LayoutKey.DIALOG_FILEEX_SOUND)
                 fileexDialog.arguments = bundle
                 fileexDialog.show(supportFragmentManager, LayoutKey.DIALOG_FILEEX_TAG)
+            }
+            ListenerKey.KEY_SOUND_LOAD -> {
+                //keysound초기화
+                initKeySound()
             }
         }
     }

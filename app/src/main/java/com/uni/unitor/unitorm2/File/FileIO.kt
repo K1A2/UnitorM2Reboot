@@ -146,13 +146,12 @@ class FileIO(private val context: Context) : ContextWrapper(context) {
     //ZIP
     class Export(context: Context, title:String, path: String) : AsyncTask<String, String, Boolean>() {
 
-        val progressDialog = ProgressDialog(context)
-        val title = title
-        val context = context
-        val path = path
-        val out = Environment.getExternalStorageDirectory().absolutePath + "/unipackExport/" + title + File(Environment.getExternalStorageDirectory().absolutePath
-                + "/unipackExport/").listFiles(object : FileFilter { override fun accept(file: File): Boolean {
-            return file.isFile && file.name.startsWith(title) } }).size + ".zip"
+        private val progressDialog = ProgressDialog(context)
+        private val title = title
+        private val context = context
+        private val path = path
+        private var out:String = ""
+
 
         @Override
         override fun onPreExecute() {
@@ -167,6 +166,9 @@ class FileIO(private val context: Context) : ContextWrapper(context) {
             try {
                 val mk = File(Environment.getExternalStorageDirectory().absolutePath + "/unipackExport/")
                 mk.mkdirs()
+                out = Environment.getExternalStorageDirectory().absolutePath + "/unipackExport/" + title + File(Environment.getExternalStorageDirectory().absolutePath
+                        + "/unipackExport/").listFiles(object : FileFilter { override fun accept(file: File): Boolean {
+                    return file.isFile && file.name.startsWith(title) } }).size + ".zip"
                 zip(path, out)
                 return true
             } catch (e:Exception) {

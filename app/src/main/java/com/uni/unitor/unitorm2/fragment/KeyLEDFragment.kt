@@ -38,7 +38,7 @@ import java.util.Collections.addAll
 
 class KeyLEDFragment : Fragment(){
 
-    private lateinit var spinner_chain: Spinner
+    private var spinner_chain: Spinner? = null
     private lateinit var linear_buttons: LinearLayout
     private lateinit var layout_ledLeft: LinearLayout
     private lateinit var layout_editLeft: LinearLayout
@@ -56,11 +56,12 @@ class KeyLEDFragment : Fragment(){
     private lateinit var group_command:RadioGroup
     private lateinit var spinner_velocity:Spinner
     private lateinit var button_add_led:ImageButton
+    private lateinit var text_currenr_button:TextView
 
     private val ledFrameAapter:LedContentListAdapter = LedContentListAdapter()
     private val ledContentAdapter:LedContentListAdapter = LedContentListAdapter()
     private val ledListAdpater:FileListAdapter = FileListAdapter()
-    private lateinit var root:View
+    private var root:View? = null
     private var bundle: Bundle? = null
     private var chain:String = ""
     private var isEdit: Boolean = false
@@ -126,28 +127,29 @@ class KeyLEDFragment : Fragment(){
 
         onRequestListener.setKeyLEDContext(this)
 
-        linear_buttons = root.findViewById<LinearLayout>(R.id.Layout_Btns)
-        layout_ledLeft = root.findViewById(R.id.Layout_LED_ALL_LEFT)
-        layout_editLeft = root.findViewById(R.id.Layout_LED_EDIT_LEFT)
-        layout_ledRight = root.findViewById(R.id.Layout_LED_ALL_RIGHT)
-        layout_editRight = root.findViewById(R.id.Layout_LED_EDIT_RIGHT)
-        spinner_chain = root.findViewById(R.id.Spinner_chain_LED) as Spinner
-        recycler_LED = root.findViewById(R.id.recycle_files)
-        recycler_content = root.findViewById(R.id.recycle_content)
-        text_current_led = root.findViewById(R.id.text_current_led)
-        button_previous = root.findViewById(R.id.button_edit_previous)
-        seekBar_frame = root.findViewById(R.id.seekbar_frame)
-        text_current_con = root.findViewById(R.id.text_current_frame)
-        recycler_frame = root.findViewById(R.id.recycle_frame)
-        button_add = root.findViewById(R.id.button_edit_add)
-        edit_delay = root.findViewById(R.id.edit_delay)
-        group_command = root.findViewById(R.id.group_command)
-        spinner_velocity = root.findViewById(R.id.spinner_velocity)
-        button_add_led = root.findViewById(R.id.button_edit_add_led)
+        linear_buttons = root!!.findViewById<LinearLayout>(R.id.Layout_Btns)
+        layout_ledLeft = root!!.findViewById(R.id.Layout_LED_ALL_LEFT)
+        layout_editLeft = root!!.findViewById(R.id.Layout_LED_EDIT_LEFT)
+        layout_ledRight = root!!.findViewById(R.id.Layout_LED_ALL_RIGHT)
+        layout_editRight = root!!.findViewById(R.id.Layout_LED_EDIT_RIGHT)
+        spinner_chain = root!!.findViewById(R.id.Spinner_chain_LED) as Spinner
+        recycler_LED = root!!.findViewById(R.id.recycle_files)
+        recycler_content = root!!.findViewById(R.id.recycle_content)
+        text_current_led = root!!.findViewById(R.id.text_current_led)
+        button_previous = root!!.findViewById(R.id.button_edit_previous)
+        seekBar_frame = root!!.findViewById(R.id.seekbar_frame)
+        text_current_con = root!!.findViewById(R.id.text_current_frame)
+        recycler_frame = root!!.findViewById(R.id.recycle_frame)
+        button_add = root!!.findViewById(R.id.button_edit_add)
+        edit_delay = root!!.findViewById(R.id.edit_delay)
+        group_command = root!!.findViewById(R.id.group_command)
+        spinner_velocity = root!!.findViewById(R.id.spinner_velocity)
+        button_add_led = root!!.findViewById(R.id.button_edit_add_led)
+        text_currenr_button = root!!.findViewById(R.id.text_current_button)
 
         for (vertical in 1..8) {
             for (horizontal in 1..8) {
-                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                val playButton = root!!.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
                 playButton.setActivity(LayoutKey.PLAYBTN_LAYOUT_LED)
                 if (savedInstanceState != null) {
                     playButton.setcurrentChain(savedInstanceState.getString(LayoutKey.KEYSOUND_BUNDLE_CHAIN))
@@ -193,7 +195,7 @@ class KeyLEDFragment : Fragment(){
             text_current_led.setText("")
             for (vertical in 1..8) {
                 for (horizontal in 1..8) {
-                    val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                    val playButton = root!!.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
                     isEdit = false
                     playButton.setIsEdit(isEdit)
                     playButton.offLED()
@@ -204,6 +206,8 @@ class KeyLEDFragment : Fragment(){
             ledFrameAapter.clearItem()
             edit_delay.setText("")
             text_current_con.setText("")
+            text_currenr_button.text = ""
+            clickedButton = ""
         }
 
         //frame 추가 버튼
@@ -229,17 +233,19 @@ class KeyLEDFragment : Fragment(){
                 ledListAdpater.addItem(con)
 
                 onRequestListener.onRequestLED(ListenerKey.KEY_LED_FILE, "")
+            } else {
+                Toast.makeText(context, context!!.getString(R.string.toast_sound_noselect), Toast.LENGTH_SHORT).show()
             }
         }
 
         //체인 선택 리스너뷰
-        spinner_chain.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        spinner_chain!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (parent!!.childCount != 0) {
                     (parent.getChildAt(0) as TextView).setTextColor(Color.WHITE)
                     try {
-                        val chain_selected = (spinner_chain.getItemAtPosition(position) as String).split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
+                        val chain_selected = (spinner_chain!!.getItemAtPosition(position) as String).split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
                         chain = chain_selected
                         setChainButton()
                         //buttonCurrent = ""
@@ -268,6 +274,8 @@ class KeyLEDFragment : Fragment(){
                         when (menuItem.itemId) {
                             R.id.menu_led_select -> {//TODO: LED 선택
                                 setLayoutMode(true)
+                                text_currenr_button.text = ""
+                                clickedButton = ""
                                 text_current_led.text = x.fname
 
                                 var finised = false
@@ -302,7 +310,7 @@ class KeyLEDFragment : Fragment(){
                                 }
                                 for (vertical in 1..8) {
                                     for (horizontal in 1..8) {
-                                        val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                                        val playButton = root!!.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
                                         isEdit = false
                                         playButton.disableShow()
                                     }
@@ -493,7 +501,7 @@ class KeyLEDFragment : Fragment(){
         }
         onRequestListener.onRequestLED(ListenerKey.KEY_LED_MODIFIDE, builder.toString(), text_current_led.text.toString())
         val s = text_current_led.text.toString().split("\\s+".toRegex())
-        val playButton = root.findViewWithTag(s[1] + " " + s[2]) as PlayButton
+        val playButton = root!!.findViewWithTag(s[1] + " " + s[2]) as PlayButton
         playButton.changeLed(builder.toString(), text_current_led.text.toString())
     }
 
@@ -504,13 +512,38 @@ class KeyLEDFragment : Fragment(){
         isEdit = true
         for (vertical in 1..8) {
             for (horizontal in 1..8) {
-                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                val playButton = root!!.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
                 playButton.setIsEdit(isEdit)
                 playButton.offLED()
             }
         }
 
         val now = position
+
+        if (position >= 1) {
+            val con = ledContentAdapter.getItem(now - 1)
+            for (i in con.contents!!.split("\\n".toRegex())) {
+                if (!i.isEmpty()) {
+                    if (i.startsWith("o")||i.startsWith("on")) {
+                        try {
+                            val c = i.split("\\s+".toRegex())
+                            val playButton = root!!.findViewWithTag(c[1] + " " + c[2]) as PlayButton
+                            playButton.onLED(velocity[c[4].toInt()])
+                        } catch (e:Exception) {
+                            continue
+                        }
+                    } else if (i.startsWith("f")||i.startsWith("off")) {
+                        try {
+                            val c = i.split("\\s+".toRegex())
+                            val playButton = root!!.findViewWithTag(c[1] + " " + c[2]) as PlayButton
+                            playButton.offLED()
+                        } catch (e:Exception) {
+                            continue
+                        }
+                    }
+                }
+            }
+        }
 
         val con = ledContentAdapter.getItem(now)
 
@@ -524,7 +557,7 @@ class KeyLEDFragment : Fragment(){
                 if (i.startsWith("o")||i.startsWith("on")) {
                     try {
                         val c = i.split("\\s+".toRegex())
-                        val playButton = root.findViewWithTag(c[1] + " " + c[2]) as PlayButton
+                        val playButton = root!!.findViewWithTag(c[1] + " " + c[2]) as PlayButton
                         playButton.onLED(velocity[c[4].toInt()])
                     } catch (e:Exception) {
                         continue
@@ -532,7 +565,7 @@ class KeyLEDFragment : Fragment(){
                 } else if (i.startsWith("f")||i.startsWith("off")) {
                     try {
                         val c = i.split("\\s+".toRegex())
-                        val playButton = root.findViewWithTag(c[1] + " " + c[2]) as PlayButton
+                        val playButton = root!!.findViewWithTag(c[1] + " " + c[2]) as PlayButton
                         playButton.offLED()
                     } catch (e:Exception) {
                         continue
@@ -569,7 +602,7 @@ class KeyLEDFragment : Fragment(){
 
     //receive edit
     fun receiveEdit(id:String) {//TODO: led modifiy
-        val playButton = root.findViewWithTag(id) as PlayButton
+        val playButton = root!!.findViewWithTag(id) as PlayButton
         when (group_command.checkedRadioButtonId) {
 
             R.id.radio_edit_on -> {
@@ -655,33 +688,35 @@ class KeyLEDFragment : Fragment(){
 
     //tabhost에 chain갯수 요청 결과 처리
     fun setChain(chain:String?) {
-        var adapters:ArrayAdapter<String?>? = null
-        try {
-            val chain_num = chain!!.toInt()
-            val chainlist:Array<String?> = arrayOfNulls<String>(chain_num)
-            val list:ArrayList<String?> = ArrayList()
-            //val chainlist = arrayOf(chain_num)
-            for (i in 0 until chain_num step 1) {
-                chainlist[i] = String.format(getString(R.string.spinner_chain), i+1)
-                list.add(String.format(getString(R.string.spinner_chain), i+1))
+        if (spinner_chain != null&&root != null&&activity != null) {
+            var adapters:ArrayAdapter<String?>? = null
+            try {
+                val chain_num = chain!!.toInt()
+                val chainlist:Array<String?> = arrayOfNulls<String>(chain_num)
+                val list:ArrayList<String?> = ArrayList()
+                //val chainlist = arrayOf(chain_num)
+                for (i in 0 until chain_num step 1) {
+                    chainlist[i] = String.format(getString(R.string.spinner_chain), i+1)
+                    list.add(String.format(getString(R.string.spinner_chain), i+1))
+                }
+                adapters = ArrayAdapter(activity, android.support.design.R.layout.support_simple_spinner_dropdown_item, list)
+                spinner_chain!!.setAdapter(adapters)
+            } catch (e:Exception) {
+                val s = arrayOf<String>(String.format(getString(R.string.spinner_chain), "1"))
+                adapters = ArrayAdapter(activity, android.support.design.R.layout.support_simple_spinner_dropdown_item, s)
+                spinner_chain!!.adapter = adapters
             }
-            adapters = ArrayAdapter(activity, android.support.design.R.layout.support_simple_spinner_dropdown_item, list)
-            spinner_chain.setAdapter(adapters)
-        } catch (e:Exception) {
-            val s = arrayOf<String>(String.format(getString(R.string.spinner_chain), "1"))
-            adapters = ArrayAdapter(activity, android.support.design.R.layout.support_simple_spinner_dropdown_item, s)
-            spinner_chain.adapter = adapters
-        }
-        for (vertical in 1..8) {
-            for (horizontal in 1..8) {
-                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
-                playButton.setChain(chain!!)
+            for (vertical in 1..8) {
+                for (horizontal in 1..8) {
+                    val playButton = root!!.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                    playButton.setChain(chain!!)
+                }
             }
-        }
-        if (bundle != null) {
-            spinner_chain.setSelection(bundle!!.getString(LayoutKey.KEYLED_BUNDLE_CHAIN).toInt() - 1)
-        } else {
-            spinner_chain.setSelection(0)
+            if (bundle != null) {
+                spinner_chain!!.setSelection(bundle!!.getString(LayoutKey.KEYLED_BUNDLE_CHAIN).toInt() - 1)
+            } else {
+                spinner_chain!!.setSelection(0)
+            }
         }
     }
 
@@ -689,7 +724,7 @@ class KeyLEDFragment : Fragment(){
     private fun setChainButton() {
         for (vertical in 1..8) {
             for (horizontal in 1..8) {
-                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                val playButton = root!!.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
                 playButton.setcurrentChain(chain)
                 playButton.setButtonisInLed()
             }
@@ -700,7 +735,7 @@ class KeyLEDFragment : Fragment(){
     fun setLEDFile(content : ArrayList<Array<String>>?) {//TODO: led파일 버튼에 처리
         for (vertical in 1..8) {
             for (horizontal in 1..8) {
-                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                val playButton = root!!.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
                 playButton.resetLed()
             }
         }
@@ -711,7 +746,7 @@ class KeyLEDFragment : Fragment(){
                  val names = name.split("\\s+".toRegex())
                  if (names.size in 4..5) {
                      try {
-                         val playButton = root.findViewWithTag(names[1] + " " + names[2])as PlayButton
+                         val playButton = root!!.findViewWithTag(names[1] + " " + names[2])as PlayButton
                          playButton.addLED(name, content)
                      } catch (e:Exception) {
                          continue
@@ -721,7 +756,7 @@ class KeyLEDFragment : Fragment(){
         }
         for (vertical in 1..8) {
             for (horizontal in 1..8) {
-                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                val playButton = root!!.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
                 playButton.setButtonisInLed()
             }
         }
@@ -730,6 +765,7 @@ class KeyLEDFragment : Fragment(){
     //LED파일 리스트에 등록
     fun setLEDList(ledlist:ArrayList<Array<String>>, clicked:String) {
         clickedButton = clicked
+        text_currenr_button.text = chain + " " + clicked
         ledListAdpater.clearItem()
         for (i in ledlist) {
             val name = i[1]
@@ -765,12 +801,13 @@ class KeyLEDFragment : Fragment(){
     override fun onStop() {
         super.onStop()
         clickedButton = ""
+        text_currenr_button.text = ""
         isEdit = false
         ledContentAdapter.clearItem()
         text_current_led.setText("")
         for (vertical in 1..8) {
             for (horizontal in 1..8) {
-                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                val playButton = root!!.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
                 playButton.setIsEdit(isEdit)
                 playButton.setButtonisInLed()
                 playButton.offLED()

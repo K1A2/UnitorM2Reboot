@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name="com.uni.unitor.unitorm2.layout.SplashActivity" android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,9 +20,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name="com.uni.unitor.unitorm2.layout.MainActivity" android:screenOrientation="sensorLandscape"/>
+
         <activity android:name="com.uni.unitor.unitorm2.layout.TabHostActivity" android:screenOrientation="sensorLandscape" android:windowSoftInputMode="stateAlwaysHidden"/>
+
         <activity android:name=".preference.PreferenceActivity" android:screenOrientation="sensorLandscape"/>
+
     </application>
 
 </manifest>

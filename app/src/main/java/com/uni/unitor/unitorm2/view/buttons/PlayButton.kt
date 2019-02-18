@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.widget.RelativeLayout
 import com.uni.unitor.unitorm2.fragment.KeyLEDFragment
 import com.uni.unitor.unitorm2.layout.LayoutKey
+import java.lang.Exception
 
 
 class PlayButton : RelativeLayout, KeyLEDFragment.OnPlayLED {
@@ -117,7 +118,6 @@ class PlayButton : RelativeLayout, KeyLEDFragment.OnPlayLED {
 //        con.registerReceiver(receiver, filter)
 
         textView.setOnClickListener {
-            //TODO: sounds와 keyled 구
             when(activity) {
                 //sound일때
                 LayoutKey.PLAYBTN_LAYOUT_SOUND -> {
@@ -126,7 +126,7 @@ class PlayButton : RelativeLayout, KeyLEDFragment.OnPlayLED {
                             val s = soundlist.get(list)
 
                             if (s[1].equals(currenrchain)) {
-                                val count = multilist.get(s[1].toInt() - 1)
+                                val count = multilist.get(s[1].toInt() - 1)//TODO: Err check
                                 if (count[1] > count[3]) {//넘길횟수 체크
                                     multilist.set(s[1].toInt() - 1, arrayOf(count[0], count[1], count[2], count[3] + 1))
                                     continue
@@ -227,33 +227,41 @@ class PlayButton : RelativeLayout, KeyLEDFragment.OnPlayLED {
     }
 
     //multilist초기화
-    private fun initList() {
+    private fun initList(): Boolean {
         multilist.clear()
-        for (a in 1.. chain.toInt()) {
-            multilist.add(arrayOf(a, 0, 0, 0))
+        try {
+            for (a in 1.. chain.toInt()) {
+                multilist.add(arrayOf(a, 0, 0, 0))
+            }
+            return true
+        } catch (e:Exception) {
+            return false
+        } catch (e:kotlin.Exception) {
+            return false
         }
     }
 
     //multilist세팅
-    private fun setMulti() {
-        initList()
-        for (s in soundlist) {
-            val chain = s[1]
+    fun setMulti() {
+        if (initList()) {
+            for (s in soundlist) {
+                val chain = s[1]
 
-            var isIn = false
-            for (m in 0..multilist.size - 1) {
-                val sin = multilist.get(m)
-                if (chain.toInt() == sin[0]) {
-                    multilist.set(m, arrayOf(sin[0], 1, sin[2] + 1, 1))//chain current allcount forcount
-                    isIn = true
-                    break
+                var isIn = false
+                for (m in 0..multilist.size - 1) {
+                    val sin = multilist.get(m)
+                    if (chain.toInt() == sin[0]) {
+                        multilist.set(m, arrayOf(sin[0], 1, sin[2] + 1, 1))//chain current allcount forcount
+                        isIn = true
+                        break
+                    }
+                }
+                if (!isIn) {
+                    multilist.add(arrayOf(chain.toInt(), 1, 1, 1))
                 }
             }
-            if (!isIn) {
-                multilist.add(arrayOf(chain.toInt(), 1, 1, 1))
-            }
+            setButtonisIn()
         }
-        setButtonisIn()
     }
 
     //sound 반복/웜홀 변경

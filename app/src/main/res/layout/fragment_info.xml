@@ -18,39 +18,87 @@
             android:orientation="vertical"
             android:layout_marginRight="3dp">
 
-            <EditText
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Title"
-                android:id="@+id/Edit_Title"
-                android:imeOptions="actionNext"
-                android:layout_marginBottom="3dp"
-                android:theme="@style/edittext_darkback"
-                android:textColorHint="@color/colorEdittextHint"
-                android:textColor="@color/colorTextNormal"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Producer"
-                android:id="@+id/Edit_Producer"
-                android:imeOptions="actionNext"
-                android:layout_marginBottom="3dp"
-                android:theme="@style/edittext_darkback"
-                android:textColorHint="@color/colorEdittextHint"
-                android:textColor="@color/colorTextNormal"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Title: "
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorTextNormal"
+                    android:textSize="20dp"/>
 
-            <EditText
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Title"
+                    android:id="@+id/Edit_Title"
+                    android:imeOptions="actionNext"
+                    android:layout_marginBottom="3dp"
+                    android:theme="@style/edittext_darkback"
+                    android:textColorHint="@color/colorEdittextHint"
+                    android:textColor="@color/colorTextNormal"/>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Chain"
-                android:id="@+id/Edit_Chain"
-                android:inputType="number"
-                android:imeOptions="actionDone"
-                android:layout_marginBottom="3dp"
-                android:theme="@style/edittext_darkback"
-                android:textColorHint="@color/colorEdittextHint"
-                android:textColor="@color/colorTextNormal"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Producer: "
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorTextNormal"
+                    android:textSize="20dp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Producer"
+                    android:id="@+id/Edit_Producer"
+                    android:imeOptions="actionNext"
+                    android:layout_marginBottom="3dp"
+                    android:theme="@style/edittext_darkback"
+                    android:textColorHint="@color/colorEdittextHint"
+                    android:textColor="@color/colorTextNormal"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Chain: "
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorTextNormal"
+                    android:textSize="20dp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Chain"
+                    android:id="@+id/Edit_Chain"
+                    android:inputType="number"
+                    android:imeOptions="actionDone"
+                    android:layout_marginBottom="3dp"
+                    android:theme="@style/edittext_darkback"
+                    android:textColorHint="@color/colorEdittextHint"
+                    android:textColor="@color/colorTextNormal"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

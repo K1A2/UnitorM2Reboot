@@ -35,7 +35,7 @@ import kotlin.Comparator
 class KeySoundFragment : Fragment(){
 
     private lateinit var linear_buttons:LinearLayout
-    private lateinit var spinner_chain:Spinner
+    private var spinner_chain:Spinner? = null
     private lateinit var radioG_mode:RadioGroup
     private lateinit var list_sounds:RecyclerView
     private lateinit var list_playlist:RecyclerView
@@ -47,7 +47,7 @@ class KeySoundFragment : Fragment(){
     private var soundListAdapter:FileListAdapter = FileListAdapter()
     private var soundPlayListAdapter:FileListAdapter = FileListAdapter()
     private var isPlay:Boolean = false
-    private lateinit var root:View
+    private var root:View? = null
     private var chain:String = "1"
     private var buttonCurrent:String = ""
 
@@ -64,13 +64,13 @@ class KeySoundFragment : Fragment(){
 
         onRequestListener.setKeySoundContext(this)
 
-        linear_buttons = root.findViewById<LinearLayout>(R.id.Layout_Btns)
-        spinner_chain = root.findViewById<Spinner>(R.id.Spinner_chain)
-        radioG_mode = root.findViewById<RadioGroup>(R.id.RadioG_mode)
-        list_sounds = root.findViewById<RecyclerView>(R.id.List_KeySound)
-        list_playlist = root.findViewById<RecyclerView>(R.id.list_sound_playlist)
-        text_current = root.findViewById<TextView>(R.id.Text_current_sound)
-        button_add = root.findViewById<ImageButton>(R.id.Button_Image_add)
+        linear_buttons = root!!.findViewById<LinearLayout>(R.id.Layout_Btns)
+        spinner_chain = root!!.findViewById<Spinner>(R.id.Spinner_chain)
+        radioG_mode = root!!.findViewById<RadioGroup>(R.id.RadioG_mode)
+        list_sounds = root!!.findViewById<RecyclerView>(R.id.List_KeySound)
+        list_playlist = root!!.findViewById<RecyclerView>(R.id.list_sound_playlist)
+        text_current = root!!.findViewById<TextView>(R.id.Text_current_sound)
+        button_add = root!!.findViewById<ImageButton>(R.id.Button_Image_add)
 
         //sound files
         list_sounds.layoutManager = LinearLayoutManager(activity)
@@ -86,7 +86,7 @@ class KeySoundFragment : Fragment(){
 
         for (vertical in 1..8) {
             for (horizontal in 1..8) {
-                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                val playButton = root!!.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
                 playButton.setActivity(LayoutKey.PLAYBTN_LAYOUT_SOUND)
                 if (savedInstanceState != null) {
                     playButton.setcurrentChain(savedInstanceState.getString(LayoutKey.KEYSOUND_BUNDLE_CHAIN))
@@ -97,13 +97,13 @@ class KeySoundFragment : Fragment(){
         }
 
         //체인 선택 리스너뷰
-        spinner_chain.onItemSelectedListener = object : OnItemSelectedListener {
+        spinner_chain!!.onItemSelectedListener = object : OnItemSelectedListener {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (parent!!.childCount != 0) {
                     (parent.getChildAt(0) as TextView).setTextColor(Color.WHITE)
                     try {
-                        val chain_selected = (spinner_chain.getItemAtPosition(position) as String).split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
+                        val chain_selected = (spinner_chain!!.getItemAtPosition(position) as String).split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
                         chain = chain_selected
                         setChainButton()
                         buttonCurrent = ""
@@ -114,9 +114,9 @@ class KeySoundFragment : Fragment(){
                     }
                 } else {
                     if (bundle != null) {
-                        spinner_chain.setSelection(bundle!!.getString(LayoutKey.KEYLED_BUNDLE_CHAIN).toInt() - 1)
+                        spinner_chain!!.setSelection(bundle!!.getString(LayoutKey.KEYLED_BUNDLE_CHAIN).toInt() - 1)
                     } else {
-                        spinner_chain.setSelection(0)
+                        spinner_chain!!.setSelection(0)
                     }
                 }
             }
@@ -157,7 +157,7 @@ class KeySoundFragment : Fragment(){
                         when (menuItem.itemId) {
                             R.id.menu_sound_select -> {//선택
                                 if (!buttonCurrent.equals("")) {
-                                    val playButton = root.findViewWithTag(buttonCurrent) as PlayButton
+                                    val playButton = root!!.findViewWithTag(buttonCurrent) as PlayButton
                                     playButton.addSound(chain, item.fname!!, "1")
                                     val s = FileListItem()
                                     s.fname = chain + " " + buttonCurrent + " " + item.fname + " 1"
@@ -230,7 +230,7 @@ class KeySoundFragment : Fragment(){
                     list.set(position, itemn)
                     soundPlayListAdapter.dataChanged(position)
 
-                    val playButton = root.findViewWithTag(buttonCurrent) as PlayButton
+                    val playButton = root!!.findViewWithTag(buttonCurrent) as PlayButton
                     val a = slist.split("\\s+".toRegex())
                     if (a.size == 6) {
                         playButton.changeSound(item.fname!!, a[0], a[3], a[4], a[5])
@@ -258,7 +258,7 @@ class KeySoundFragment : Fragment(){
                                 val item = soundPlayListAdapter.getItem(position)
                                 soundPlayListAdapter.removeItem(position)
                                 onRequestListener.onRequest(ListenerKey.KEY_SOUND_REMOVE, item.fname!!)
-                                val playButton = root.findViewWithTag(buttonCurrent) as PlayButton
+                                val playButton = root!!.findViewWithTag(buttonCurrent) as PlayButton
                                 playButton.removeSound(item.fname!!)
                             }
                         }
@@ -274,6 +274,7 @@ class KeySoundFragment : Fragment(){
 
     override fun onStart() {
         super.onStart()
+        onRequestListener.onRequest(ListenerKey.KEY_SOUND_LOAD, "")
         //사운드 파일 추가
         button_add.setOnClickListener {
             onRequestListener.onRequest(ListenerKey.KEY_SOUND_ADD_FILE, "")
@@ -292,7 +293,7 @@ class KeySoundFragment : Fragment(){
     private fun setChainButton() {
         for (vertical in 1..8) {
             for (horizontal in 1..8) {
-                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                val playButton = root!!.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
                 playButton.setcurrentChain(chain)
             }
         }
@@ -302,7 +303,7 @@ class KeySoundFragment : Fragment(){
     private fun setIsPlayButton() {
         for (vertical in 1..8) {
             for (horizontal in 1..8) {
-                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                val playButton = root!!.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
                 playButton.setIsPlay(isPlay)
             }
         }
@@ -310,26 +311,30 @@ class KeySoundFragment : Fragment(){
 
     //tabhost에 chain갯수 요청 결과 처리
     fun setChain(chain:String?) {
-        var adapter:ArrayAdapter<String?>? = null
-        try {
-            val chain_num = chain!!.toInt()
-            val chainlist = arrayOfNulls<String>(chain_num)
-            //val chainlist = arrayOf(chain_num)
-            for (i in 0 until chain_num step 1) {
-                chainlist[i] = String.format(getString(R.string.spinner_chain), i+1)
+        if (spinner_chain != null&&root != null&&activity != null) {
+            var adapter: ArrayAdapter<String?>? = null
+            try {
+                val chain_num = chain!!.toInt()
+                val chainlist = arrayOfNulls<String>(chain_num)
+                //val chainlist = arrayOf(chain_num)
+                for (i in 0 until chain_num step 1) {
+                    chainlist[i] = String.format(getString(R.string.spinner_chain), i + 1)
+                }
+                adapter = ArrayAdapter(context, android.support.design.R.layout.support_simple_spinner_dropdown_item, chainlist)
+                spinner_chain!!.adapter = adapter
+            } catch (e: Exception) {
+                val s = arrayOf<String>(1.toString())
+                s[0] = String.format(getString(R.string.spinner_chain), "1")
+                adapter = ArrayAdapter(context, android.support.design.R.layout.support_simple_spinner_dropdown_item, s)
+
+                spinner_chain!!.adapter = adapter
             }
-            adapter = ArrayAdapter(context, android.support.design.R.layout.support_simple_spinner_dropdown_item, chainlist)
-            spinner_chain.adapter = adapter
-        } catch (e:Exception) {
-            val s = arrayOf<String>(1.toString())
-            s[0] = String.format(getString(R.string.spinner_chain), "1")
-            adapter = ArrayAdapter(context, android.support.design.R.layout.support_simple_spinner_dropdown_item, s)
-            spinner_chain.adapter = adapter
-        }
-        for (vertical in 1..8) {
-            for (horizontal in 1..8) {
-                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
-                playButton.setChain(chain!!)
+            for (vertical in 1..8) {
+                for (horizontal in 1..8) {
+                    val playButton = root!!.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                    playButton.setChain(chain!!)
+                    playButton.setMulti()
+                }
             }
         }
     }
@@ -338,7 +343,7 @@ class KeySoundFragment : Fragment(){
     fun setButton(sound:ArrayList<String>) {
         for (vertical in 1..8) {
             for (horizontal in 1..8) {
-                val playButton = root.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
+                val playButton = root!!.findViewWithTag(vertical.toString() + " " + horizontal.toString()) as PlayButton
                 playButton.textView.isClickable = true
                 playButton.textView.isFocusable = true
                 for (s in sound) {
@@ -377,8 +382,8 @@ class KeySoundFragment : Fragment(){
 
     //웜홀 처리
     fun setWormwhole(chain:String) {
-        if (chain.toInt() <= spinner_chain.count) {
-            spinner_chain.setSelection(chain.toInt() - 1)
+        if (chain.toInt() <= spinner_chain!!.count) {
+            spinner_chain!!.setSelection(chain.toInt() - 1)
         }
     }
 
