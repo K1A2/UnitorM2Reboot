@@ -1,16 +1,20 @@
 package com.uni.unitor.unitorm2.layout
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.media.AudioManager
 import android.media.SoundPool
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.PowerManager
+import android.preference.PreferenceManager
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -35,6 +39,7 @@ import com.uni.unitor.unitorm2.fragment.dialog.FileExplorerdDialog
 import java.lang.Exception
 import java.net.URL
 import java.security.Key
+import kotlin.RuntimeException
 
 class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, KeySoundFragment.OnKeySoundRequestListener, FileExplorerdDialog.OnFileSelectListener, KeyLEDFragment.OnKeyLEDRequestListener {
 
@@ -64,16 +69,29 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     private var chain:String = "1"
     private lateinit var preKill:SharedPreferenceIO
     private var isKilled = false
+    private lateinit var isOn:SharedPreferences
+    private var isKeepOn = false
+    private var wakeLock: PowerManager.WakeLock? = null
 
+    @SuppressLint("InvalidWakeLockTag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_tabhost)
         if (supportActionBar != null) supportActionBar!!.hide()
 
+        isOn = PreferenceManager.getDefaultSharedPreferences(this)
         preKill = SharedPreferenceIO(this, PreferenceKey.KEY_REPOSITORY_KILL)
         isKilled = preKill.getBoolean(PreferenceKey.KEY_KILL_DIED, false)
         keysoundInit = preKill.getBoolean(PreferenceKey.KEY_SOUND_INIT, true)
+
+        //화면 유지 여부
+        isKeepOn = isOn.getBoolean("setting_screen", false)
+        if (isKeepOn) {
+            val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+            wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "ScreenOn")
+            wakeLock!!.acquire()
+        }
 
         keyLEDIO = KeyLEDIO(this)
         keySoundIO = KeySoundIO(this)
@@ -522,6 +540,15 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         super.onPause()
         if (fileexDialog.dialog != null&&fileexDialog.dialog.isShowing&&!fileexDialog.isRemoving) {
             fileexDialog.dismiss()
+        }
+        if (isKeepOn&&wakeLock != null) {
+            try {
+                if (wakeLock!!.isHeld) wakeLock!!.release()
+            } catch (e:RuntimeException) {
+
+            } catch (e:java.lang.RuntimeException) {
+
+            }
         }
 //        preKill.setBoolean(PreferenceKey.KEY_SOUND_INIT, keysoundInit)
 //        preKill.setBoolean(PreferenceKey.KEY_KILL_DIED, PreferenceKey.KEY_KILL_FORCE)

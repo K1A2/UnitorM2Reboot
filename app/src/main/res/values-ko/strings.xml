@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">UnitorM2</string>
-    <string name="app_version">5.0.0b3</string>
+    <string name="app_version">5.0.0b4</string>
     <string name="ad">ca-app-pub-7873521316289922/7696297430</string>
     <string name="adtest">ca-app-pub-3940256099942544/6300978111</string>
     <string name="per_re_title">권한 요청</string>
@@ -102,4 +102,8 @@
     <string name="alert_restore_msg">앱이 비정상적으로 종료되었었습니다. \'%s\'를 복구시킬수 있습니다. 만약 \'아니오\'를 선택한다면, 다시는 복구시킬수 없습니다.</string>
     <string name="alert_restore_ok">복구하기</string>
     <string name="alert_restore_no">아니오</string>
+    <string name="pre_category_opensource">오픈소스 라이선스</string>
+    <string name="pre_category_app">앱 설정</string>
+    <string name="pre_check_display_t">디스플레이 켜진채로 유지하기</string>
+    <string name="pre_check_dis_o_s">유니팩을 만들동안 화면을 켜진채로 유지합니다.</string>
 </resources>

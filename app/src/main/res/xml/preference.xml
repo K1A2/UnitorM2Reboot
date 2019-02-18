@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/pre_category_app">
+
+        <SwitchPreference android:title="@string/pre_check_display_t"
+            android:summary="@string/pre_check_dis_o_s"
+            android:defaultValue="false"
+            android:key="setting_screen"/>
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/pre_categoty_info">
+
         <Preference android:title="@string/pre_contact"
             android:summary="@string/pre_contact_sum">
             <intent android:action="android.intent.action.SENDTO"
                 android:data="mailto:jckim0307@gmail.com"/>
         </Preference>
+
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pre_category_opensource" >
+
+        <Preference android:title="android-floating-action-button"
+            android:summary="Apache License 2.0">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/futuresimple/android-floating-action-button"/>
+        </Preference>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>
