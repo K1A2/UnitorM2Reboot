@@ -13,8 +13,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.*
 import com.getbase.floatingactionbutton.FloatingActionButton
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.*
 import com.uni.unitor.unitorm2.File.FileIO
 import com.uni.unitor.unitorm2.File.FileKey
 import com.uni.unitor.unitorm2.File.UnipackIO
@@ -35,6 +34,7 @@ class MainActivity : AppCompatActivity(), FileExplorerdDialog.OnUnipackSelectLis
     private lateinit var floating_import: FloatingActionButton
     private lateinit var floating_setting: FloatingActionButton
     private lateinit var adView:AdView
+    private lateinit var interAd:InterstitialAd
 
     private lateinit var kill:SharedPreferenceIO
     private val unipackAdapter:UnipackListAdapter = UnipackListAdapter()
@@ -49,6 +49,15 @@ class MainActivity : AppCompatActivity(), FileExplorerdDialog.OnUnipackSelectLis
         setContentView(R.layout.activity_main)
         if (supportActionBar != null) supportActionBar!!.hide()
 
+        MobileAds.initialize(this, "ca-app-pub-7873521316289922~7967347251")
+        adView = findViewById(R.id.admob)
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+
+        interAd = InterstitialAd(this)
+        interAd.adUnitId = "ca-app-pub-7873521316289922/9694048818"
+        interAd.loadAd(AdRequest.Builder().build())
+
         unipackIO = UnipackIO(this)
         sharedPreferenceIO = SharedPreferenceIO(this@MainActivity, PreferenceKey.KEY_REPOSITORY_INFO)
         kill = SharedPreferenceIO(this, PreferenceKey.KEY_REPOSITORY_KILL)
@@ -58,9 +67,6 @@ class MainActivity : AppCompatActivity(), FileExplorerdDialog.OnUnipackSelectLis
         floating_new = findViewById<FloatingActionButton>(R.id.fab_new)
         floating_import = findViewById<FloatingActionButton>(R.id.fab_import)
         floating_setting = findViewById<FloatingActionButton>(R.id.fab_setting)
-        adView = findViewById(R.id.admob)
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
 
         recycler_unipack.layoutManager = LinearLayoutManager(this)
         recycler_unipack.itemAnimator = DefaultItemAnimator()
@@ -176,16 +182,51 @@ class MainActivity : AppCompatActivity(), FileExplorerdDialog.OnUnipackSelectLis
 
     //유니팩 편집 시작전 SharedPreference에 info전보 저장
     private fun startEdit(string_title: String, string_producer: String, string_chain: String, string_path: String) {
-        sharedPreferenceIO.setString(PreferenceKey.KEY_INFO_TITLE, string_title)
-        sharedPreferenceIO.setString(PreferenceKey.KEY_INFO_PRODUCER, string_producer)
-        sharedPreferenceIO.setString(PreferenceKey.KEY_INFO_CHAIN, string_chain)
-        sharedPreferenceIO.setString(PreferenceKey.KEY_INFO_PATH, string_path)
-        kill.setBoolean(PreferenceKey.KEY_KILL_DIED, false)
-        kill.setBoolean(PreferenceKey.KEY_SOUND_INIT, true)
-        val intent = Intent(this@MainActivity, TabHostActivity::class.java)
-        intent.putExtra(PreferenceKey.KEY_KILL_DIED, false)
-        startActivity(intent)
-        finish()
+        if (interAd.isLoaded) {
+            interAd.show()
+            interAd.adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    // Code to be executed when an ad finishes loading.
+                }
+
+                override fun onAdFailedToLoad(errorCode: Int) {
+                    // Code to be executed when an ad request fails.
+                }
+
+                override fun onAdOpened() {
+                    // Code to be executed when the ad is displayed.
+                }
+
+                override fun onAdLeftApplication() {
+                    // Code to be executed when the user has left the app.
+                }
+
+                override fun onAdClosed() {
+                    sharedPreferenceIO.setString(PreferenceKey.KEY_INFO_TITLE, string_title)
+                    sharedPreferenceIO.setString(PreferenceKey.KEY_INFO_PRODUCER, string_producer)
+                    sharedPreferenceIO.setString(PreferenceKey.KEY_INFO_CHAIN, string_chain)
+                    sharedPreferenceIO.setString(PreferenceKey.KEY_INFO_PATH, string_path)
+                    kill.setBoolean(PreferenceKey.KEY_KILL_DIED, false)
+                    kill.setBoolean(PreferenceKey.KEY_SOUND_INIT, true)
+                    val intent = Intent(this@MainActivity, TabHostActivity::class.java)
+                    intent.putExtra(PreferenceKey.KEY_KILL_DIED, false)
+                    startActivity(intent)
+                    finish()
+                }
+            }
+        } else {
+            sharedPreferenceIO.setString(PreferenceKey.KEY_INFO_TITLE, string_title)
+            sharedPreferenceIO.setString(PreferenceKey.KEY_INFO_PRODUCER, string_producer)
+            sharedPreferenceIO.setString(PreferenceKey.KEY_INFO_CHAIN, string_chain)
+            sharedPreferenceIO.setString(PreferenceKey.KEY_INFO_PATH, string_path)
+            kill.setBoolean(PreferenceKey.KEY_KILL_DIED, false)
+            kill.setBoolean(PreferenceKey.KEY_SOUND_INIT, true)
+            val intent = Intent(this@MainActivity, TabHostActivity::class.java)
+            intent.putExtra(PreferenceKey.KEY_KILL_DIED, false)
+            startActivity(intent)
+            finish()
+        }
+
     }
 
     //selected unipack

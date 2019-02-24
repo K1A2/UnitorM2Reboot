@@ -64,7 +64,7 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     private var keysoundInit:Boolean = true
     private var soundLoaded:ArrayList<Array<Any>> = ArrayList()
     private lateinit var loadSound: LoadSound
-    private lateinit var soundPool:SoundPool
+    private var soundPool:SoundPool? = null
     private var isUnload:Boolean = false
     private var chain:String = "1"
     private lateinit var preKill:SharedPreferenceIO
@@ -405,10 +405,10 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
         for (sound in soundLoaded) {
             if (sound[0].toString().equals(name)) {
                 if (repeat.toInt()-1==-1) {
-                    soundPool.play(sound[1] as Int, 1f, 1f, 0, 0, 1f)
+                    soundPool!!.play(sound[1] as Int, 1f, 1f, 0, 0, 1f)
                     break
                 } else {
-                    soundPool.play(sound[1] as Int, 1f, 1f, 0, repeat.toInt() - 1, 1f)
+                    soundPool!!.play(sound[1] as Int, 1f, 1f, 0, repeat.toInt() - 1, 1f)
                     break
                 }
             }
@@ -557,10 +557,11 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
     //백그라운드로 돌아갈시 언로딩
     override fun onStop() {
         super.onStop()
-        while (loadSound.status == AsyncTask.Status.RUNNING) {
-
+        if (loadSound.status == AsyncTask.Status.RUNNING) {
+            loadSound.cancel(true)
+        } else {
+            soundUnLoad()
         }
-        soundUnLoad()
     }
 
     //사운드 언로딘
@@ -654,6 +655,9 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
                     publishProgress(s[1])
                     soundLoaded.add(arrayOf(name, pool))
                     count++
+                    if (isCancelled) {
+                        return true
+                    }
                 }
                 return true
             } catch (e:Exception) {
@@ -666,8 +670,20 @@ class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, 
             progressDialog.progress = count
         }
 
+        override fun onCancelled(result: Boolean?) {
+            progressDialog.dismiss()
+            Toast.makeText(context, "Load Cancelled", Toast.LENGTH_SHORT).show()
+            if (result!!) {
+                (context as TabHostActivity).setLoad(soundLoaded, soundPool)
+            } else {
+
+            }
+            (context as TabHostActivity).soundUnLoad()
+        }
+
         override fun onPostExecute(result: Boolean?) {
             progressDialog.dismiss()
+            Toast.makeText(context, "Load Finished", Toast.LENGTH_SHORT).show()
             if (result!!) {
                 (context as TabHostActivity).setLoad(soundLoaded, soundPool)
             } else {

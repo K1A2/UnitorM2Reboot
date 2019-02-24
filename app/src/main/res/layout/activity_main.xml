@@ -6,7 +6,7 @@
     android:layout_height="match_parent" android:background="@color/colorLayoutBackground">
 
     <com.google.android.gms.ads.AdView
-        fab:adUnitId="@string/ad"
+        fab:adUnitId="ca-app-pub-7873521316289922/7696297430"
         android:id="@+id/admob"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
