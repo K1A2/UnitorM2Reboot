@@ -15,6 +15,8 @@ import android.view.WindowManager
 import android.widget.Toast
 import com.uni.unitor.unitorm2.R
 
+/**앱 실행사 보이는 시작 화면**/
+
 class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

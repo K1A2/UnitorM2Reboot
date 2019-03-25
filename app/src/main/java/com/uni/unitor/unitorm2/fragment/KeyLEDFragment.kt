@@ -33,8 +33,7 @@ import com.uni.unitor.unitorm2.view.spinner.SpinnerColordapter
 import java.util.*
 import java.util.Collections.addAll
 
-
-
+/**keyled 편집 화면**/
 
 class KeyLEDFragment : Fragment(){
 
@@ -603,78 +602,80 @@ class KeyLEDFragment : Fragment(){
     //receive edit
     fun receiveEdit(id:String) {//TODO: led modifiy
         val playButton = root!!.findViewWithTag(id) as PlayButton
-        when (group_command.checkedRadioButtonId) {
+        if (!!text_current_con.text.isEmpty()) {
+            when (group_command.checkedRadioButtonId) {
 
-            R.id.radio_edit_on -> {
-                playButton.onLED(velocity[spinner_velocity.selectedItemPosition])
-                val command = "o " + id + " a " + spinner_velocity.selectedItemPosition
-                val i = LedContentListItem()
-                i.line = command
-                i.contents = ""
-                ledFrameAapter.addItem(i)
-                var c = 0
-                for (h in ledContentAdapter.getAllItem()) {
-                    if (h.line.equals(text_current_con.text.substring(10))) {
-                        val builder = StringBuilder()
-                        var count=  0
-                        val list = ArrayList<String>()
-                        for (m in h.contents!!.split("\\n+".toRegex())) {
-                            if (!m.isEmpty()) {
-                                list.add(m)
+                R.id.radio_edit_on -> {
+                    playButton.onLED(velocity[spinner_velocity.selectedItemPosition])
+                    val command = "o " + id + " a " + spinner_velocity.selectedItemPosition
+                    val i = LedContentListItem()
+                    i.line = command
+                    i.contents = ""
+                    ledFrameAapter.addItem(i)
+                    var c = 0
+                    for (h in ledContentAdapter.getAllItem()) {
+                        if (h.line.equals(text_current_con.text.substring(10))) {
+                            val builder = StringBuilder()
+                            var count=  0
+                            val list = ArrayList<String>()
+                            for (m in h.contents!!.split("\\n+".toRegex())) {
+                                if (!m.isEmpty()) {
+                                    list.add(m)
+                                }
                             }
-                        }
-                        for (k in list) {
-                            if (count+1 == list.size) {
-                                builder.append(command + "\n")
+                            for (k in list) {
+                                if (count+1 == list.size) {
+                                    builder.append(command + "\n")
+                                }
+                                builder.append(k + "\n")
+                                count++
                             }
-                            builder.append(k + "\n")
-                            count++
+                            val l = LedContentListItem()
+                            l.line = h.line
+                            l.contents = builder.toString()
+                            ledContentAdapter.changeItem(c, l)
+                            modifiedLed()
+                            break
+                        } else {
+                            c++
                         }
-                        val l = LedContentListItem()
-                        l.line = h.line
-                        l.contents = builder.toString()
-                        ledContentAdapter.changeItem(c, l)
-                        modifiedLed()
-                        break
-                    } else {
-                        c++
                     }
                 }
-            }
 
-            R.id.radio_edit_off -> {
-                playButton.offLED()
-                val command = "f " + id
-                val i = LedContentListItem()
-                i.line = command
-                i.contents = ""
-                ledFrameAapter.addItem(i)
-                var c = 0
-                for (h in ledContentAdapter.getAllItem()) {
-                    if (h.line.equals(text_current_con.text.substring(10))) {
-                        val builder = StringBuilder()
-                        var count = 0
-                        val list = ArrayList<String>()
-                        for (m in h.contents!!.split("\\n+".toRegex())) {
-                            if (!m.isEmpty()) {
-                                list.add(m)
+                R.id.radio_edit_off -> {
+                    playButton.offLED()
+                    val command = "f " + id
+                    val i = LedContentListItem()
+                    i.line = command
+                    i.contents = ""
+                    ledFrameAapter.addItem(i)
+                    var c = 0
+                    for (h in ledContentAdapter.getAllItem()) {
+                        if (h.line.equals(text_current_con.text.substring(10))) {
+                            val builder = StringBuilder()
+                            var count = 0
+                            val list = ArrayList<String>()
+                            for (m in h.contents!!.split("\\n+".toRegex())) {
+                                if (!m.isEmpty()) {
+                                    list.add(m)
+                                }
                             }
-                        }
-                        for (k in list) {
-                            if (count+1 == list.size) {
-                                builder.append(command + "\n")
+                            for (k in list) {
+                                if (count+1 == list.size) {
+                                    builder.append(command + "\n")
+                                }
+                                builder.append(k + "\n")
+                                count++
                             }
-                            builder.append(k + "\n")
-                            count++
+                            val l = LedContentListItem()
+                            l.line = h.line
+                            l.contents = builder.toString()
+                            ledContentAdapter.changeItem(c, l)
+                            modifiedLed()
+                            break
+                        } else {
+                            c++
                         }
-                        val l = LedContentListItem()
-                        l.line = h.line
-                        l.contents = builder.toString()
-                        ledContentAdapter.changeItem(c, l)
-                        modifiedLed()
-                        break
-                    } else {
-                        c++
                     }
                 }
             }

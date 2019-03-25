@@ -11,6 +11,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.uni.unitor.unitorm2.R
 
+/**연주하는 패드 밖에 32개의 둥근 버튼(미완)**/
+
 class McButton : LinearLayout, View.OnClickListener {
 
     lateinit var textView: TextView

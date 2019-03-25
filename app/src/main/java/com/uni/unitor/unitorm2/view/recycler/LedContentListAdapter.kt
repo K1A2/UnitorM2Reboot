@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.uni.unitor.unitorm2.R
 
+/**led 내용 보여줄때 사용하는 리사이클러뷰 어댑터**/
+
 class LedContentListAdapter : RecyclerView.Adapter<LedContentListAdapter.ViewHolder>() {
 
     private val contentItems: MutableList<LedContentListItem>

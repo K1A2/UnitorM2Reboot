@@ -27,6 +27,7 @@ import android.widget.AdapterView
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**파일 선택기 다이얼로그**/
 
 class FileExplorerdDialog : DialogFragment() {
 

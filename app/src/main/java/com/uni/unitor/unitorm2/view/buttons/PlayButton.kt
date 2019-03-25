@@ -23,6 +23,8 @@ import com.uni.unitor.unitorm2.fragment.KeyLEDFragment
 import com.uni.unitor.unitorm2.layout.LayoutKey
 import java.lang.Exception
 
+/**연주하는 네모난 64개의 버튼
+ * led, sound에 따라서 다르게 처리하는 클릭 리스너 구현**/
 
 class PlayButton : RelativeLayout, KeyLEDFragment.OnPlayLED {
 

@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.uni.unitor.unitorm2.R
 
+/**파일 목록 보여줄때 사용하는 리사이클러뷰 어댑터**/
+
 class FileListAdapter : RecyclerView.Adapter<FileListAdapter.ViewHolder>() {
 
     private val fileItems: MutableList<FileListItem>

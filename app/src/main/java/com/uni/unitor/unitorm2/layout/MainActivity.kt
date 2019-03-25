@@ -27,6 +27,9 @@ import com.uni.unitor.unitorm2.view.recycler.UnipackListItem
 import com.uni.unitor.unitorm2.view.recycler.listener.RecyclerItemClickListener
 import java.io.File
 
+/**앱 실행시 splashActivity 다음으로 보이는 메인화면
+ * 유니팩 선택, 삭제 등 구현**/
+
 class MainActivity : AppCompatActivity(), FileExplorerdDialog.OnUnipackSelectListener {
 
     private lateinit var recycler_unipack:RecyclerView

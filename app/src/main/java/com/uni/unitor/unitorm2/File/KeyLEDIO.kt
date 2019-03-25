@@ -11,6 +11,10 @@ import com.uni.unitor.unitorm2.layout.TabHostActivity
 import java.io.*
 import java.lang.StringBuilder
 
+/**
+ * Unipack중 LED 파일 입출력 담당
+ * 파일 읽기, keyLED 읽기 또는 저장, led work파일 읽기 쓰기 등**/
+
 class KeyLEDIO(private val context: Context) : ContextWrapper(context) {
 
     private val fileIO:FileIO = FileIO(context)
@@ -116,7 +120,11 @@ class KeyLEDIO(private val context: Context) : ContextWrapper(context) {
 
     private fun rename(workpath:String, name:String) {
         val s = name.split("\\s+".toRegex())
-        val file = File(workpath).listFiles(object : FileFilter {
+        val work = File(workpath)
+        if (!work.exists()) {
+            fileIO.isExists(work, FileKey.KEY_DIRECTORY_INT)
+        }
+        val file = work.listFiles(object : FileFilter {
             override fun accept(file: File): Boolean {
                 return file.isFile && file.name.equals(name)
             }

@@ -17,6 +17,9 @@ import com.uni.unitor.unitorm2.view.buttons.PlayButton;
 
 import java.util.ArrayList;
 
+/**
+ * led 재생하는 스레드 (미완)**/
+
 public  class PlayLED extends AsyncTask<String, ArrayList<String>, Boolean> {
 
     private String[] content;

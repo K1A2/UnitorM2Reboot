@@ -41,6 +41,8 @@ import java.net.URL
 import java.security.Key
 import kotlin.RuntimeException
 
+/**InfoFragment, KeySoundFragment, KeyLEDFragment를 하나로 이어주는 액티비티**/
+
 class TabHostActivity : AppCompatActivity(), InfoFragment.OnInfoChangeListener, KeySoundFragment.OnKeySoundRequestListener, FileExplorerdDialog.OnFileSelectListener, KeyLEDFragment.OnKeyLEDRequestListener {
 
     private lateinit var toolbarV: Toolbar

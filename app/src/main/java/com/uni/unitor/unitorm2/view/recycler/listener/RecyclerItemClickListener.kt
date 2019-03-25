@@ -6,6 +6,9 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 
+/**리사이클러뷰 리스너
+ * 그냥 클릭, 롱클릭 구현**/
+
 class RecyclerItemClickListener(context: Context, recyclerView: RecyclerView, private val onItemClickListener: OnItemClickListener?) : RecyclerView.OnItemTouchListener {
 
     internal var gestureDetector: GestureDetector

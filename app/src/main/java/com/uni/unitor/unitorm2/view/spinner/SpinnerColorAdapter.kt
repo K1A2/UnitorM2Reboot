@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.BaseAdapter
 
+/**밸로시티 선택때 사용하는 스피너 어댑터**/
 
 class SpinnerColordapter(internal var context: Context, internal var data: List<String>?, internal var coclor: List<Int>?) : BaseAdapter() {
     internal var inflater: LayoutInflater

@@ -14,6 +14,8 @@ import android.widget.TextView
 import com.uni.unitor.unitorm2.File.sharedpreference.PreferenceKey
 import com.uni.unitor.unitorm2.R
 
+/**info 편집 화면**/
+
 class InfoFragment : Fragment() {
 
     private var edit_Title:EditText? = null

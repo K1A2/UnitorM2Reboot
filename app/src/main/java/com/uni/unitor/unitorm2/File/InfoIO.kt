@@ -8,6 +8,10 @@ import java.io.File
 import java.io.FileReader
 import java.io.PrintWriter
 
+/**
+ * Unipack중 Info 입출력 담당
+ * 가져오기 출력하기**/
+
 class InfoIO(private val context: Context) : ContextWrapper(context) {
     private val defaultpath: String = Environment.getExternalStorageDirectory().absolutePath + "/"
 

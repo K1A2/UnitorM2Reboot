@@ -6,7 +6,7 @@ import android.preference.PreferenceActivity
 import com.uni.unitor.unitorm2.R
 import android.preference.SwitchPreference
 
-
+/**설정창**/
 
 class PreferenceActivity : PreferenceActivity(), Preference.OnPreferenceClickListener {
 

@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.uni.unitor.unitorm2.R
 
+/**유니팩 리스트때 사용하는 리사이클러뷰 어댑터**/
+
 class UnipackListAdapter : RecyclerView.Adapter<UnipackListAdapter.ViewHolder>() {
 
     private val unipackExplorerItems: MutableList<UnipackListItem>

@@ -14,6 +14,7 @@ import android.widget.BaseAdapter
 import com.uni.unitor.unitorm2.layout.LayoutKey
 import java.io.File
 
+/**파일 선택시 사용하는 리사이클러뷰 어댑터**/
 
 class SelectFileAdapter(type:String) : BaseAdapter() {
 

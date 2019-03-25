@@ -13,6 +13,11 @@ import java.io.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
+/**
+ * 모든 기본적인 파일 입출력 담당
+ * 기본적인 파일 생성, 삭제, 파일 가져오기 등
+ **/
+
 class FileIO(private val context: Context) : ContextWrapper(context) {
     private val defaultpath: String = Environment.getExternalStorageDirectory().absolutePath + "/"
 

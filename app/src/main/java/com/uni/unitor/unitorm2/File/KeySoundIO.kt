@@ -16,6 +16,10 @@ import com.uni.unitor.unitorm2.R
 import com.uni.unitor.unitorm2.layout.TabHostActivity
 import java.io.*
 
+/**
+ * Unipack중 sound 파일 입출력 담당
+ * sounds폴더 읽어오기, keysound폴더 가져오고 수정**/
+
 class KeySoundIO(private val context: Context) : ContextWrapper(context) {
 
     private val fileIO:FileIO = FileIO(context)
@@ -107,23 +111,13 @@ class KeySoundIO(private val context: Context) : ContextWrapper(context) {
         private val keysoundIO:KeySoundIO = KeySoundIO(context)
         private val prograssDialog:ProgressDialog = ProgressDialog(context)
 
-//        private val progressDialog:AlertDialog.Builder = AlertDialog.Builder(context)
-//        val layout: RelativeLayout = View.inflate(context, R.layout.dialog_progress, null) as RelativeLayout
-
         private val context:Context = context
         private val path:String? = path
-//        private val text_Title:TextView = layout.findViewById<TextView>(R.id.dialog_progress_title)
-//        private val text_Sub:TextView = layout.findViewById<TextView>(R.id.dialog_progress_sub)
-//        private val progressBar:ProgressBar = layout.findViewById<ProgressBar>(R.id.dialog_progress_bar)
-//        private val button_Ok:Button = layout.findViewById<Button>(R.id.button_progress_ok)
 
         override fun onPreExecute() {
-//            progressDialog.setView(layout)
             prograssDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
             prograssDialog.setCancelable(false)
             prograssDialog.setCanceledOnTouchOutside(false)
-//                   text_Title.setText(R.string.async_duplicate_sound_title)
-//                   text_Sub.visibility = View.GONE
             prograssDialog.setTitle(context.getString(R.string.async_duplicate_sound_title))
             prograssDialog.show()
         }
